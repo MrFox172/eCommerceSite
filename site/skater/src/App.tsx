@@ -4,7 +4,12 @@ import Footer from "./components/Footer/Footer";
 import Home from "./components/Home/Home";
 import { Route, Routes } from "react-router-dom";
 
+import { useState } from "react";
+
 function App() {
+  const [cart, setCart] = useState([]);
+  const [user, setUser] = useState(null);
+
   return (
     <>
       <Header />
