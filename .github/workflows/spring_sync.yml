@@ -24,7 +24,7 @@ jobs:
       run: chmod +x ./site/skater_backend/gradlew
 
     - name: Build with Gradle
-      working-directory: ./skater_backend
+      working-directory: ./site/skater_backend
       run: ./gradlew bootJar
 
     - name: Upload artifact
