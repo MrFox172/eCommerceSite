@@ -47,18 +47,18 @@ jobs:
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_KEY }}
+        host: ${{ secrets.WILL_EC2_HOST }}
+        username: ${{ secrets.WILL_EC2_USER }}
+        key: ${{ secrets.WILL_EC2_KEY }}
         source: "./build/*.jar"
         target: "/home/ubuntu/skater"
 
     - name: Execute remote command
       uses: appleboy/ssh-action@v1.1.0
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_KEY }}
+        host: ${{ secrets.WILL_EC2_HOST }}
+        username: ${{ secrets.WILL_EC2_USER }}
+        key: ${{ secrets.WILL_EC2_KEY }}
         script: |
           cd /opt/skater
           sudo ./shutdown.sh
