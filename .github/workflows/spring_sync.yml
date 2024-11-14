@@ -64,3 +64,4 @@ jobs:
           sudo ./shutdown.sh
           sudo mv -f /home/ubuntu/skater/build/* /opt/skater/build/
           sudo ./start.sh
+          cat output.log
