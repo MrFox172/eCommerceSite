@@ -16,6 +16,13 @@ function App() {
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/home" Component={Home} />
+        <Route path="/skateboards" Component={Home} />
+        <Route path="/skates" Component={Home} />
+        <Route path="/shoes" Component={Home} />
+        <Route path="/apparel" Component={Home} />
+        <Route path="/accessories" Component={Home} />
+        <Route path="/login" Component={Home} />
+        <Route path="/cart" Component={Home} />
       </Routes>
       <Footer />
     </>
