@@ -1,6 +1,8 @@
 package com.ecommerce.skater.controller;
 
 import com.ecommerce.skater.data.Account;
+import com.ecommerce.skater.dto.AccountLogin;
+import com.ecommerce.skater.dto.AccountSignUp;
 import com.ecommerce.skater.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,8 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public Account authenticateAccount(@RequestBody Account account) {
-        return accountRepo.findOneByEmailaddressAndPassword(account.getEmailaddress(), account.getPassword());
+    public Account authenticateAccount(@RequestBody AccountLogin account) {
+        return accountRepo.findOneByEmailaddressAndPassword(account.emailaddress(), account.password());
     }
 
     @PostMapping
@@ -39,17 +41,15 @@ public class AccountController {
         return accountRepo.save(account);
     }
 
-    @GetMapping("/new")
-    public Account createAccount(String name) {
-
+    @PostMapping("/signup")
+    public Account createAccount(@RequestBody AccountSignUp accountSignUp) {
         Account account = new Account();
-        account.setFirstname("John");
-        account.setLastname("Doe");
-        account.setEmailaddress("john.doe@gmail.com");
-        account.setPassword("password");
-        account.setPhonenumber("123-333-4444");
+        account.setFirstname(accountSignUp.firstname());
+        account.setLastname(accountSignUp.lastname());
+        account.setEmailaddress(accountSignUp.emailaddress());
+        account.setPhonenumber(accountSignUp.phonenumber());
+        account.setPassword(accountSignUp.password());
         return accountRepo.save(account);
     }
-
 
 }
