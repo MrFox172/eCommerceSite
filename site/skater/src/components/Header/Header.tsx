@@ -35,7 +35,7 @@ const Header: React.FC = () => {
               </NavDropdown>
             </Nav>
             <Nav>
-              <Nav.Link href="#deets">Login</Nav.Link>
+              <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link eventKey={2} href="#memes">
                 Cart
               </Nav.Link>

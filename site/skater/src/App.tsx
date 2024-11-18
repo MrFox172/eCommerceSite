@@ -2,6 +2,7 @@ import "./App.css";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Home from "./components/Home/Home";
+import Login from "./components/Auth/Login";
 import { Route, Routes } from "react-router-dom";
 
 import { useState } from "react";
@@ -21,7 +22,7 @@ function App() {
         <Route path="/shoes" Component={Home} />
         <Route path="/apparel" Component={Home} />
         <Route path="/accessories" Component={Home} />
-        <Route path="/login" Component={Home} />
+        <Route path="/login" Component={Login} />
         <Route path="/cart" Component={Home} />
       </Routes>
       <Footer />
