@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/shipments")
+@CrossOrigin
 public class ShipmentController {
 
     @Autowired

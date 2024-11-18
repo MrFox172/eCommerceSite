@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/seller-account")
+@CrossOrigin
 public class SellerAccountController {
 
     @Autowired

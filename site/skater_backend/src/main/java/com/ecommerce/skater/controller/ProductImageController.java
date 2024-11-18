@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product-images")
+@CrossOrigin
 public class ProductImageController {
 
     @Autowired
