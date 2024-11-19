@@ -6,24 +6,30 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
-const Header: React.FC = () => {
+import { useEffect } from "react";
+import { useState } from "react";
 
-  const localuser = localStorage.getItem("user");
-  const user = localuser ? JSON.parse(localuser) : null;
+const Header: React.FC = (user) => {
+  const [userLinksUrl, setUserLinksUrl] = useState<string>("/login");
+  const [userLinksText, setUserLinksText] = useState<string>("Login");
 
-  let userLinksUrl = "/login";
-  let userLinksText = "Login";
-
-  if (user !== null) {
-    userLinksUrl = "/logout";
-    userLinksText = "Logout";
-  }
+  useEffect(() => {
+    if (user !== null) {
+      setUserLinksUrl("/logout");
+      setUserLinksText("Logout");
+    } else {
+      setUserLinksUrl("/login");
+      setUserLinksText("Login");
+    }
+  }, [user]);
 
   return (
     <>
       <Navbar bg="light" data-bs-theme="light">
         <Container fluid className="px-5">
-          <Navbar.Brand href="/" className="fw-bold">SKATER.COM</Navbar.Brand>
+          <Navbar.Brand href="/" className="fw-bold">
+            SKATER.COM
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
