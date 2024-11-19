@@ -7,11 +7,23 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
 const Header: React.FC = () => {
+
+  const localuser = localStorage.getItem("user");
+  const user = localuser ? JSON.parse(localuser) : null;
+
+  let userLinksUrl = "/login";
+  let userLinksText = "Login";
+
+  if (user !== null) {
+    userLinksUrl = "/logout";
+    userLinksText = "Logout";
+  }
+
   return (
     <>
       <Navbar bg="light" data-bs-theme="light">
         <Container fluid className="px-5">
-          <Navbar.Brand href="/">SKATER.COM</Navbar.Brand>
+          <Navbar.Brand href="/" className="fw-bold">SKATER.COM</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
@@ -35,7 +47,7 @@ const Header: React.FC = () => {
               </NavDropdown>
             </Nav>
             <Nav>
-              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href={userLinksUrl}>{userLinksText}</Nav.Link>
               <Nav.Link eventKey={2} href="#memes">
                 Cart
               </Nav.Link>

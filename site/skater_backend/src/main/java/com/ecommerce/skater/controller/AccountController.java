@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/account")
@@ -34,6 +35,9 @@ public class AccountController {
 
     @PostMapping("/login")
     public Account authenticateAccount(@RequestBody AccountLogin account) {
+        System.out.println(account.emailaddress());
+        System.out.println(account.password());
+
         return accountRepo.findOneByEmailaddressAndPassword(account.emailaddress(), account.password());
     }
 
@@ -42,7 +46,7 @@ public class AccountController {
         return accountRepo.save(account);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public Account createAccount(@RequestBody AccountSignUp accountSignUp) {
         Account account = new Account();
         account.setFirstname(accountSignUp.firstname());
