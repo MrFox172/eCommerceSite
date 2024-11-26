@@ -25,7 +25,7 @@ const Login = () => {
         console.log(userLogin);
 
         axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-        axios.post("http://thelowerorbit.com:8080/api/account/login", {
+        axios.post("https://www.thelowerorbit.com:8080/api/account/login", {
             emailaddress: userLogin.email,
             password: userLogin.password
         }).then((response) => {

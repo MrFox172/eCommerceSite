@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Logout from "./components/Auth/Logout";
+import Account from "./components/Account/Account";
 import { Route, Routes } from "react-router-dom";
 
 import { useState } from "react";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/accessories" Component={Home} />
         <Route path="/login" Component={Login} />
         <Route path="/logout" Component={Logout} />
+        <Route path="/account" Component={Account} />
         <Route path="/cart" Component={Home} />
         <Route path="/register" Component={Register} />
       </Routes>
