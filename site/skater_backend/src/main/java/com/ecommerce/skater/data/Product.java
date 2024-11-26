@@ -23,8 +23,9 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "seller_account_id", nullable = false)
-    private Integer sellerAccountId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_account_id", referencedColumnName = "id")
+    private SellerAccount sellerAccount;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -38,8 +39,9 @@ public class Product {
     @Column(name = "max_quantity", nullable = false, length = 50)
     private String maxQuantity;
 
-    @Column(name = "category_id", nullable = false)
-    private Integer categoryId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
     @Column(name = "tags", nullable = false, length = 500)
     private String tags;

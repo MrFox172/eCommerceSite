@@ -2,6 +2,7 @@ package com.ecommerce.skater.controller;
 
 import com.ecommerce.skater.data.Product;
 import com.ecommerce.skater.repository.ProductRepo;
+import com.ecommerce.skater.repository.SellerAccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepo productRepo;
+
+    @Autowired
+    private SellerAccountRepo sellerAccountRepo;
 
     // create a new product
     @PostMapping
@@ -42,7 +46,6 @@ public class ProductController {
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
             product.setMaxQuantity(productDetails.getMaxQuantity());
-            product.setCategoryId(productDetails.getCategoryId());
             product.setTags(productDetails.getTags());
             return productRepo.save(product);
         }
@@ -53,5 +56,12 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productRepo.deleteById(id);
+    }
+
+    // get all products by seller id
+    @GetMapping("/seller/{sellerId}")
+    public List<Product> getProductsBySellerId(@PathVariable Long sellerId) {
+        var seller = sellerAccountRepo.findById(sellerId).orElse(null);
+        return productRepo.findBySellerAccount(seller);
     }
 }
