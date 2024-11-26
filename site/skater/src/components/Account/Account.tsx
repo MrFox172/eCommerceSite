@@ -1,8 +1,18 @@
-import { Col, Container, Row, ListGroup, Tab } from "react-bootstrap";
+import {
+  Col,
+  Container,
+  Row,
+  ListGroup,
+  Tab,
+  Button,
+  Modal,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Profile from "./Profile";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Terms from "./Terms";
+import Sellers from "./Sellers";
 
 const Account: React.FC = () => {
   const navigate = useNavigate();
@@ -28,7 +38,7 @@ const Account: React.FC = () => {
     Orders: <h1>Orders</h1>,
     Address: <h1>Address</h1>,
     "Payment Methods": <h1>Payment Methods</h1>,
-    Sellers: <h1>Sellers</h1>,
+    Sellers: <Sellers />
   };
 
   const getLoggedUser = () => {
@@ -56,6 +66,72 @@ const Account: React.FC = () => {
   useEffect(() => {
     getLoggedUser();
   }, []);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => {
+        createSellerAccount();
+        setShow(false);
+    };
+  const handleShow = () => setShow(true);
+
+  const [showSellerOptions, setShowSellerOptions] = useState(false);
+  const [sellerAccount, setSellerAccount] = useState({
+    id: 0,
+    accountId: 0,
+    companyName: "",
+    createdate: "",
+  });
+
+  const getSellerStatus = () => {
+    const loggedUser = localStorage.getItem("user");
+    if (loggedUser === null) {
+      console.log("User not logged in");
+      navigate("/login");
+    } else {
+      const userLogin = JSON.parse(loggedUser);
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      axios
+        .get(
+          `https://www.thelowerorbit.com:8080/api/seller/account/${userLogin.id}`
+        )
+        .then((response) => {
+          console.log(response.data);
+          if (response.data === null) {
+            setShowSellerOptions(false);
+          } else {
+            setShowSellerOptions(true);
+            const sellerAccount = response.data;
+            setSellerAccount(sellerAccount);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const createSellerAccount = () => {
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      axios
+        .post(`https://www.thelowerorbit.com:8080/api/seller/account`, {
+          accountId: account.id,
+          companyName: `${account.firstname} ${account.lastname}`,
+        })
+        .then((response) => {
+          console.log(response.data);
+          const sellerAccount = response.data;
+          setSellerAccount(sellerAccount);
+          setShowSellerOptions(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  };
+
+  useEffect(() => {
+    getSellerStatus();
+  }, [sellerAccount]);
 
   return (
     <Tab.Container defaultActiveKey={`#${activeTab}`}>
@@ -94,11 +170,24 @@ const Account: React.FC = () => {
             <div className="my-2 px-3">
               <h5>Seller Zone</h5>
               <hr />
-              <ListGroup>
-                <ListGroup.Item>Profile</ListGroup.Item>
-                <ListGroup.Item>Sales</ListGroup.Item>
-                <ListGroup.Item>Products</ListGroup.Item>
-              </ListGroup>
+              {!showSellerOptions && (
+                <div>
+                  <p>
+                    Want to sell your products on our site? Enable your seller
+                    account now.
+                  </p>
+                  <Button variant="success" onClick={handleShow}>
+                    Enable Seller Account
+                  </Button>
+                </div>
+              )}
+              {showSellerOptions && (
+                <ListGroup>
+                  <ListGroup.Item href="#Sellers">Sellers</ListGroup.Item>
+                  <ListGroup.Item>Sales</ListGroup.Item>
+                  <ListGroup.Item>Products</ListGroup.Item>
+                </ListGroup>
+              )}
             </div>
           </Col>
           <Col>
@@ -124,6 +213,27 @@ const Account: React.FC = () => {
           </Col>
         </Row>
       </Container>
+      <Modal show={show} onHide={handleClose} size="lg" centered>
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title>Enable Seller Account</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-white">
+          <h4>So you want to be a seller for our site?</h4>
+          <br />
+          Agree to the terms and conditions to enable your seller account.
+          <br />
+          <br />
+          <Terms />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Naw, not for me
+          </Button>
+          <Button variant="success" onClick={handleClose}>
+            I Agree 👍
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Tab.Container>
   );
 };
