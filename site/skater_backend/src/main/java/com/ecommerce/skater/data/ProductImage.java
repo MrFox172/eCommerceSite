@@ -29,7 +29,7 @@ public class ProductImage {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "image_url", nullable = false, length = 50)
+    @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;
 
     @CreatedDate
