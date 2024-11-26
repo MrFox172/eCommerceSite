@@ -18,7 +18,7 @@ interface ProfileProps {
     };
 }
 
-const Profile: React.FC<ProfileProps> = (props: ProfileProps) => {
+const Profile = (props: ProfileProps) => {
 
     const rowStyle = "mb-5";
   return (

@@ -12,17 +12,19 @@ import Profile from "./Profile";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Terms from "./Terms";
-import Sellers from "./Sellers";
+import Products from "./SellerProducts";
 
-const Account: React.FC = () => {
+const Account = () => {
   const navigate = useNavigate();
   const [accountMenuList, setAccountMenuList] = useState([
     "Profile",
     "Orders",
     "Address",
-    "Payment Methods",
-    "Sellers",
+    "Payment Methods"
   ]);
+
+  const tabPanes = ["Profile", "Orders", "Address", "Payment Methods", "Sellers", "Products", "Sales"];
+
   const [activeTab, setActiveTab] = useState("Profile");
   const [account, setAccount] = useState({
     id: 0,
@@ -33,12 +35,21 @@ const Account: React.FC = () => {
     createdate: "12-12-2021",
   });
 
+  const [showSellerOptions, setShowSellerOptions] = useState(false);
+  const [sellerAccount, setSellerAccount] = useState({
+    id: 0,
+    accountId: 0,
+    companyName: "",
+    createdate: "",
+  });
+
   const component: Record<string, JSX.Element> = {
     Profile: <Profile pageName={activeTab} account={account} />,
     Orders: <h1>Orders</h1>,
     Address: <h1>Address</h1>,
     "Payment Methods": <h1>Payment Methods</h1>,
-    Sellers: <Sellers />
+    Products: <Products sellerAccount={sellerAccount} />,
+    Sales: <h1>Sales</h1>,
   };
 
   const getLoggedUser = () => {
@@ -75,14 +86,6 @@ const Account: React.FC = () => {
     };
   const handleShow = () => setShow(true);
 
-  const [showSellerOptions, setShowSellerOptions] = useState(false);
-  const [sellerAccount, setSellerAccount] = useState({
-    id: 0,
-    accountId: 0,
-    companyName: "",
-    createdate: "",
-  });
-
   const getSellerStatus = () => {
     const loggedUser = localStorage.getItem("user");
     if (loggedUser === null) {
@@ -97,7 +100,7 @@ const Account: React.FC = () => {
         )
         .then((response) => {
           console.log(response.data);
-          if (response.data === null) {
+          if (response.data === "") {
             setShowSellerOptions(false);
           } else {
             setShowSellerOptions(true);
@@ -131,11 +134,11 @@ const Account: React.FC = () => {
 
   useEffect(() => {
     getSellerStatus();
-  }, [sellerAccount]);
+  }, []);
 
   return (
     <Tab.Container defaultActiveKey={`#${activeTab}`}>
-      <Container className="px-4">
+      <Container className="px-4 min-vh-100">
         <Row>
           <Col lg={4} className="bg-light pt-4">
             <div className="my-2 mb-5 px-3">
@@ -183,9 +186,8 @@ const Account: React.FC = () => {
               )}
               {showSellerOptions && (
                 <ListGroup>
-                  <ListGroup.Item href="#Sellers">Sellers</ListGroup.Item>
-                  <ListGroup.Item>Sales</ListGroup.Item>
-                  <ListGroup.Item>Products</ListGroup.Item>
+                  <ListGroup.Item action variant="light" href="#Products" onClick={() => setActiveTab("Products")}>Products</ListGroup.Item>
+                  <ListGroup.Item action variant="light" href="#Sales" onClick={() => setActiveTab("Sales")}>Sales</ListGroup.Item>
                 </ListGroup>
               )}
             </div>
@@ -203,7 +205,7 @@ const Account: React.FC = () => {
             </Row>
             <Row className="px-4">
               <Tab.Content>
-                {accountMenuList.map((setting) => (
+                {tabPanes.map((setting) => (
                   <Tab.Pane eventKey={`#${setting}`} key={setting}>
                     {component[setting]}
                   </Tab.Pane>
