@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SellerAccountRepo extends JpaRepository<SellerAccount, Long> {
+public interface SellerAccountRepo extends JpaRepository<SellerAccount, Integer> {
 
-    Optional<SellerAccount> findByAccountId(Long accountId);
+    Optional<SellerAccount> findByAccountId(int accountId);
 }

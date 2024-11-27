@@ -31,13 +31,13 @@ public class ProductImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductImage> getProductImageById(@PathVariable Long id) {
+    public ResponseEntity<ProductImage> getProductImageById(@PathVariable int id) {
         Optional<ProductImage> productImage = productImageRepository.findById(id);
         return productImage.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/product/{id}")
-    public List<ProductImage> getProductImagesByProductId(@PathVariable Long id) {
+    public List<ProductImage> getProductImagesByProductId(@PathVariable int id) {
         return productImageRepository.findAllByProductId(id);
     }
 
@@ -46,23 +46,8 @@ public class ProductImageController {
         return new ResponseEntity<ProductImage>(fileService.uploadFile(upload), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductImage> updateProductImage(@PathVariable Long id, @RequestBody ProductImage productImageDetails) {
-        Optional<ProductImage> productImage = productImageRepository.findById(id);
-        if (productImage.isPresent()) {
-            ProductImage updatedProductImage = productImage.get();
-            updatedProductImage.setProductId(productImageDetails.getProductId());
-            updatedProductImage.setName(productImageDetails.getName());
-            updatedProductImage.setImageUrl(productImageDetails.getImageUrl());
-            updatedProductImage.setCreatedate(productImageDetails.getCreatedate());
-            return ResponseEntity.ok(productImageRepository.save(updatedProductImage));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductImage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProductImage(@PathVariable int id) {
         Optional<ProductImage> productImage = productImageRepository.findById(id);
         if (productImage.isPresent()) {
             productImageRepository.delete(productImage.get());

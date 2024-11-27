@@ -1,5 +1,6 @@
 package com.ecommerce.skater.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,8 +25,9 @@ public class AccountOrder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "account_id", nullable = false)
-    private Integer accountId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "order_status", nullable = false, length = 50)
     private String orderStatus;
@@ -34,4 +38,17 @@ public class AccountOrder {
     @CreatedDate
     private Timestamp createdate;
 
+    @OneToMany(mappedBy = "accountOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductOrder> productsOrdered = new ArrayList<>();
+
+    public void addProductOrder(ProductOrder productOrder) {
+        productsOrdered.add(productOrder);
+        productOrder.setAccountOrder(this);
+    }
+
+    public void removeProductOrder(ProductOrder productOrder) {
+        productsOrdered.remove(productOrder);
+        productOrder.setAccountOrder(null);
+    }
 }

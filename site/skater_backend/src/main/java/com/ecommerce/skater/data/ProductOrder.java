@@ -22,11 +22,13 @@ public class ProductOrder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "account_order_id", nullable = false)
-    private Integer accountOrderId;
+    @ManyToOne
+    @JoinColumn(name = "account_order_id")
+    private AccountOrder accountOrder;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

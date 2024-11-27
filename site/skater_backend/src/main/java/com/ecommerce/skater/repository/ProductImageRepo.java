@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductImageRepo extends JpaRepository<ProductImage, Long> {
+public interface ProductImageRepo extends JpaRepository<ProductImage, Integer> {
 
-    List<ProductImage> findAllByProductId(Long id);
+    List<ProductImage> findAllByProductId(int id);
 }

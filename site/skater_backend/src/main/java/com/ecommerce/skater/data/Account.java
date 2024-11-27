@@ -1,5 +1,6 @@
 package com.ecommerce.skater.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "account")
@@ -20,7 +23,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private String firstname;
     private String lastname;
     private String emailaddress;
@@ -28,6 +31,12 @@ public class Account {
     private String phonenumber;
     @CreatedDate
     private Timestamp createdate;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Address> addresses = new ArrayList<>();
+
+
 
     public Account() {
     }
@@ -38,5 +47,15 @@ public class Account {
         this.emailaddress = emailaddress;
         this.password = password;
         this.phonenumber = phonenumber;
+    }
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setAccount(this);
+    }
+
+    public void removeAddress(Address address) {
+        addresses.remove(address);
+        address.setAccount(null);
     }
 }

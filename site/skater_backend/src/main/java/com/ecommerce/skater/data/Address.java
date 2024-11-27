@@ -23,8 +23,9 @@ public class Address {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "account_id", nullable = false)
-    private Integer accountId;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @Column(name = "street", nullable = false, length = 50)
     private String street;

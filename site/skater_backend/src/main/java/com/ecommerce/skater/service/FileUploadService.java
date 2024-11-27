@@ -3,6 +3,7 @@ package com.ecommerce.skater.service;
 import com.ecommerce.skater.data.ProductImage;
 import com.ecommerce.skater.dto.ProductImageUpload;
 import com.ecommerce.skater.repository.ProductImageRepo;
+import com.ecommerce.skater.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class FileUploadService {
 
     @Autowired
     private ProductImageRepo productImageRepository;
+    @Autowired
+    private ProductRepo productRepo;
 
     public ProductImage uploadFile(ProductImageUpload uploadfile) {
 
@@ -45,11 +48,11 @@ public class FileUploadService {
             throw new RuntimeException(e);
         }
 
-        String keyName = uploadfile.productid() + "/" + multipartFile.getOriginalFilename();
+        String keyName = uploadfile.productId() + "/" + multipartFile.getOriginalFilename();
         String filePath = "/tmp/" + keyName;
 
         // create directory if not exists
-        File directory = new File("/tmp/" + uploadfile.productid());
+        File directory = new File("/tmp/" + uploadfile.productId());
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -137,8 +140,10 @@ public class FileUploadService {
         targetFile.delete();
         directory.delete();
 
+        var product = productRepo.findById(uploadfile.productId()).orElse(null);
+
         ProductImage productImage = new ProductImage();
-        productImage.setProductId(Integer.parseInt(uploadfile.productid()));
+        productImage.setProduct(product);
         productImage.setName(multipartFile.getOriginalFilename());
         productImage.setImageUrl(objectUrl);
         productImageRepository.save(productImage);

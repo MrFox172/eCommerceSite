@@ -24,7 +24,7 @@ public class ShipmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Shipment> getShipmentById(@PathVariable Long id) {
+    public ResponseEntity<Shipment> getShipmentById(@PathVariable int id) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);
         return shipment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -35,7 +35,7 @@ public class ShipmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Shipment> updateShipment(@PathVariable Long id, @RequestBody Shipment shipmentDetails) {
+    public ResponseEntity<Shipment> updateShipment(@PathVariable int id, @RequestBody Shipment shipmentDetails) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);
         if (shipment.isPresent()) {
             Shipment updatedShipment = shipment.get();
@@ -52,7 +52,7 @@ public class ShipmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteShipment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteShipment(@PathVariable int id) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);
         if (shipment.isPresent()) {
             shipmentRepository.delete(shipment.get());

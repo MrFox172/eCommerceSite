@@ -23,7 +23,7 @@ public class PaymentMethodController {
 
     // Get a payment method by id
     @GetMapping("/{id}")
-    public PaymentMethod getPaymentMethodById(@PathVariable Long id) {
+    public PaymentMethod getPaymentMethodById(@PathVariable int id) {
         return paymentMethodRepo.findById(id).orElse(null);
     }
 
@@ -35,7 +35,7 @@ public class PaymentMethodController {
 
     // Update a payment method
     @PutMapping("/{id}")
-    public PaymentMethod updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentMethod paymentMethodDetails) {
+    public PaymentMethod updatePaymentMethod(@PathVariable int id, @RequestBody PaymentMethod paymentMethodDetails) {
         PaymentMethod paymentMethod = paymentMethodRepo.findById(id).orElse(null);
         if (paymentMethod != null) {
             paymentMethod.setCardNumber(paymentMethodDetails.getCardNumber());
@@ -48,7 +48,7 @@ public class PaymentMethodController {
 
     // Delete a payment method
     @DeleteMapping("/{id}")
-    public void deletePaymentMethod(@PathVariable Long id) {
+    public void deletePaymentMethod(@PathVariable int id) {
         paymentMethodRepo.deleteById(id);
     }
 }

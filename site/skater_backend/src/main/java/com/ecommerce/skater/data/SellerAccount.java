@@ -23,8 +23,9 @@ public class SellerAccount {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "account_id", nullable = false)
-    private Integer accountId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "company_name", nullable = false, length = 50)
     private String companyName;

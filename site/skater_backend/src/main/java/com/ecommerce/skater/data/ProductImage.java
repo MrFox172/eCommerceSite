@@ -23,8 +23,9 @@ public class ProductImage {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
