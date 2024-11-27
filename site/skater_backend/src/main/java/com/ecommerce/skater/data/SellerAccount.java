@@ -1,5 +1,7 @@
 package com.ecommerce.skater.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class SellerAccount {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonManagedReference
     private Account account;
 
     @Column(name = "company_name", nullable = false, length = 50)

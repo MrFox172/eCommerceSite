@@ -1,5 +1,6 @@
 package com.ecommerce.skater.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -27,6 +28,7 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_account_id", referencedColumnName = "id")
+    @JsonBackReference
     private SellerAccount sellerAccount;
 
     @Column(name = "name", nullable = false, length = 50)
@@ -43,6 +45,7 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonBackReference
     private Category category;
 
     @Column(name = "tags", nullable = false, length = 500)

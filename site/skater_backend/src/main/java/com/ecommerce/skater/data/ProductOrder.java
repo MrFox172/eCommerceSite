@@ -1,5 +1,6 @@
 package com.ecommerce.skater.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,10 +25,12 @@ public class ProductOrder {
 
     @ManyToOne
     @JoinColumn(name = "account_order_id")
+    @JsonBackReference
     private AccountOrder accountOrder;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonBackReference
     private Product product;
 
     @Column(name = "quantity", nullable = false)
