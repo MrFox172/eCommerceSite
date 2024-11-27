@@ -45,7 +45,7 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonManagedReference
     private Category category;
 
     @Column(name = "tags", nullable = false, length = 500)
