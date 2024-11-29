@@ -37,7 +37,10 @@ public class Account {
     @JsonManagedReference
     private List<Address> addresses = new ArrayList<>();
 
-
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "account_id")
+    @JsonManagedReference
+    private SellerAccount sellerAccount;
 
     public Account() {
     }

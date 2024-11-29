@@ -27,7 +27,7 @@ public class SellerAccount {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonBackReference
     private Account account;
 
     @Column(name = "company_name", nullable = false, length = 50)
