@@ -40,8 +40,8 @@ public class Product {
     @Column(name = "price", nullable = false, length = 50)
     private String price;
 
-    @Column(name = "max_quantity", nullable = false, length = 50)
-    private String maxQuantity;
+    @Column(name = "stock_on_hand", nullable = false)
+    private int stockOnHand;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")

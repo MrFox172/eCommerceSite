@@ -1,5 +1,6 @@
 package com.ecommerce.skater.controller;
 
+import com.ecommerce.skater.data.Category;
 import com.ecommerce.skater.data.Product;
 import com.ecommerce.skater.repository.CategoryRepo;
 import com.ecommerce.skater.repository.ProductRepo;
@@ -7,6 +8,7 @@ import com.ecommerce.skater.repository.SellerAccountRepo;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.ecommerce.skater.dto.ProductDto;
 
 import java.util.List;
 
@@ -27,8 +29,19 @@ public class ProductController {
     // create a new product
     @Operation(summary = "Create a new Product", description = "Creates a new product")
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productRepo.save(product);
+    public Product createProduct(@RequestBody ProductDto product) {
+        Product newProduct = new Product();
+        newProduct.setName(product.name());
+        newProduct.setDescription(product.description());
+        newProduct.setPrice(product.price());
+        newProduct.setStockOnHand(product.stockOnHand());
+
+        var category = categoryRepo.findById(product.categoryId()).orElse(null);
+        newProduct.setCategory(category);
+
+        newProduct.setTags(product.tags());
+
+        return productRepo.save(newProduct);
     }
 
     // get a product by id
@@ -53,7 +66,7 @@ public class ProductController {
             product.setName(productDetails.getName());
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
-            product.setMaxQuantity(productDetails.getMaxQuantity());
+            product.setStockOnHand(productDetails.getStockOnHand());
             product.setTags(productDetails.getTags());
             return productRepo.save(product);
         }
@@ -103,7 +116,7 @@ public class ProductController {
     // get all product categories
     @Operation(summary = "Get All Product Categories", description = "Returns a list of all product categories")
     @GetMapping("/categories")
-    public List<String> getAllProductCategories() {
-        return categoryRepo.findAll().stream().map(category -> category.getName()).toList();
+    public List<Category> getAllProductCategories() {
+        return categoryRepo.findAll();
     }
 }
