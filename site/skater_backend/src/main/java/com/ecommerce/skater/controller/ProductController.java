@@ -7,6 +7,8 @@ import com.ecommerce.skater.repository.ProductRepo;
 import com.ecommerce.skater.repository.SellerAccountRepo;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ecommerce.skater.dto.ProductDto;
 
@@ -29,19 +31,24 @@ public class ProductController {
     // create a new product
     @Operation(summary = "Create a new Product", description = "Creates a new product")
     @PostMapping
-    public Product createProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDto product) {
         Product newProduct = new Product();
         newProduct.setName(product.name());
         newProduct.setDescription(product.description());
         newProduct.setPrice(product.price());
         newProduct.setStockOnHand(product.stockOnHand());
+        newProduct.setTags(product.tags());
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
         newProduct.setCategory(category);
 
-        newProduct.setTags(product.tags());
-
-        return productRepo.save(newProduct);
+        var seller = sellerAccountRepo.findById(product.sellerAccountId()).orElse(null);
+        newProduct.setSellerAccount(seller);
+        try {
+            return new ResponseEntity<Product>(productRepo.save(newProduct), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // get a product by id
