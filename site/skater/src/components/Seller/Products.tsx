@@ -162,7 +162,7 @@ const Products = () => {
     console.log("Product Name: ", product);
 
     axios
-      .post("http://localhost:8080/api/product", {
+      .post("https://www.thelowerorbit.com:8080/api/product", {
         name: product.name,
         description: product.description,
         price: product.price,
@@ -202,7 +202,7 @@ const Products = () => {
     e.preventDefault();
     console.log("Product Name: ", product);
 
-    axios.put(`http://localhost:8080/api/product/${product.id}`,{
+    axios.put(`https://www.thelowerorbit.com:8080/api/product/${product.id}`,{
       name: product.name,
       description: product.description,
       price: product.price,
@@ -235,7 +235,7 @@ const Products = () => {
     }
 
     axios
-      .delete(`http://localhost:8080/api/product/${e.target.id}`)
+      .delete(`https://www.thelowerorbit.com:8080/api/product/${e.target.id}`)
       .then((response) => {
         console.log(response.data);
         if (response.status === 200) {
@@ -283,7 +283,7 @@ const Products = () => {
     formData.set("productId", product.id.toString());
 
     axios
-      .post("http://localhost:8080/api/product/images", formData, {
+      .post("https://www.thelowerorbit.com:8080/api/product/images", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => {
