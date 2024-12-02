@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "seller_account_id", referencedColumnName = "id")
     @JsonBackReference
     private SellerAccount sellerAccount;
@@ -43,7 +43,7 @@ public class Product {
     @Column(name = "stock_on_hand", nullable = false)
     private int stockOnHand;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @JsonManagedReference
     private Category category;

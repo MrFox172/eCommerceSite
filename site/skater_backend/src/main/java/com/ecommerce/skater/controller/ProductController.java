@@ -2,9 +2,12 @@ package com.ecommerce.skater.controller;
 
 import com.ecommerce.skater.data.Category;
 import com.ecommerce.skater.data.Product;
+import com.ecommerce.skater.data.ProductImage;
+import com.ecommerce.skater.dto.ProductImageUpload;
 import com.ecommerce.skater.repository.CategoryRepo;
 import com.ecommerce.skater.repository.ProductRepo;
 import com.ecommerce.skater.repository.SellerAccountRepo;
+import com.ecommerce.skater.service.FileUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,9 @@ public class ProductController {
 
     @Autowired
     private CategoryRepo categoryRepo;
+
+    @Autowired
+    private FileUploadService fileService;
 
     // create a new product
     @Operation(summary = "Create a new Product", description = "Creates a new product")
@@ -67,17 +73,28 @@ public class ProductController {
 
     // update a product
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable int id, @RequestBody Product productDetails) {
-        Product product = productRepo.findById(id).orElse(null);
-        if (product != null) {
-            product.setName(productDetails.getName());
-            product.setDescription(productDetails.getDescription());
-            product.setPrice(productDetails.getPrice());
-            product.setStockOnHand(productDetails.getStockOnHand());
-            product.setTags(productDetails.getTags());
-            return productRepo.save(product);
+    public ResponseEntity<Product>  updateProduct(@PathVariable int id, @RequestBody ProductDto productDetails) {
+
+        try {
+            Product product = productRepo.findById(id).orElse(null);
+            if (product == null) {
+                return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+            }
+
+            product.setName(productDetails.name());
+            product.setDescription(productDetails.description());
+            product.setPrice(productDetails.price());
+            product.setStockOnHand(productDetails.stockOnHand());
+            product.setTags(productDetails.tags());
+
+            var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
+            product.setCategory(category);
+
+            var updatedProduct = productRepo.save(product);
+            return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     // delete a product
@@ -125,5 +142,18 @@ public class ProductController {
     @GetMapping("/categories")
     public List<Category> getAllProductCategories() {
         return categoryRepo.findAll();
+    }
+
+    @PostMapping(value="/images", consumes = "multipart/form-data")
+    public ResponseEntity<Product> uploadFile(@ModelAttribute ProductImageUpload upload) {
+
+        try {
+            fileService.uploadFile(upload);
+            var product = productRepo.findById(upload.productId()).orElse(null);
+            return new ResponseEntity<Product>(product, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

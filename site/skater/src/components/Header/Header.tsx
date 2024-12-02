@@ -9,19 +9,16 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const Header: React.FC = (user) => {
-  const [userLinksUrl, setUserLinksUrl] = useState<string>("/login");
-  const [userLinksText, setUserLinksText] = useState<string>("Login");
+const Header = (props: {localUser: string, setLocalUser: (() => void) }) => {
+  const [isLogged, setIsLogged] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user !== null) {
-      setUserLinksUrl("/logout");
-      setUserLinksText("Logout");
+    if (props.localUser !== "") {
+      setIsLogged(true);
     } else {
-      setUserLinksUrl("/login");
-      setUserLinksText("Login");
+      setIsLogged(false);
     }
-  }, [user]);
+  }, [props.localUser]);
 
   return (
     <>
@@ -53,7 +50,14 @@ const Header: React.FC = (user) => {
               </NavDropdown>
             </Nav>
             <Nav>
-              <Nav.Link href={userLinksUrl}>{userLinksText}</Nav.Link>
+              {(isLogged) ? (
+                <>
+                  <Nav.Link href="/account">Account</Nav.Link>
+                  <Nav.Link href="/logout">Logout</Nav.Link>
+                </>
+              ): (
+                <Nav.Link href="/login">Login</Nav.Link>
+              )}
               <Nav.Link eventKey={2} href="#memes">
                 Cart
               </Nav.Link>

@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ChangeEvent, useState} from "react";
 import { Col, Container, Row, Card, Form, Button } from "react-bootstrap";
 
-const Login = () => {
+const Login = (props) => {
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (props.localUser !== "") {
+            navigate("/");
+        }
+    }, [props.localUser, navigate]);
 
     const [userLogin, setUserLogin] = useState({
             email: "", 
@@ -36,8 +42,7 @@ const Login = () => {
                 console.log("Invalid login credentials");
                 return;
             }
-
-            localStorage.setItem('user', JSON.stringify(response.data));
+            props.setLocalUser(JSON.stringify(response.data));
             navigate("/");
 
         }).catch((error) => {

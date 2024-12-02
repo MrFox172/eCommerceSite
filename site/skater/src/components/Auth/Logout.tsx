@@ -2,18 +2,15 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-const Logout = () => {
+const Logout = (props) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
   useEffect(() => {
-    setTimeout(() => {
-      handleLogout();
-    }, 3000);
+    const handleLogout = () => {
+      props.setLocalUser("");
+      navigate("/");
+    };
+    handleLogout();
   }, []);
 
   return (
