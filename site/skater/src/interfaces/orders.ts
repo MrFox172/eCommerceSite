@@ -11,5 +11,3 @@ interface Order {
   orderTotal: number;
   status: string;
 }
-
-interface OrderDetailed {}

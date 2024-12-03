@@ -25,11 +25,11 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
 
   const handleSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-  }
+  };
 
   const handleSearchSubmit = () => {
-      if(search === "") return;
-      navigate(`/search/${search}`);
+    if (search === "") return;
+    navigate(`/search/${search}`);
   };
 
   return (
@@ -45,7 +45,7 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
               <Nav.Link href="/skateboards">Skateboards</Nav.Link>
               <Nav.Link href="/skates">Skates</Nav.Link>
               <Nav.Link href="/shoes">Shoes</Nav.Link>
-              <Nav.Link href="/apperal">Apperal</Nav.Link>
+              <Nav.Link href="/apparel">Apparel</Nav.Link>
               <Nav.Link href="/accessories">Accessories</Nav.Link>
               <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -72,7 +72,12 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
                   value={search}
                   onChange={handleSearchOnChange}
                 />
-                <Button type="submit" variant="success" size="sm" className="m-0 px-3 rounded-0">
+                <Button
+                  type="submit"
+                  variant="success"
+                  size="sm"
+                  className="m-0 px-3 rounded-0"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
