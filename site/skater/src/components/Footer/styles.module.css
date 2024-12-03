@@ -7,3 +7,63 @@
   bottom: 0;
   width: 100%;
 }
+
+.top {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 0px;
+  background-color: #333;
+}
+
+.button {
+  margin: 0px;
+  width: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: #333;
+  border-color: #fff;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #333;
+  border-color: #333;
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.bottom div {
+  text-align: center;
+  padding: 10px;
+  gap: 20px;
+}
+
+.left {
+  grid-column: 1;
+}
+
+.middle {
+  grid-column: 2 / span 2;
+}
+
+.right {
+  grid-column: 4;
+}
+
+.right span {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+
+.right span a {
+  flex-direction: row;
+}
+
+.icon {
+  font-size: 2rem;
+}
