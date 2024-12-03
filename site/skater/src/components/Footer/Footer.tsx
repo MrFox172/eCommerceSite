@@ -40,15 +40,29 @@ const Footer: React.FC = () => {
         </div>
         <div className={styles.right}>
           <h4>Follow Us</h4>
-          <a href="https://www.facebook.com">
-            <FontAwesomeIcon icon={faFacebook} />
-          </a>
-          <a href="https://www.instagram.com">
-            <FontAwesomeIcon icon={faInstagram} />
-          </a>
-          <a href="https://www.twitter.com">
-            <FontAwesomeIcon icon={faTwitter} />
-          </a>
+          <span>
+            <a href="https://www.facebook.com">
+              <FontAwesomeIcon
+                icon={faFacebook}
+                className={styles.icon}
+                size="lg"
+              />
+            </a>
+            <a href="https://www.instagram.com">
+              <FontAwesomeIcon
+                icon={faInstagram}
+                className={styles.icon}
+                size="lg"
+              />
+            </a>
+            <a href="https://www.twitter.com">
+              <FontAwesomeIcon
+                icon={faTwitter}
+                className={styles.icon}
+                size="lg"
+              />
+            </a>
+          </span>
         </div>
       </div>
     </footer>
