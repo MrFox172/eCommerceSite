@@ -15,6 +15,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import { Route, Routes } from "react-router-dom";
 
 import { useState } from "react";
+import Search from "./components/Search/Search";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -45,6 +46,7 @@ function App() {
           </Route>
           <Route path="/cart" Component={Home} />
           <Route path="/register" Component={Register} />
+          <Route path="/search/:keyword" element={<Search />} />
         </Routes>
       </div>
       <Footer />

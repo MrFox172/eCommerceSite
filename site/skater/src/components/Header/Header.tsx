@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import { Form, Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -9,8 +10,10 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const Header = (props: {localUser: string, setLocalUser: (() => void) }) => {
+const Header = (props: { localUser: string; setLocalUser: () => void }) => {
+  const navigate = useNavigate();
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     if (props.localUser !== "") {
@@ -19,6 +22,15 @@ const Header = (props: {localUser: string, setLocalUser: (() => void) }) => {
       setIsLogged(false);
     }
   }, [props.localUser]);
+
+  const handleSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  }
+
+  const handleSearchSubmit = () => {
+      if(search === "") return;
+      navigate(`/search/${search}`);
+  };
 
   return (
     <>
@@ -50,12 +62,35 @@ const Header = (props: {localUser: string, setLocalUser: (() => void) }) => {
               </NavDropdown>
             </Nav>
             <Nav>
-              {(isLogged) ? (
+              <Form className="d-flex mx-4 w-100" onSubmit={handleSearchSubmit}>
+                <Form.Control
+                  type="search"
+                  placeholder="Search for products"
+                  className="rounded-0 w-100"
+                  aria-label="Search"
+                  id="searchkeyword"
+                  value={search}
+                  onChange={handleSearchOnChange}
+                />
+                <Button type="submit" variant="success" size="sm" className="m-0 px-3 rounded-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-search"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                  </svg>
+                </Button>
+              </Form>
+              {isLogged ? (
                 <>
                   <Nav.Link href="/account">Account</Nav.Link>
                   <Nav.Link href="/logout">Logout</Nav.Link>
                 </>
-              ): (
+              ) : (
                 <Nav.Link href="/login">Login</Nav.Link>
               )}
               <Nav.Link eventKey={2} href="#memes">
