@@ -9,6 +9,7 @@ public record ProductDto(
         int stockOnHand,
         int categoryId,
         String tags,
-        int sellerAccountId
+        int sellerAccountId,
+        String brand
 ) {
 }

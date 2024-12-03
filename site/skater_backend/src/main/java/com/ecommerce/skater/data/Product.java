@@ -40,6 +40,9 @@ public class Product {
     @Column(name = "price", nullable = false, length = 50)
     private String price;
 
+    @Column(name = "brand", nullable = false, length = 50)
+    private String brand;
+
     @Column(name = "stock_on_hand", nullable = false)
     private int stockOnHand;
 

@@ -44,6 +44,7 @@ public class ProductController {
         newProduct.setPrice(product.price());
         newProduct.setStockOnHand(product.stockOnHand());
         newProduct.setTags(product.tags());
+        newProduct.setBrand(product.brand());
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
         newProduct.setCategory(category);
@@ -86,6 +87,7 @@ public class ProductController {
             product.setPrice(productDetails.price());
             product.setStockOnHand(productDetails.stockOnHand());
             product.setTags(productDetails.tags());
+            product.setBrand(productDetails.brand());
 
             var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
             product.setCategory(category);
