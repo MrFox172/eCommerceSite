@@ -158,4 +158,15 @@ public class ProductController {
             return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String keyword) {
+        return productRepo.findBySearchKeyword(keyword);
+    }
+
+    @GetMapping("/brands")
+    public List<String> getAllBrands() {
+        return productRepo.findAllBrands();
+    }
+
 }
