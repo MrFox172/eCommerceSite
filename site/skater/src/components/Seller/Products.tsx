@@ -6,7 +6,6 @@ import {
   InputGroup,
   Button,
   Card,
-  ListGroupItem,
   ListGroup,
   Modal,
   Alert,
@@ -18,59 +17,20 @@ import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import SellerProductCard from "./ProductCard";
 import { useFetch } from "../../hooks/useFetch";
-
-interface iProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  stockOnHand: number;
-  category: {
-    id: number;
-    name: string;
-    createdate: string;
-  };
-  productImages: [
-    {
-      id: number;
-      name: string;
-      imageUrl: string;
-      createdate: string;
-    }
-  ];
-  tags: string;
-  createdate: string;
-}
-
-interface Account {
-  id: number;
-  firstname: string;
-  lastname: string;
-  emailaddress: string;
-  phonenumber: string;
-  createdate: string;
-  sellerAccount: {
-    id: number;
-    accountId: number;
-    companyName: string;
-    createdate: string;
-  };
-}
-
-interface iCategory {
-  id: number;
-  name: string;
-  createdate: string;
-}
+import { Account as IAccount } from "../../interfaces/user";
+import { Product as IProduct, Category as ICategory } from "../../interfaces/products";
 
 const Products = () => {
-  const [user, setUser] = useState<Account>({
+
+  const [user, setUser] = useState<IAccount>({
     id: 0,
     firstname: "",
     lastname: "",
     emailaddress: "",
     phonenumber: "",
     createdate: "",
+    addresses: [],
+    password: "",
     sellerAccount: {
       id: 0,
       accountId: 0,
@@ -78,11 +38,13 @@ const Products = () => {
       createdate: "",
     },
   });
-  const defaultProduct: iProduct = {
+
+  const defaultProduct: IProduct = {
     id: 0,
     name: "",
     description: "",
     price: "",
+    brand: "",
     stockOnHand: 0,
     category: {
       id: 0,
@@ -100,11 +62,11 @@ const Products = () => {
     tags: "",
     createdate: "",
   };
-  const context: Account = useOutletContext();
-  const [product, setProduct] = useState<iProduct>(defaultProduct);
+  const context: IAccount = useOutletContext();
+  const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [saveMsg, setSaveMsg] = useState<string>("");
-  const [sellerProducts, setSellerProducts] = useState<Array<iProduct>>([]);
-  const [categories, setCategories] = useState<iCategory[]>([]);
+  const [sellerProducts, setSellerProducts] = useState<Array<IProduct>>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [url, setUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -118,8 +80,6 @@ const Products = () => {
   }, [context]);
 
   const { data, isPending, error } = useFetch(url);
-
-  //const [ cdata, cisPending, cerror ] = useFetch(`/product/categories`);
 
   useEffect(() => {
     console.log("Data: ", data);
@@ -155,7 +115,7 @@ const Products = () => {
     setShow(true);
   };
 
-  const handleProductSubmit = (e) => {
+  const handleProductSubmit = (e: React.SyntheticEvent) => {
     console.log("Product Submitted");
     e.preventDefault();
 
@@ -185,20 +145,27 @@ const Products = () => {
       });
   };
 
-  const handleProductInput = (e) => {
-    const value: (typeof product)[keyof typeof product] = e.target.value;
+  const handleOnChangeSelect = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLSelectElement;
+    
+    const category = categories.find((category) => {
+        return category.name === target.value ? category : null;
+    });
 
-    if (e.target.id === "category" && e.target.value !== "Select Category") {
-      const category = categories.find((category) => {
-        return category.name === e.target.value ? category : null;
-      });
-      setProduct({ ...product, [e.target.id]: category });
-      return;
-    }
-    setProduct({ ...product, [e.target.id]: value });
+    setProduct({ ...product, [target.id]: category });
+    return;
+  }
+
+  const handleOnChangeInput = (e: React.SyntheticEvent) => {
+
+    const target = e.target as HTMLInputElement;
+
+    const value: (typeof product)[keyof typeof product] = target.value;
+
+    setProduct({ ...product, [target.id]: value });
   };
 
-  const handleProductUpdateSubmit = (e) => {
+  const handleProductUpdateSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     console.log("Product Name: ", product);
 
@@ -226,7 +193,8 @@ const Products = () => {
       });
   };
 
-  const handleProductDelete = (e) => {
+  const handleProductDelete = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLButtonElement;
 
     const confirmBox = window.confirm("Do you really want to delete this Product?");
 
@@ -235,11 +203,11 @@ const Products = () => {
     }
 
     axios
-      .delete(`https://www.thelowerorbit.com:8080/api/product/${e.target.id}`)
+      .delete(`https://www.thelowerorbit.com:8080/api/product/${target.id}`)
       .then((response) => {
         console.log(response.data);
         if (response.status === 200) {
-          setSellerProducts(sellerProducts.filter((product) => product.id !== e.target.id));
+          setSellerProducts(sellerProducts.filter((product) => product.id !== Number(target.id)));
         }
         setSaveMsg("Product deleted successfully...");
       })
@@ -250,28 +218,29 @@ const Products = () => {
 
   };
 
-  const handleProductImageUploadSubmit = (e) => {
+  const handleProductImageUploadSubmit = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLFormElement;
     e.preventDefault();
     setSaveMsg("");
     setIsLoading(true);
     console.log("Product Name: ", product);
 
-    if (e.target.formFile.files.length === 0) {
+    if (target.formFile.files.length === 0) {
       setSaveMsg("No image selected...");
       setIsLoading(false);
       return;
     }
 
-    if (e.target.formFile.files[0].size > 5000000) {
+    if (target.formFile.files[0].size > 5000000) {
       setSaveMsg("Image size too large...");
       setIsLoading(false);
       return;
     }
 
     if (
-      e.target.formFile.files[0].type !== "image/jpeg" &&
-      e.target.formFile.files[0].type !== "image/png" &&
-      e.target.formFile.files[0].type !== "image/jpg"
+      target.formFile.files[0].type !== "image/jpeg" &&
+      target.formFile.files[0].type !== "image/png" &&
+      target.formFile.files[0].type !== "image/jpg"
     ) {
       setSaveMsg("Invalid image format..., image must be jpeg, jpg or png");
       setIsLoading(false);
@@ -279,7 +248,7 @@ const Products = () => {
     }
 
     const formData = new FormData();
-    formData.set("file", e.target.formFile.files[0]);
+    formData.set("file", target.formFile.files[0]);
     formData.set("productId", product.id.toString());
 
     axios
@@ -299,7 +268,7 @@ const Products = () => {
               return product;
             }
           }));
-          e.target.formFile.value = null;
+          target.formFile.value = null;
           setProduct(response.data);
         }
       })
@@ -323,6 +292,8 @@ const Products = () => {
       </Row>
       <Row>
         <Col>
+          {isPending && <div>Loading...</div>}
+          {error && <div>{error}</div>}
           <ListGroup className="mt-2 p-0">
             {sellerProducts &&
               sellerProducts.map((product) => (
@@ -359,7 +330,7 @@ const Products = () => {
                   type="text"
                   placeholder="Enter product name"
                   id="name"
-                  onChange={handleProductInput}
+                  onChange={handleOnChangeInput}
                   value={product?.name}
                   required
                   size="sm"
@@ -373,7 +344,7 @@ const Products = () => {
                   type="text"
                   placeholder="Enter product description"
                   id="description"
-                  onChange={handleProductInput}
+                  onChange={handleOnChangeInput}
                   value={product?.description}
                   required
                   size="sm"
@@ -384,14 +355,14 @@ const Products = () => {
               <FormGroup as={Col} md="4">
                 <Form.Label>Sale Price (USD):</Form.Label>
                 <InputGroup size="sm">
-                  <InputGroup.Text id="inputGroupPrepend" size="sm">
+                  <InputGroup.Text id="inputGroupPrepend">
                     $
                   </InputGroup.Text>
                   <Form.Control
                     type="text"
                     placeholder="99.99"
                     id="price"
-                    onChange={handleProductInput}
+                    onChange={handleOnChangeInput}
                     value={product?.price}
                     required
                     size="sm"
@@ -404,7 +375,7 @@ const Products = () => {
                   type="text"
                   placeholder="00000000"
                   id="stockOnHand"
-                  onChange={handleProductInput}
+                  onChange={handleOnChangeInput}
                   value={product?.stockOnHand}
                   required
                   size="sm"
@@ -418,7 +389,7 @@ const Products = () => {
                   aria-label="Select Category"
                   id="category"
                   required
-                  onChange={handleProductInput}
+                  onChange={handleOnChangeSelect}
                   size="sm"
                 >
                   <option>Select Category</option>
@@ -441,7 +412,7 @@ const Products = () => {
                   type="text"
                   placeholder="tag1, tag2"
                   id="tags"
-                  onChange={handleProductInput}
+                  onChange={handleOnChangeInput}
                   value={product?.tags}
                   size="sm"
                 />
@@ -456,7 +427,6 @@ const Products = () => {
                   <Button
                     variant="success"
                     type="submit"
-                    onChange={handleProductInput}
                     size="sm"
                   >
                     Add Product
@@ -465,7 +435,6 @@ const Products = () => {
                   <Button
                     variant="success"
                     type="submit"
-                    onChange={handleProductInput}
                     size="sm"
                   >
                     Update Product Info

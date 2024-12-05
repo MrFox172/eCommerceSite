@@ -20,6 +20,13 @@ interface Login {
   password: string;
 }
 
+interface SellerAccount {
+  id: number;
+  accountId: number;
+  companyName: string;
+  createdate: string;
+};
+
 interface Account {
   id: number;
   firstname: string;
@@ -29,5 +36,7 @@ interface Account {
   phonenumber: string;
   createdate: string;
   addresses: Address[];
-  sellerAccount: string;
+  sellerAccount: SellerAccount;
 }
+
+export type { Address, Register, Login, SellerAccount, Account };

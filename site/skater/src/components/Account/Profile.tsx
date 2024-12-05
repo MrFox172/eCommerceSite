@@ -1,39 +1,12 @@
 import { Col, Row, Form, InputGroup, Button } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-interface Account {
-  id: number;
-  firstname: string;
-  lastname: string;
-  emailaddress: string;
-  phonenumber: string;
-  createdate: string;
-  sellerAccount: {
-    id: number;
-    accountId: number;
-    companyName: string;
-    createdate: string;
-  };
-}
+import { Account as IAccount } from "../../interfaces/user";
 
 const Profile = () => {
   const rowStyle = "mb-3";
-  const [account, setAccount] = useState<Account>({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    emailaddress: "",
-    phonenumber: "",
-    createdate: "",
-    sellerAccount: {
-      id: 0,
-      accountId: 0,
-      companyName: "",
-      createdate: "",
-    },
-  });
-  const context: Account = useOutletContext();
+  const [account, setAccount] = useState<IAccount>({} as IAccount);
+  const context: IAccount = useOutletContext();
   
   useEffect(() => {
     setAccount(context);
@@ -47,11 +20,9 @@ const Profile = () => {
             <Form.Label>ID:</Form.Label>
             <Form.Control
               type="text"
-              value={account?.id}
+              value={account?.id || ""}
               disabled
-              onChange={(e) => {
-                return e.target.value;
-              }}
+              readOnly={true}
             />
           </Form.Group>
         </Row>
@@ -62,10 +33,8 @@ const Profile = () => {
               required
               type="text"
               placeholder="First name"
-              value={account?.firstname}
-              onChange={(e) => {
-                return e.target.value;
-              }}
+              value={account?.firstname || ""}
+              onChange={(e) => setAccount({ ...account, firstname: e.target.value })}
             />
           </Form.Group>
           <Form.Group as={Col} md="6">
@@ -74,10 +43,8 @@ const Profile = () => {
               required
               type="text"
               placeholder="Last name"
-              value={account?.lastname}
-              onChange={(e) => {
-                return e.target.value;
-              }}
+              value={account?.lastname || ""}
+              onChange={(e) => setAccount({ ...account, lastname: e.target.value })}
             />
           </Form.Group>
         </Row>
@@ -90,11 +57,9 @@ const Profile = () => {
                 type="text"
                 placeholder="Email Address"
                 aria-describedby="inputGroupPrepend"
-                value={account?.emailaddress}
+                value={account?.emailaddress || ""}
                 required
-                onChange={(e) => {
-                  return e.target.value;
-                }}
+                onChange={(e) => setAccount({ ...account, emailaddress: e.target.value })}
               />
             </InputGroup>
           </Form.Group>
@@ -106,11 +71,9 @@ const Profile = () => {
                 type="text"
                 placeholder="Phone Number"
                 aria-describedby="inputGroupPrepend"
-                value={account?.phonenumber}
+                value={account?.phonenumber || ""}
                 required
-                onChange={(e) => {
-                  return e.target.value;
-                }}
+                onChange={(e) => setAccount({ ...account, phonenumber: e.target.value })}
               />
             </InputGroup>
           </Form.Group>
@@ -143,6 +106,9 @@ const Profile = () => {
                 type="password"
                 placeholder="New Password"
                 required
+                onChange={(e) => {
+                  return e.target.value;
+                }}
               />
             </Form.Group>
             <Form.Group as={Col} md="6">
@@ -151,6 +117,9 @@ const Profile = () => {
                 type="password"
                 placeholder="Confirm Password"
                 required
+                onChange={(e) => {
+                  return e.target.value;
+                }}
               />
             </Form.Group>
             <Button variant="success" type="submit" className="mt-5 m-3 w-25">

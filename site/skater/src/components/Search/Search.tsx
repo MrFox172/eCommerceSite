@@ -4,6 +4,7 @@ import { useFetch } from "../../hooks/useFetch";
 import styles from "./styles.module.css";
 import img from '../../assets/img-placeholder.svg';
 import { useEffect } from "react";
+import { Product as IProduct } from "../../interfaces/products";
 
 const Search = () => {
 
@@ -38,8 +39,8 @@ const Search = () => {
                         <div className={styles.grid}>
                         {isPending && <div>Loading...</div>}
                         {error && <div>{error}</div>}
-                        {data && data.map((product) => (
-                            <Card className="p-2">
+                        {data && data.map((product: IProduct) => (
+                            <Card className="p-2" key={product.id}>
                                 <Card.Img variant="top" className={styles.image_holder} src={img}/>
                                 <hr />
                                 <Card.Body className="p-2">

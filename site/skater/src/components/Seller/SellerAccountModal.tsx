@@ -2,27 +2,15 @@ import { Button, Modal } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Terms from "./Terms";
+import { Account as IAccount } from "../../interfaces/user";
 
-interface Account {
-  id: number;
-  firstname: string;
-  lastname: string;
-  emailaddress: string;
-  phonenumber: string;
-  createdate: string;
-  sellerAccount: {
-    id: number;
-    accountId: number;
-    companyName: string;
-    createdate: string;
-  };
-}
+const SellerAccountModal = (props: {account: IAccount | null, setShowSellerOptions, setShow, show, handleShow }) => {
 
-const SellerAccountModal = (props) => {
   const handleAgreeClose = () => {
     createSellerAccount(props.account, props.setShowSellerOptions);
     props.setShow(false);
   };
+
   const handleClose = () => props.setShow(false);
 
   return (
@@ -55,7 +43,7 @@ const SellerAccountModal = (props) => {
 export default SellerAccountModal;
 
 const createSellerAccount = (
-  account: Account,
+  account: IAccount | null,
   setShowSellerOptions: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   if (account !== null) {

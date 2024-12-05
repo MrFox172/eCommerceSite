@@ -11,6 +11,8 @@ import com.ecommerce.skater.repository.ProductOrderRepo;
 import com.ecommerce.skater.repository.ProductRepo;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -128,6 +130,15 @@ public class OrderController {
             return accountOrderRepo.findById(id).orElse(null);
         }
         return null;
+    }
+
+    @GetMapping("/account/{accountId}")
+    public List<AccountOrder> getOrdersByAccount(@PathVariable int accountId) {
+        var account = accountRepo.findById(accountId).orElse(null);
+        if (account == null) {
+            return new ResponseEntity<List<AccountOrder>>(HttpStatus.BAD_REQUEST).getBody();
+        }
+        return accountOrderRepo.findByAccount(account);
     }
 
 }
