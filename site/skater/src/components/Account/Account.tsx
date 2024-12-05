@@ -4,28 +4,12 @@ import { useState, useEffect} from "react";
 import { AccountMenu } from "./AccountMenu";
 import SellerAccountModal from "../Seller/SellerAccountModal";
 import { useFetch } from "../../hooks/useFetch";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { Account as IAccount } from "../../interfaces/user";
 
-interface Account {
-  id: number;
-  firstname: string;
-  lastname: string;
-  emailaddress: string;
-  phonenumber: string;
-  createdate: string;
-  sellerAccount: {
-    id: number;
-    accountId: number;
-    companyName: string;
-    createdate: string;
-  };
-}
-
-const Account = (props) => {
+const Account = (props : {localUser: string, setLocalUser: () => void}) => {
   const navigate = useNavigate();
-  const [localUser, setLocalUser] = useLocalStorage("user", "");
   const [activeTab, setActiveTab] = useState("");
-  const [account, setAccount] = useState<Account>();
+  const [account, setAccount] = useState<IAccount | null>(null);
   const [showSellerOptions, setShowSellerOptions] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
 
@@ -34,13 +18,13 @@ const Account = (props) => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    if (localUser === "") {
+    if (props.localUser === "") {
       navigate("/login");
     }
-    setUrl(`/account/${JSON.parse(localUser).id}`)
-  }, [localUser, navigate]);
+    setUrl(`/account/${JSON.parse(props.localUser).id}`)
+  }, [props.localUser, navigate]);
 
-  const { data, isPending, error } = useFetch(url);
+  const { data } = useFetch(url);
 
   useEffect(() => {
     if (data) {

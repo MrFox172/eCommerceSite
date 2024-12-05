@@ -1,10 +1,11 @@
 import { ListGroup, Button } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Account as IAccount } from "../../interfaces/user";
 
 export const AccountMenu = (props: {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-  account;
+  account: IAccount | null;
   showSellerOptions: boolean;
   setShowSellerOptions: React.Dispatch<React.SetStateAction<boolean>>;
   handleShow: () => void;

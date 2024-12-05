@@ -1,25 +1,11 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-interface Account {
-    id: number;
-    firstname: string;
-    lastname: string;
-    emailaddress: string;
-    phonenumber: string;
-    createdate: string;
-    sellerAccount: {
-      id: number;
-      accountId: number;
-      companyName: string;
-      createdate: string;
-    };
-  }
+import { Account as IAccount } from "../../interfaces/user";
 
 const Payments = () => {
 
-    const [account, setAccount] = useState<Account>();
-    const context: Account = useOutletContext();
+    const [account, setAccount] = useState<IAccount>();
+    const context: IAccount = useOutletContext();
     console.log(account);
 
     useEffect(() => {
