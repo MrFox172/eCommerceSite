@@ -3,13 +3,11 @@ package com.ecommerce.skater.controller;
 import com.ecommerce.skater.data.Account;
 import com.ecommerce.skater.data.AccountOrder;
 import com.ecommerce.skater.data.Address;
-import com.ecommerce.skater.dto.AccountLogin;
-import com.ecommerce.skater.dto.AccountSignUp;
-import com.ecommerce.skater.dto.AddressDto;
-import com.ecommerce.skater.dto.PasswordDto;
+import com.ecommerce.skater.dto.*;
 import com.ecommerce.skater.repository.AccountOrderRepo;
 import com.ecommerce.skater.repository.AccountRepo;
 import com.ecommerce.skater.repository.AddressRepo;
+import com.ecommerce.skater.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/account")
@@ -53,11 +52,18 @@ public class AccountController {
 
     @Operation(summary = "Looks up account by Email and Password", description = "Returns an account by email and password")
     @PostMapping("/login")
-    public Account authenticateAccount(@RequestBody AccountLogin account) {
-        System.out.println(account.emailaddress());
-        System.out.println(account.password());
+    public ResponseEntity authenticateAccount(@RequestBody AccountLogin account) {
+        Account signin = accountRepo.findOneByEmailaddressAndPassword(account.emailaddress(), account.password());
 
-        return accountRepo.findOneByEmailaddressAndPassword(account.emailaddress(), account.password());
+        if (signin == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        if(!signin.isVerified()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(signin, HttpStatus.OK);
     }
 
     @Operation(summary = "Create Account", description = "Creates a new account")
@@ -68,14 +74,40 @@ public class AccountController {
 
     @Operation(summary = "Register/Signup New Account", description = "Creates a new account")
     @PostMapping("/register")
-    public Account createAccount(@RequestBody AccountSignUp accountSignUp) {
+    public ResponseEntity createAccount(@RequestBody AccountSignUp accountSignUp) {
+
+        Account existingAccount = accountRepo.findOneByEmailaddress(accountSignUp.emailaddress());
+        System.out.println(existingAccount);
+        if (existingAccount != null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        UUID uuid = UUID.randomUUID();
+
         Account account = new Account();
         account.setFirstname(accountSignUp.firstname());
         account.setLastname(accountSignUp.lastname());
         account.setEmailaddress(accountSignUp.emailaddress());
         account.setPhonenumber(accountSignUp.phonenumber());
         account.setPassword(accountSignUp.password());
-        return accountRepo.save(account);
+        account.setVerified(false);
+        account.setVerificationToken(uuid.toString());
+
+        Account newAccount = accountRepo.save(account);
+        emailService.sendVerificationEmail(accountSignUp.emailaddress(), uuid.toString(), newAccount.getId());
+
+        return new ResponseEntity(newAccount, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Verify Account", description = "Verifies an account")
+    @GetMapping("{id}/verify/{token}")
+    public ResponseEntity verifyAccount(@PathVariable int id, @PathVariable String token) {
+        Account account = accountRepo.findOneByIdAndVerificationToken(id, token);
+        if (account == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        account.setVerified(true);
+        accountRepo.save(account);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     // get orders by account id
@@ -162,6 +194,16 @@ public class AccountController {
         }
         account.setPassword(password.newPassword());
         return new ResponseEntity(accountRepo.save(account),HttpStatus.OK);
+    }
+
+    @Autowired
+    private EmailService emailService;
+
+    @PostMapping("/email")
+    public ResponseEntity sendEmail(@RequestBody EmailDto email) {
+        emailService.sendEmail(email.to(), email.subject(), email.text());
+        //emailService.sendVerificationEmail(email.to(), "12234567890");
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

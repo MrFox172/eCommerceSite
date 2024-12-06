@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Account as IAccount } from "../../interfaces/user";
 import axios from "axios";
 import Password from "./Password";
+import Address from "./Address";
 
 const Profile = () => {
   const rowStyle = "mb-3";
@@ -137,6 +138,7 @@ const Profile = () => {
           </Col>
         </Row>
       </Form>
+      <Address account={account} setAccount={setAccount} />
       <Password account={account} setAccount={setAccount} />
     </>
   );

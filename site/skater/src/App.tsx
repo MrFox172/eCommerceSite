@@ -9,7 +9,6 @@ import Account from "./components/Account/Account";
 import SellerProducts from "./components/Seller/Products";
 import Profile from "./components/Account/Profile";
 import Orders from "./components/Account/Orders";
-import Address from "./components/Account/Address";
 import Payments from "./components/Account/Payments";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { Route, Routes } from "react-router-dom";
@@ -18,6 +17,7 @@ import SellApparel from "./components/SellApparel/SellApparel";
 import SellAccessories from "./components/SellAccessories/SellAccessories";
 import SellShoes from "./components/SellShoes/SellShoes";
 import SellSkates from "./components/SellSkates/SellSkates";
+import Verify from "./components/Auth/Verify";
 
 import { useState } from "react";
 import Search from "./components/Search/Search";
@@ -63,12 +63,12 @@ function App() {
             <Route path="/account/profile" element={<Profile />} />
             <Route path="/account/seller" element={<SellerProducts />} />
             <Route path="/account/orders" Component={Orders} />
-            <Route path="/account/address" Component={Address} />
             <Route path="/account/payments" Component={Payments} />
           </Route>
           <Route path="/cart" Component={Home} />
-          <Route path="/register" Component={Register} />
+          <Route path="/register" element={<Register localUser={localUser} setLocalUser={setLocalUser} />} />
           <Route path="/search/:keyword" element={<Search />} />
+          <Route path="/:id/verify/:token" element={<Verify />} />
         </Routes>
       </div>
       <Footer />
