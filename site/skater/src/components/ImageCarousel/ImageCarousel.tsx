@@ -2,12 +2,20 @@ import React from "react";
 import styles from "./styles.module.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+import ProductSalesCard from "../ProductSalesCard/ProductSalesCard";
+
+interface Product {
+  name: string;
+  price: string;
+  description?: string;
+}
+
 interface CarouselProps {
-  images: string[]; // Array of image URLs
+  products: Product[]; // Array of products corresponding to images
   background?: string; // Background image URL
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images, background }) => {
+const Carousel: React.FC<CarouselProps> = ({ products, background }) => {
   const carouselStyle = background
     ? { backgroundImage: `url(${background})`, backgroundSize: "cover" }
     : {};
@@ -20,18 +28,17 @@ const Carousel: React.FC<CarouselProps> = ({ images, background }) => {
       style={carouselStyle}
     >
       <div className={`carousel-inner ${styles.carouselInner}`}>
-        {images.map((image, index) => (
+        {products.map((product, index) => (
           <div
             className={`carousel-item ${index === 0 ? "active" : ""} ${
               styles.carouselItem
             }`}
             key={index}
           >
-            <img
-              src={image}
-              className={`d-block ${styles.crazyImg}`}
-              alt={`Slide ${index + 1}`}
-            />
+
+            <div className={styles.fixedCardSize}>
+              <ProductSalesCard {...product} />
+            </div>
           </div>
         ))}
       </div>
