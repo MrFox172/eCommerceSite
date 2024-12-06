@@ -257,7 +257,8 @@ const Products = () => {
     if (
       target.formFile.files[0].type !== "image/jpeg" &&
       target.formFile.files[0].type !== "image/png" &&
-      target.formFile.files[0].type !== "image/jpg"
+      target.formFile.files[0].type !== "image/jpg" &&
+      target.formFile.files[0].type !== "image/webp"
     ) {
       setSaveMsg("Invalid image format..., image must be jpeg, jpg or png");
       setIsLoading(false);
