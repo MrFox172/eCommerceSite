@@ -15,11 +15,9 @@ const Home: React.FC = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <h1>Welcome to the Home Page</h1>
+        <h1>Shop Apparel, Skateboards, and Accessories</h1>
         <p>
-          This is a simple React application that uses React Router to navigate
-          between pages. The application is created using create-react-app and
-          uses TypeScript for type checking.
+          Top brands and the latest styles in clothing, skateboards, and skating accessories
         </p>
       </Container>
     </>
