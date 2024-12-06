@@ -1,11 +1,10 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { useFetch } from "../../hooks/useFetch";
 import styles from "./styles.module.css";
-import img from "../../assets/img-placeholder.svg";
 import { useEffect } from "react";
 import { Product as IProduct } from "../../interfaces/products";
+import ProductCard from "../ProductCard/ProductCard";
 
 interface FixedSearchProps {
   searchTerm: string;
@@ -42,31 +41,7 @@ const FixedSearch: React.FC<FixedSearchProps> = ({ searchTerm }) => {
               {error && <div>{error}</div>}
               {data &&
                 data.map((product: IProduct) => (
-                  <Card className="p-2" key={product.id}>
-                    <Card.Img
-                      variant="top"
-                      className={styles.image_holder}
-                      src={img}
-                    />
-                    <hr />
-                    <Card.Body className="p-2">
-                      <div>
-                        <strong>{product.brand}</strong>
-                        <br />
-                        {product.name}
-                        <br />
-                        <br />
-                        {product.description}
-                        <br />
-                        <strong>
-                          <h2 className="my-3">${product.price}</h2>
-                        </strong>
-                        <Button variant="warning" size="sm">
-                          Add to cart
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
+                  <ProductCard key={product.id} {...product} />
                 ))}
             </div>
           </Col>
