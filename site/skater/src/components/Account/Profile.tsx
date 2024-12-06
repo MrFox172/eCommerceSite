@@ -24,7 +24,7 @@ const Profile = () => {
     setProfileLoading(true);
 
     axios
-      .put(`http://localhost:8080/api/account/${account.id}`, {
+      .put(`https://www.thelowerorbit.com:8080/api/account/${account.id}`, {
         id: account.id,
         firstname: account.firstname,
         lastname: account.lastname,

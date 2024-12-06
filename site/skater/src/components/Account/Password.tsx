@@ -30,7 +30,7 @@ const Password = (props: {
     setSubmitMsg("");
     setPasswordLoading(true);
     axios
-      .put(`http://localhost:8080/api/account/${props.account.id}/password`, {
+      .put(`https://www.thelowerorbit.com:8080/api/account/${props.account.id}/password`, {
         oldPassword: oldPassword,
         newPassword: newPassword,
       })
