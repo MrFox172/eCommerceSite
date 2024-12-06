@@ -23,6 +23,7 @@ interface Product {
   tags: string; //consider changing to array on server side.
   createdate: string;
   productImages: ProductImage[];
+  onSale: boolean;
 }
 
 export type { Product, Category, ProductImage };
