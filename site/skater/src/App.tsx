@@ -22,7 +22,7 @@ import Verify from "./components/Auth/Verify";
 import { useState } from "react";
 import Search from "./components/Search/Search";
 
-import CartManager from "./interfaces/cartManager";
+import { CartManager } from "./interfaces/cartManager";
 
 function App() {
   const [cart, setCart] = useState([]);
