@@ -12,17 +12,20 @@ import Orders from "./components/Account/Orders";
 import Payments from "./components/Account/Payments";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { Route, Routes } from "react-router-dom";
-import SellSkateboards from "./components/SellSkateboards/SellSkateboards";
-import SellApparel from "./components/SellApparel/SellApparel";
-import SellAccessories from "./components/SellAccessories/SellAccessories";
-import SellShoes from "./components/SellShoes/SellShoes";
-import SellSkates from "./components/SellSkates/SellSkates";
 import Verify from "./components/Auth/Verify";
+
+import SkateboardBG from "./assets/SkateboardCarouselBackdrop.png";
+import SkateBG from "./assets/SkatesCarouselBackdrop.png";
+import ShoeBG from "./assets/ShoesCarouselBackdrop.png";
+import ApparelBG from "./assets/ApparelCarouselBackdrop.png";
+import AccessoriesBG from "./assets/AccessoriesCarouselBackdrop.png";
 
 import { useState } from "react";
 import Search from "./components/Search/Search";
 
 import { CartManager } from "./interfaces/cartManager";
+
+import SellProductsPage from "./components/SellProductsPage/SellProductsPage";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -37,11 +40,42 @@ function App() {
         <Routes>
           <Route path="/" Component={Home} />
           <Route path="/home" Component={Home} />
-          <Route path="/skateboards" Component={SellSkateboards} />
-          <Route path="/skates" Component={SellSkates} />
-          <Route path="/shoes" Component={SellShoes} />
-          <Route path="/apparel" Component={SellApparel} />
-          <Route path="/accessories" Component={SellAccessories} />
+          <Route
+            path="/skateboards"
+            element={
+              <SellProductsPage
+                searchTerm={"Skateboard"}
+                background={SkateboardBG}
+              />
+            }
+          />
+          <Route
+            path="/skates"
+            element={
+              <SellProductsPage searchTerm={"Skates"} background={SkateBG} />
+            }
+          />
+          <Route
+            path="/shoes"
+            element={
+              <SellProductsPage searchTerm={"Shoes"} background={ShoeBG} />
+            }
+          />
+          <Route
+            path="/apparel"
+            element={
+              <SellProductsPage searchTerm={"Apperal"} background={ApparelBG} />
+            }
+          />
+          <Route
+            path="/accessories"
+            element={
+              <SellProductsPage
+                searchTerm={"Accessories"}
+                background={AccessoriesBG}
+              />
+            }
+          />
           <Route
             path="/login"
             element={
@@ -66,7 +100,12 @@ function App() {
             <Route path="/account/payments" Component={Payments} />
           </Route>
           <Route path="/cart" Component={Home} />
-          <Route path="/register" element={<Register localUser={localUser} setLocalUser={setLocalUser} />} />
+          <Route
+            path="/register"
+            element={
+              <Register localUser={localUser} setLocalUser={setLocalUser} />
+            }
+          />
           <Route path="/search/:keyword" element={<Search />} />
           <Route path="/:id/verify/:token" element={<Verify />} />
         </Routes>
