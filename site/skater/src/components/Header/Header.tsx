@@ -10,6 +10,8 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useEffect } from "react";
 import { useState } from "react";
 
+import logoImage from "../../assets/SKATERLogoSmall.png";
+
 const Header = (props: { localUser: string; setLocalUser: () => void }) => {
   const navigate = useNavigate();
   const [isLogged, setIsLogged] = useState<boolean>(false);
@@ -37,7 +39,8 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
       <Navbar bg="light" data-bs-theme="light">
         <Container fluid className="px-5">
           <Navbar.Brand href="/" className="fw-bold">
-            SKATER.COM
+            <img src={logoImage} className={styles.icon}/>
+            KATER.COM
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">

@@ -6,3 +6,9 @@
   background-color: #333;
   color: white;
 }
+
+.icon {
+  width: 3rem;
+  display: inline-block;
+  margin-right: -0.75rem;
+}
