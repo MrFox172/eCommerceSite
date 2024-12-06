@@ -1,10 +1,18 @@
-import React, { ChangeEvent, useState } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import logoImage from "../../assets/SKATERLogoSmall.png";
+import styles from "./styles.module.css";
 
-const CreateUser = () => {
+const Register = (props) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (props.localUser !== "") {
+        navigate("/");
+    }
+}, [props.localUser, navigate]);
 
   const [state, setState] = useState({
     firstname: "",
@@ -14,6 +22,11 @@ const CreateUser = () => {
     password: "",
   });
 
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
+  const [firstname, setFirstname] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const onFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value: (typeof state)[keyof typeof state] = event.target.value;
 
@@ -22,11 +35,13 @@ const CreateUser = () => {
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(state);
+    setInvalidEmail(false);
+    setRegistrationComplete(false);
+    setIsLoading(true);
 
     axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
     axios
-      .post("https://thelowerorbit.com:8080/api/account/register", {
+      .post("https://www.thelowerorbit.com:8080/api/account/register", {
         firstname: state.firstname,
         lastname: state.lastname,
         emailaddress: state.email,
@@ -34,17 +49,20 @@ const CreateUser = () => {
         password: state.password,
       })
       .then((response) => {
-        console.log("Registration successful");
-        console.log(response.data);
-        if (response.data === null || response.data === "") {
-          console.log("Invalid registration credentials");
-          return;
-        }
-        localStorage.setItem("user", JSON.stringify(response.data));
-        navigate("/");
+
+        setRegistrationComplete(true);
+        setFirstname(response.data.firstname);
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 400) {
+          console.log("Email already exists!!");
+          setInvalidEmail(true);
+          return;
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -53,12 +71,26 @@ const CreateUser = () => {
       <Container className="p-5 text-auto me-auto justify-content-center">
         <Row className="justify-content-center text-center">
           <Col lg={6}>
-            <h1 className="fw-bold text-secondary-emphasis">SKATER.COM</h1>
+            <h1 className="fw-bold text-secondary-emphasis"><img src={logoImage} className={styles.icon}/>KATER.COM</h1>
+            {!registrationComplete && (
             <Card className="round text-start">
               <Card.Header className="text-center bg-dark bg-gradient text-white p-3">
                 <h4>Register Account</h4>
               </Card.Header>
               <Card.Body>
+                <Alert variant={'info'}>
+                Welcome to Skater.com! 🛹 <br /><br />
+                Join the ultimate skateboarding community. Register now to access exclusive gear, insider deals, and the latest skate trends.
+                <br /><br />
+                Why Sign Up?<br />
+                  •	Fast and secure checkout<br />
+                  •	Track your orders easily<br />
+                  •	Get access to special offers<br />
+                  •	Stay up to date on the latest skate trends<br />
+                
+                  <br />
+                Ready to shred? Create your account in seconds! 🤘
+                </Alert>
                 <Form className="text-left" onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
                     <Form.Label>First Name</Form.Label>
@@ -110,11 +142,35 @@ const CreateUser = () => {
                     />
                   </Form.Group>
                   <Button variant="success" type="submit">
-                    Register
+                    {isLoading ? (
+                <div
+                  className="spinner-border spinner-border-sm text-light"
+                  role="status"
+                ></div>
+              ) : (
+                "Register"
+              )}
                   </Button>
+                  {invalidEmail && (
+                    <div className="alert alert-danger mt-3" role="alert">
+                      Email already exists!!! Please try again.
+                    </div>
+                  )}
                 </Form>
               </Card.Body>
             </Card>
+            )}
+            {registrationComplete && (
+              <Alert variant={'info'}>
+                <h2>Thanks {firstname}!</h2> <br />
+                <h4>Your Registration is now Complete</h4>
+                <p>
+                  Your account has been successfully created. 
+                  <br />
+                  Please check your email for a confirmation link.
+                </p>
+              </Alert>
+            )}
           </Col>
         </Row>
       </Container>
@@ -122,4 +178,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default Register;

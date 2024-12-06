@@ -1,6 +1,7 @@
 package com.ecommerce.skater.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -25,11 +26,25 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String firstname;
+
     private String lastname;
+
     private String emailaddress;
+
+    @JsonIgnore
     private String password;
+
     private String phonenumber;
+
+    @Column(name = "is_verified")
+    private boolean isVerified;
+
+    @JsonIgnore
+    @Column(name = "verification_token")
+    private String verificationToken;
+
     @CreatedDate
     private Timestamp createdate;
 

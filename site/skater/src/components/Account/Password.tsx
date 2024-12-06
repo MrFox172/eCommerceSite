@@ -66,7 +66,6 @@ const Password = (props: {
             <Form.Label>Old Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Old Password"
               required
               onChange={handleOldPasswordOnChange}
               value={oldPassword || ""}
@@ -77,7 +76,6 @@ const Password = (props: {
             <Form.Label>New Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="New Password"
               required
               onChange={handleNewPasswordOnChange}
               value={newPassword || ""}
