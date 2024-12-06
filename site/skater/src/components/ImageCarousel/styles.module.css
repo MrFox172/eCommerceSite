@@ -9,7 +9,7 @@
   background-size: cover; /* Ensures the background scales proportionally */
   background-position: center; /* Keeps the focus on the center of the image */
   background-repeat: no-repeat; /* Prevents tiling */
-  aspect-ratio: 1920 / 300; /* Maintains the aspect ratio */
+  aspect-ratio: 1920 / 600; /* Maintains the aspect ratio */
   width: 100%; /* Makes the carousel responsive */
   max-width: 1920px; /* Optional: limits the width to the original image size */
   margin: auto; /* Centers the carousel horizontally */
@@ -38,6 +38,7 @@
   transform: scale(1.1) rotate(-5deg);
   filter: hue-rotate(0deg) brightness(1.5);
 }
+
 button.crazy-btn {
   background: #000000; /* Solid black background */
   border: 3px solid #ffffff; /* White border for high contrast */

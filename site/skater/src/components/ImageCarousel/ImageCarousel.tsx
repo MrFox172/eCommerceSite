@@ -4,14 +4,20 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 interface CarouselProps {
   images: string[]; // Array of image URLs
+  background?: string; // Background image URL
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images }) => {
+const Carousel: React.FC<CarouselProps> = ({ images, background }) => {
+  const carouselStyle = background
+    ? { backgroundImage: `url(${background})`, backgroundSize: "cover" }
+    : {};
+
   return (
     <div
       id="carouselExampleAutoplaying"
       className={`carousel slide ${styles.carousel}`}
       data-bs-ride="carousel"
+      style={carouselStyle}
     >
       <div className={`carousel-inner ${styles.carouselInner}`}>
         {images.map((image, index) => (
