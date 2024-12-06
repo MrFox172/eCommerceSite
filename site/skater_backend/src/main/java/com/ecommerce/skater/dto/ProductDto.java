@@ -10,6 +10,7 @@ public record ProductDto(
         int categoryId,
         String tags,
         int sellerAccountId,
-        String brand
+        String brand,
+        String salePrice
 ) {
 }
