@@ -66,6 +66,7 @@ const Account = (props : {localUser: string, setLocalUser: () => void}) => {
       </Container>
       <SellerAccountModal
         account={account}
+        setAccount={setAccount}
         setShowSellerOptions={setShowSellerOptions}
         show={show}
         setShow={setShow}
