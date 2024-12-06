@@ -22,7 +22,7 @@ const SellerAccountModal = (props: {account: IAccount | null, setAccount, setSho
     if (account !== null) {
       axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
       axios
-        .post(`http://localhost:8080/api/seller/account`, {
+        .post(`https://www.thelowerorbit.com:8080/api/seller/account`, {
           accountId: account?.id,
           companyName: `${account?.firstname} ${account?.lastname}`,
         })

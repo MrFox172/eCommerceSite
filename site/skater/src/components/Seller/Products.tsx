@@ -97,7 +97,7 @@ const Products = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/product/categories")
+      .get("https://www.thelowerorbit.com:8080/api/product/categories")
       .then((response) => {
         setCategories(response.data);
       })
@@ -127,7 +127,7 @@ const Products = () => {
     console.log("Product Name: ", product);
 
     axios
-      .post("http://localhost:8080/api/product", {
+      .post("https://www.thelowerorbit.com:8080/api/product", {
         name: product.name,
         brand: product.brand,
         description: product.description,
