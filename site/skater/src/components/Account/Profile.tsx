@@ -2,19 +2,52 @@ import { Col, Row, Form, InputGroup, Button } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Account as IAccount } from "../../interfaces/user";
+import axios from "axios";
+import Password from "./Password";
 
 const Profile = () => {
   const rowStyle = "mb-3";
   const [account, setAccount] = useState<IAccount>({} as IAccount);
+  const [profileMsg, setProfileMsg] = useState<string>("");
+  const [profileLoading, setProfileLoading] = useState<boolean>(false);
   const context: IAccount = useOutletContext();
-  
+
+  axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+
   useEffect(() => {
     setAccount(context);
   }, [context]);
 
+  const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setProfileMsg("");
+    setProfileLoading(true);
+
+    axios
+      .put(`http://localhost:8080/api/account/${account.id}`, {
+        id: account.id,
+        firstname: account.firstname,
+        lastname: account.lastname,
+        emailaddress: account.emailaddress,
+        phonenumber: account.phonenumber,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAccount(res.data);
+        setProfileMsg("Profile updated successfully!");
+      })
+      .catch((err) => {
+        console.log(err);
+        setProfileMsg("Profile update failed!!");
+      })
+      .finally(() => {
+        setProfileLoading(false);
+      });
+  };
+
   return (
     <>
-      <Form className="border rounded p-4">
+      <Form className="border rounded p-4" onSubmit={handleProfileSubmit}>
         <Row className={rowStyle}>
           <Form.Group as={Col} md="4">
             <Form.Label>ID:</Form.Label>
@@ -34,7 +67,9 @@ const Profile = () => {
               type="text"
               placeholder="First name"
               value={account?.firstname || ""}
-              onChange={(e) => setAccount({ ...account, firstname: e.target.value })}
+              onChange={(e) =>
+                setAccount({ ...account, firstname: e.target.value })
+              }
             />
           </Form.Group>
           <Form.Group as={Col} md="6">
@@ -44,7 +79,9 @@ const Profile = () => {
               type="text"
               placeholder="Last name"
               value={account?.lastname || ""}
-              onChange={(e) => setAccount({ ...account, lastname: e.target.value })}
+              onChange={(e) =>
+                setAccount({ ...account, lastname: e.target.value })
+              }
             />
           </Form.Group>
         </Row>
@@ -59,75 +96,48 @@ const Profile = () => {
                 aria-describedby="inputGroupPrepend"
                 value={account?.emailaddress || ""}
                 required
-                onChange={(e) => setAccount({ ...account, emailaddress: e.target.value })}
+                onChange={(e) =>
+                  setAccount({ ...account, emailaddress: e.target.value })
+                }
               />
             </InputGroup>
           </Form.Group>
           <Form.Group as={Col} md="6">
             <Form.Label>Phone Number</Form.Label>
-            <InputGroup>
-              <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Phone Number"
-                aria-describedby="inputGroupPrepend"
-                value={account?.phonenumber || ""}
-                required
-                onChange={(e) => setAccount({ ...account, phonenumber: e.target.value })}
-              />
-            </InputGroup>
+            <Form.Control
+              type="text"
+              placeholder="Phone Number"
+              aria-describedby="inputGroupPrepend"
+              value={account?.phonenumber || ""}
+              required
+              onChange={(e) =>
+                setAccount({ ...account, phonenumber: e.target.value })
+              }
+            />
           </Form.Group>
         </Row>
         <Row className={rowStyle}>
           <Form.Group as={Col} md="6">
-            User Created At: {account?.createdate}
+            User Created At: {new Date(account?.createdate).toLocaleString()}
           </Form.Group>
         </Row>
-        <Row className="justify-content-end">
-        <Col md={4} className="justify-content-end text-end">
-        <Button variant="success" type="submit" size="sm">
-          Save
-        </Button>
-        </Col>
+        <Row className="justify-content-end border-top">
+          <Col md={6} className="justify-content-end text-end">
+            <p className="msg text-danger py-2">{profileMsg}</p>
+            <Button variant="success" type="submit" size="sm">
+              {profileLoading ? (
+                <div
+                  className="spinner-border spinner-border-sm text-light"
+                  role="status"
+                ></div>
+              ) : (
+                "Save"
+              )}
+            </Button>
+          </Col>
         </Row>
       </Form>
-      <div className="pt-5">
-        <h4>Security</h4>
-        <hr />
-        <Form>
-          <Row>
-            <div className="alert alert-warning mx-3 p-5" role="alert">
-              You can change your password here. Please make sure to use a
-              strong password.
-            </div>
-            <Form.Group as={Col} md="6">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="New Password"
-                required
-                onChange={(e) => {
-                  return e.target.value;
-                }}
-              />
-            </Form.Group>
-            <Form.Group as={Col} md="6">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm Password"
-                required
-                onChange={(e) => {
-                  return e.target.value;
-                }}
-              />
-            </Form.Group>
-            <Button variant="success" type="submit" className="mt-5 m-3 w-25">
-              Change Password
-            </Button>
-          </Row>
-        </Form>
-      </div>
+      <Password account={account} setAccount={setAccount} />
     </>
   );
 };

@@ -133,12 +133,12 @@ public class OrderController {
     }
 
     @GetMapping("/account/{accountId}")
-    public List<AccountOrder> getOrdersByAccount(@PathVariable int accountId) {
+    public ResponseEntity<List<AccountOrder>> getOrdersByAccount(@PathVariable int accountId) {
         var account = accountRepo.findById(accountId).orElse(null);
         if (account == null) {
-            return new ResponseEntity<List<AccountOrder>>(HttpStatus.BAD_REQUEST).getBody();
+            return new ResponseEntity<List<AccountOrder>>(HttpStatus.BAD_REQUEST);
         }
-        return accountOrderRepo.findByAccount(account);
+        return new ResponseEntity<List<AccountOrder>>(accountOrderRepo.findByAccount(account), HttpStatus.OK);
     }
 
 }
