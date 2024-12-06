@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const baseUrl = 'https://www.thelowerorbit.com:8080/api';
-axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+const baseUrl = "https://www.thelowerorbit.com:8080/api";
+axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
 export const useFetch = (url: string) => {
-
-    const [data, setData] = useState(null);
-    const [isPending, setIsPending] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
       const fetchData = async () => {

@@ -91,3 +91,9 @@ button.crazy-btn:hover .crazy-icon {
   margin: 0 auto; /* Centers the image */
   display: block; /* Eliminates inline spacing issues */
 }
+
+.fixedCardSize {
+  margin-top: 1rem;
+  margin-left:10%;
+  width: 80%;
+}
