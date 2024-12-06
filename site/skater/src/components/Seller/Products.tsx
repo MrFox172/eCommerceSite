@@ -17,7 +17,7 @@ import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import SellerProductCard from "./ProductCard";
 import { useFetch } from "../../hooks/useFetch";
-import { Account as IAccount } from "../../interfaces/user";
+import { Account as IAccount, SellerAccount } from "../../interfaces/user";
 import { Product as IProduct, Category as ICategory } from "../../interfaces/products";
 
 const Products = () => {
@@ -70,28 +70,36 @@ const Products = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [url, setUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [sellerAccount, setSellerAccount] = useState<SellerAccount | null>(null);
+  const [isPending, setIsPending] = useState<boolean>(true);
 
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 
-  console.log(context);
+  console.log("Products",context);
+
+  const { data } = useFetch(`/seller/account/${context?.id}`);
 
   useEffect(() => {
-    const checkurl = () => {
-      setUser(context);
-      if (context.sellerAccount !== undefined && context.sellerAccount !== null) {
-        setUrl(`/product/seller/${context?.sellerAccount?.id}`);
-      } else {
-        setUrl("");
-      }
-    };
-    checkurl();
-  }, [context]);
-
-  const { data, isPending, error } = useFetch(url);
+    setUser(context);
+    if(data) {
+      setSellerAccount(data);
+      setUrl(`/product/seller/${sellerAccount?.id}`);
+    }
+  }, [data]);
 
   useEffect(() => {
-    if (data) {
-      setSellerProducts(data);
+    setIsPending(false);
+    if (sellerAccount) {
+      axios
+        .get(`https://www.thelowerorbit.com:8080/api/product/seller/${sellerAccount?.id}`)
+        .then((response) => {
+          console.log(response.data);
+          setSellerProducts(response.data);
+          setIsPending(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [data]);
 
