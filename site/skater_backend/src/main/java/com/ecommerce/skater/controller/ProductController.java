@@ -45,6 +45,7 @@ public class ProductController {
         newProduct.setStockOnHand(product.stockOnHand());
         newProduct.setTags(product.tags());
         newProduct.setBrand(product.brand());
+        newProduct.setSalePrice(product.salePrice());
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
         newProduct.setCategory(category);
@@ -88,6 +89,7 @@ public class ProductController {
             product.setStockOnHand(productDetails.stockOnHand());
             product.setTags(productDetails.tags());
             product.setBrand(productDetails.brand());
+            product.setSalePrice(productDetails.salePrice());
 
             var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
             product.setCategory(category);
@@ -146,6 +148,21 @@ public class ProductController {
         return categoryRepo.findAll();
     }
 
+    @Operation(summary = "Get Products by Tag that are on sale", description = "Returns a list of products by tag")
+    @GetMapping("/tag/{tag}/sale")
+    public List<Product> getProductsOnSaleByTag(@PathVariable String tag) {
+        return productRepo.findByTagsContaining(tag).stream().filter(Product::isOnSale).toList();
+    }
+
+    // get all products by category name
+    @Operation(summary = "Get Products by Category Name that are on sale", description = "Returns a list of products by category name")
+    @GetMapping("/category/name/{categoryName}/sale")
+    public List<Product> getProductsOnSaleByCategoryName(@PathVariable String categoryName) {
+        var category = categoryRepo.findByNameIgnoreCase(categoryName).orElse(null);
+
+        return productRepo.findByCategory(category).stream().filter(Product::isOnSale).toList();
+    }
+
     @PostMapping(value="/images", consumes = "multipart/form-data")
     public ResponseEntity<Product> uploadFile(@ModelAttribute ProductImageUpload upload) {
 
@@ -168,5 +185,7 @@ public class ProductController {
     public List<String> getAllBrands() {
         return productRepo.findAllBrands();
     }
+
+
 
 }
