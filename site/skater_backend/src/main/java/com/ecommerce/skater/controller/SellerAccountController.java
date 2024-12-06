@@ -1,5 +1,6 @@
 package com.ecommerce.skater.controller;
 
+import com.ecommerce.skater.data.Account;
 import com.ecommerce.skater.data.SellerAccount;
 import com.ecommerce.skater.dto.SellerAccountSignup;
 import com.ecommerce.skater.repository.AccountRepo;
@@ -68,7 +69,7 @@ public class SellerAccountController {
     }
 
     @PostMapping("/account")
-    public SellerAccount createSellerAccount(@RequestBody SellerAccountSignup sellerAccountSignUp) {
+    public Account createSellerAccount(@RequestBody SellerAccountSignup sellerAccountSignUp) {
 
         var account = accountRepo.findById(sellerAccountSignUp.accountId()).orElse(null);
         if (account == null) {
@@ -77,6 +78,8 @@ public class SellerAccountController {
         SellerAccount sellerAccount = new SellerAccount();
         sellerAccount.setAccount(account);
         sellerAccount.setCompanyName(sellerAccountSignUp.companyName());
-        return sellerAccountRepo.save(sellerAccount);
+
+        account.setSellerAccount(sellerAccount);
+        return accountRepo.save(account);
     }
 }
