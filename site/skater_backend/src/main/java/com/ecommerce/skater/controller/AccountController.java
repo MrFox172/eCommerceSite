@@ -6,11 +6,14 @@ import com.ecommerce.skater.data.Address;
 import com.ecommerce.skater.dto.AccountLogin;
 import com.ecommerce.skater.dto.AccountSignUp;
 import com.ecommerce.skater.dto.AddressDto;
+import com.ecommerce.skater.dto.PasswordDto;
 import com.ecommerce.skater.repository.AccountOrderRepo;
 import com.ecommerce.skater.repository.AccountRepo;
 import com.ecommerce.skater.repository.AddressRepo;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -133,6 +136,32 @@ public class AccountController {
         }
         account.removeAddress(address);
         return accountRepo.save(account);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable int id, @RequestBody Account accountDetails) {
+        Account account = accountRepo.findById(id).orElse(null);
+        if (account == null) {
+            return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
+        }
+        account.setFirstname(accountDetails.getFirstname());
+        account.setLastname(accountDetails.getLastname());
+        account.setEmailaddress(accountDetails.getEmailaddress());
+        account.setPhonenumber(accountDetails.getPhonenumber());
+        return new ResponseEntity<Account>(accountRepo.save(account), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity updateAccountPassword(@PathVariable int id, @RequestBody PasswordDto password) {
+        Account account = accountRepo.findById(id).orElse(null);
+        if (account == null) {
+            return new ResponseEntity("Account not found",HttpStatus.BAD_REQUEST);
+        }
+        if (!account.getPassword().equals(password.oldPassword())) {
+            return new ResponseEntity("Old password does not match!!",HttpStatus.BAD_REQUEST);
+        }
+        account.setPassword(password.newPassword());
+        return new ResponseEntity(accountRepo.save(account),HttpStatus.OK);
     }
 
 }
