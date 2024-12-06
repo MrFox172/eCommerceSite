@@ -5,19 +5,28 @@
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(255, 0, 122, 0.6);
   animation: crazy-border 6s infinite linear;
+  background-image: url("src/assets/SkateboardCarouselBackdrop.png");
+  background-size: cover; /* Ensures the background scales proportionally */
+  background-position: center; /* Keeps the focus on the center of the image */
+  background-repeat: no-repeat; /* Prevents tiling */
+  aspect-ratio: 1920 / 300; /* Maintains the aspect ratio */
+  width: 100%; /* Makes the carousel responsive */
+  max-width: 1920px; /* Optional: limits the width to the original image size */
+  margin: auto; /* Centers the carousel horizontally */
 }
+
 @keyframes crazy-border {
   0% {
-    border-color: #ff007a;
+    border-color: #f3f1f2;
   }
   33% {
-    border-color: #7a00ff;
+    border-color: #f7f6f8;
   }
   66% {
-    border-color: #00ff7a;
+    border-color: #f7f7f7;
   }
   100% {
-    border-color: #ff007a;
+    border-color: #f7f4f5;
   }
 }
 .crazy img {
@@ -26,41 +35,58 @@
 }
 
 .crazy-img:hover {
-    transform: scale(1.1) rotate(-5deg);
-    filter: hue-rotate(0deg) brightness(1.5);
-  }
-  .crazy-btn {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid #ff007a;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease-in-out;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-  }
-  .carousel-control-prev {
-    left: 10px;
-  }.carousel-control-next {
-    right: 10px;
-  }
-  
- 
-  .crazy-icon {
-    filter: invert(100%) brightness(2);
-    transition: transform 0.3s ease;
-  }
+  transform: scale(1.1) rotate(-5deg);
+  filter: hue-rotate(0deg) brightness(1.5);
+}
+button.crazy-btn {
+  background: #000000; /* Solid black background */
+  border: 3px solid #ffffff; /* White border for high contrast */
+  border-radius: 50%;
+  width: 60px; /* Button size */
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer; /* Pointer cursor for better UX */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for depth */
+}
 
-  .crazy-btn:hover .crazy-icon {
-    transform: rotate(360deg);
-  }
-  
- 
-  .carousel-inner {
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-  }
+button.crazy-btn:hover {
+  background: #ff007a; /* Bright pink background on hover */
+  border-color: #ff007a; /* Matches the hover background */
+  color: #ffffff; /* Ensures text/icons are always visible */
+}
+
+button.crazy-btn .crazy-icon {
+  filter: invert(100%) brightness(1.5); /* Bright white icons */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+button.crazy-btn:hover .crazy-icon {
+  transform: rotate(360deg);
+  filter: invert(0%) brightness(2); /* Slightly brighter for hover effect */
+}
+
+.carousel-control-prev {
+  left: 20px; /* Positions the left button */
+}
+
+.carousel-control-next {
+  right: 20px; /* Positions the right button */
+}
+
+.carousel-inner {
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.crazyImg {
+  width: 15%; /* Takes up full width of its container */
+  height: auto; /* Maintains aspect ratio */
+  margin: 0 auto; /* Centers the image */
+  display: block; /* Eliminates inline spacing issues */
+}

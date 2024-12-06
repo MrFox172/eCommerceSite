@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./styles.module.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 interface CarouselProps {
   images: string[]; // Array of image URLs
@@ -22,7 +23,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
           >
             <img
               src={image}
-              className={`d-block w-25 ${styles.crazyImg}`}
+              className={`d-block ${styles.crazyImg}`}
               alt={`Slide ${index + 1}`}
             />
           </div>
