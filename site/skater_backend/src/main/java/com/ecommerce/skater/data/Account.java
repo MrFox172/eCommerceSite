@@ -54,7 +54,7 @@ public class Account {
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "account_id")
-    @JsonManagedReference
+    @JsonBackReference
     private SellerAccount sellerAccount;
 
     public Account() {

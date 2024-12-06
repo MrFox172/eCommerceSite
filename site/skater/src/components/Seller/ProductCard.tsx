@@ -35,6 +35,9 @@ const SellerProductCard = (props: {
                 <strong>Price:</strong> ${props.sellerProduct.price}
               </Card.Text>
               <Card.Text className="my-1">
+                <strong>Sale Price:</strong> ${props.sellerProduct.salePrice}
+              </Card.Text>
+              <Card.Text className="my-1">
                 <strong>Stock on Hand:</strong>{" "}
                 {props.sellerProduct.stockOnHand}
               </Card.Text>

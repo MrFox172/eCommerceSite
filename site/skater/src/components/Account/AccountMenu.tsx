@@ -1,7 +1,9 @@
 import { ListGroup, Button } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Account as IAccount } from "../../interfaces/user";
+import axios from "axios";
+import { useFetch } from "../../hooks/useFetch";
 
 export const AccountMenu = (props: {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -10,16 +12,28 @@ export const AccountMenu = (props: {
   setShowSellerOptions: React.Dispatch<React.SetStateAction<boolean>>;
   handleShow: () => void;
 }) => {
+  axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
   const navigate = useNavigate();
-  const accountMenuList = ["Profile", "Orders", "Address", "Payments"];
+  const accountMenuList = ["Profile", "Orders", "Payments"];
+  const [url, setUrl] = React.useState<string>("");
 
   useEffect(() => {
-    if (props.account !== undefined || props.account !== null) {
-      if (props.account?.sellerAccount !== null) {
-        props.setShowSellerOptions(true);
-      }
+    if (props.account) {
+      setUrl(`/seller/account/${props.account?.id}`);
+    } else {
+      setUrl("");
     }
   }, [props.account]);
+
+  const { data } = useFetch(url);
+
+  useEffect(() => {
+    if (data) {
+      props.setShowSellerOptions(true);
+    } else {
+      props.setShowSellerOptions(false);
+    }
+  }, [data]);
 
   const handleOnClick = (e: React.SyntheticEvent, tab: string) => {
     e.preventDefault();
@@ -30,7 +44,6 @@ export const AccountMenu = (props: {
     } else {
       navigate("/account/" + tab.toLowerCase())
     };
-  
   };
 
   return (

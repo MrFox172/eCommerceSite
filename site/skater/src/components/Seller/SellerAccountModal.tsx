@@ -4,7 +4,9 @@ import axios from "axios";
 import Terms from "./Terms";
 import { Account as IAccount } from "../../interfaces/user";
 
-const SellerAccountModal = (props: {account: IAccount | null, setShowSellerOptions, setShow, show, handleShow }) => {
+const SellerAccountModal = (props: {account: IAccount | null, setAccount, setShowSellerOptions, setShow, show, handleShow }) => {
+
+  const [isError, setIsError] = useState<boolean>(false);
 
   const handleAgreeClose = () => {
     createSellerAccount(props.account, props.setShowSellerOptions);
@@ -12,6 +14,29 @@ const SellerAccountModal = (props: {account: IAccount | null, setShowSellerOptio
   };
 
   const handleClose = () => props.setShow(false);
+
+  const createSellerAccount = (
+    account: IAccount | null,
+    setShowSellerOptions: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    if (account !== null) {
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      axios
+        .post(`http://localhost:8080/api/seller/account`, {
+          accountId: account?.id,
+          companyName: `${account?.firstname} ${account?.lastname}`,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setShowSellerOptions(true);
+          props.setAccount(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsError(true);
+        });
+    }
+  };
 
   return (
     <>
@@ -34,6 +59,9 @@ const SellerAccountModal = (props: {account: IAccount | null, setShowSellerOptio
           <Button variant="success" onClick={handleAgreeClose}>
             I Agree 👍
           </Button>
+          {isError && (
+            <p className="text-danger">There was an error creating your seller account...</p>
+          )}
         </Modal.Footer>
       </Modal>
     </>
@@ -42,23 +70,4 @@ const SellerAccountModal = (props: {account: IAccount | null, setShowSellerOptio
 
 export default SellerAccountModal;
 
-const createSellerAccount = (
-  account: IAccount | null,
-  setShowSellerOptions: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  if (account !== null) {
-    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-    axios
-      .post(`https://www.thelowerorbit.com:8080/api/seller/account`, {
-        accountId: account?.id,
-        companyName: `${account?.firstname} ${account?.lastname}`,
-      })
-      .then((response) => {
-        console.log(response.data);
-        setShowSellerOptions(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-};
+
