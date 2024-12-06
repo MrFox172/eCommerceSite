@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useFetch } from "../../hooks/useFetch";
 import styles from "./styles.module.css";
@@ -6,25 +6,21 @@ import { useEffect } from "react";
 import { Product as IProduct } from "../../interfaces/products";
 import ProductCard from "../ProductCard/ProductCard";
 
-const Search = () => {
-  const navigate = useNavigate();
-  const { keyword } = useParams();
+interface FixedSearchProps {
+  searchTerm: string;
+}
 
-  useEffect(() => {
-    console.log("Search page loaded");
-    if (keyword) {
-      console.log(`Searching for ${keyword}`);
-    } else {
-      const currentUrl = window.location.href;
-      navigate(currentUrl);
-    }
-  }, [keyword, navigate]);
-
-  console.log(keyword);
-
+const FixedSearch: React.FC<FixedSearchProps> = ({ searchTerm }) => {
+  const keyword = searchTerm;
   const { data, isPending, error } = useFetch(
     `/product/search?keyword=${keyword}`
   );
+
+  useEffect(() => {
+    if (keyword) {
+      console.log(`Searching for ${keyword}`);
+    }
+  }, [keyword, data]);
 
   return (
     <>
@@ -44,7 +40,9 @@ const Search = () => {
               {isPending && <div>Loading...</div>}
               {error && <div>{error}</div>}
               {data &&
-                data.map((product: IProduct) => ProductCard({ ...product }))}
+                data.map((product: IProduct) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
             </div>
           </Col>
         </Row>
@@ -53,4 +51,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default FixedSearch;

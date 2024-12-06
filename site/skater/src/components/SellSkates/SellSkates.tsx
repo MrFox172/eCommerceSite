@@ -4,6 +4,7 @@ import shoppingCart from "../../assets/shoppingCart.png";
 import shoppingCartFilled from "../../assets/shoppingCartFilled.png";
 import Kickflip from "../../assets/Kickflip.webp";
 import SkatesBackdrop from "../../assets/SkatesCarouselBackdrop.png";
+import FixedSearch from "../FixedSearch/FixedSearch";
 
 const SellSkates: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const SellSkates: React.FC = () => {
         images={[shoppingCart, shoppingCartFilled, Kickflip]}
         background={SkatesBackdrop}
       />
+      <FixedSearch searchTerm="Skates" />
     </>
   );
 };
