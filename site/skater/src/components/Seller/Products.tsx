@@ -44,6 +44,7 @@ const Products = () => {
     name: "",
     description: "",
     price: "",
+    salePrice: "",
     brand: "",
     stockOnHand: 0,
     category: {
@@ -72,28 +73,32 @@ const Products = () => {
 
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 
-  console.log("Context Poducts:", context);
+  console.log(context);
 
   useEffect(() => {
-    setUser(context);
-    setUrl(`/product/seller/${context?.sellerAccount.id}`);
+    const checkurl = () => {
+      setUser(context);
+      if (context.sellerAccount !== undefined && context.sellerAccount !== null) {
+        setUrl(`/product/seller/${context?.sellerAccount?.id}`);
+      } else {
+        setUrl("");
+      }
+    };
+    checkurl();
   }, [context]);
 
   const { data, isPending, error } = useFetch(url);
 
   useEffect(() => {
-    console.log("Data: ", data);
     if (data) {
-      //console.log("Data: ", data);
       setSellerProducts(data);
     }
   }, [data]);
 
   useEffect(() => {
     axios
-      .get("https://www.thelowerorbit.com:8080/api/product/categories")
+      .get("http://localhost:8080/api/product/categories")
       .then((response) => {
-        console.log(response.data);
         setCategories(response.data);
       })
       .catch((error) => {
@@ -122,10 +127,12 @@ const Products = () => {
     console.log("Product Name: ", product);
 
     axios
-      .post("https://www.thelowerorbit.com:8080/api/product", {
+      .post("http://localhost:8080/api/product", {
         name: product.name,
+        brand: product.brand,
         description: product.description,
         price: product.price,
+        salePrice: product.salePrice,
         stockOnHand: product.stockOnHand,
         categoryId: product.category.id,
         tags: product.tags,
@@ -171,8 +178,10 @@ const Products = () => {
 
     axios.put(`https://www.thelowerorbit.com:8080/api/product/${product.id}`,{
       name: product.name,
+      brand: product.brand,
       description: product.description,
       price: product.price,
+      salePrice: product.salePrice,
       stockOnHand: product.stockOnHand,
       categoryId: product.category.id,
       tags: product.tags
@@ -293,7 +302,6 @@ const Products = () => {
       <Row>
         <Col>
           {isPending && <div>Loading...</div>}
-          {error && <div>{error}</div>}
           <ListGroup className="mt-2 p-0">
             {sellerProducts &&
               sellerProducts.map((product) => (
@@ -325,13 +333,27 @@ const Products = () => {
             <input type="hidden" id="id" value={product.id} />
             <Row className="my-4">
               <FormGroup>
+                <Form.Label>Product Brand:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter product brand"
+                  id="brand"
+                  onChange={handleOnChangeInput}
+                  value={product?.brand || ""}
+                  required
+                  size="sm"
+                />
+              </FormGroup>
+            </Row>
+            <Row className="my-4">
+              <FormGroup>
                 <Form.Label>Product Name:</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter product name"
                   id="name"
                   onChange={handleOnChangeInput}
-                  value={product?.name}
+                  value={product?.name || ""}
                   required
                   size="sm"
                 />
@@ -345,7 +367,7 @@ const Products = () => {
                   placeholder="Enter product description"
                   id="description"
                   onChange={handleOnChangeInput}
-                  value={product?.description}
+                  value={product?.description || ""}
                   required
                   size="sm"
                 />
@@ -353,7 +375,7 @@ const Products = () => {
             </Row>
             <Row className="my-4">
               <FormGroup as={Col} md="4">
-                <Form.Label>Sale Price (USD):</Form.Label>
+                <Form.Label>Price (USD):</Form.Label>
                 <InputGroup size="sm">
                   <InputGroup.Text id="inputGroupPrepend">
                     $
@@ -363,7 +385,24 @@ const Products = () => {
                     placeholder="99.99"
                     id="price"
                     onChange={handleOnChangeInput}
-                    value={product?.price}
+                    value={product?.price || ""}
+                    required
+                    size="sm"
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup as={Col} md="4">
+                <Form.Label>Sale Price (USD):</Form.Label>
+                <InputGroup size="sm">
+                  <InputGroup.Text id="inputGroupPrepend">
+                    $
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    placeholder="99.99"
+                    id="salePrice"
+                    onChange={handleOnChangeInput}
+                    value={product?.salePrice || ""}
                     required
                     size="sm"
                   />
@@ -376,7 +415,7 @@ const Products = () => {
                   placeholder="00000000"
                   id="stockOnHand"
                   onChange={handleOnChangeInput}
-                  value={product?.stockOnHand}
+                  value={product?.stockOnHand || ""}
                   required
                   size="sm"
                 />
@@ -396,7 +435,7 @@ const Products = () => {
                   {categories.map((category) => (
                     <option
                       key={category.id}
-                      value={category.name}
+                      value={category.name || "Select Category"}
                       selected={
                         product?.category?.name === category.name ? true : false
                       }
@@ -413,7 +452,7 @@ const Products = () => {
                   placeholder="tag1, tag2"
                   id="tags"
                   onChange={handleOnChangeInput}
-                  value={product?.tags}
+                  value={product?.tags || ""}
                   size="sm"
                 />
                 <Form.Text id="fileUploadHelp" muted>
@@ -421,6 +460,7 @@ const Products = () => {
                 </Form.Text>
               </FormGroup>
             </Row>
+            <hr />
             <Row className="my-4">
               <Col xs="4">
                 {product.id === null || product.id === 0 ? (

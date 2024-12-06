@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'site/skater_backend/**'
+    branches:
+      - 'main'
   workflow_dispatch:
 
 jobs:

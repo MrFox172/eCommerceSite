@@ -1,11 +1,10 @@
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
 
 const Verify = () => {
-  //const { verifyEmail } = useAuth();
   const { token } = useParams<{ token: string}>();
   const { id } = useParams<{ id: string }>();
   const [verified, setVerified] = useState<boolean>(false);
@@ -19,7 +18,7 @@ const Verify = () => {
         setVerified(true);
         setTimeout(() => {
             navigate("/login");
-        }, 5000);
+        }, 3000);
       })
       .catch((err) => {
         console.log(err);

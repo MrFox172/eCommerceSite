@@ -79,7 +79,7 @@ public class SellerAccountController {
         sellerAccount.setAccount(account);
         sellerAccount.setCompanyName(sellerAccountSignUp.companyName());
 
-        account.setSellerAccount(sellerAccount);
+        account.setSellerAccount(sellerAccountRepo.save(sellerAccount));
         return accountRepo.save(account);
     }
 }

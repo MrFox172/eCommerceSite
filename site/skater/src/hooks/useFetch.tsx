@@ -9,24 +9,24 @@ export const useFetch = (url: string) => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsPending(true);
-      try {
-        const response = await axios.get(baseUrl + url);
-        if (!response.status) throw new Error(response.statusText);
-        const json = await response.data;
-        setIsPending(false);
-        setData(json);
-        setError(null);
-      } catch (error) {
-        setError(`${error} Could not Fetch Data `);
-        setIsPending(false);
+    useEffect(() => {
+      const fetchData = async () => {
+        setIsPending(true);
+        try {
+          const response = await axios.get(baseUrl+url);
+          if (!response.status) throw new Error(response.statusText);
+          const json = await response.data;
+          setIsPending(false);
+          setData(json);
+          setError(null);
+        } catch (error) {
+          setError(`${error} Could not Fetch Data `);
+          setIsPending(false);
+        }
+      };
+      if (url.valueOf() != "") {
+        fetchData();
       }
-    };
-    if (url !== "") {
-      fetchData();
-    }
-  }, [url]);
-  return { data, isPending, error };
+    }, [url]);
+    return { data, isPending, error };
 };

@@ -60,6 +60,7 @@ const Register = (props) => {
           setInvalidEmail(true);
           return;
         }
+        setInvalidEmail(true);
       })
       .finally(() => {
         setIsLoading(false);
