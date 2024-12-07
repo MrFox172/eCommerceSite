@@ -5,6 +5,7 @@ import com.ecommerce.skater.data.Product;
 import com.ecommerce.skater.data.ProductImage;
 import com.ecommerce.skater.dto.ProductImageUpload;
 import com.ecommerce.skater.repository.CategoryRepo;
+import com.ecommerce.skater.repository.ProductImageRepo;
 import com.ecommerce.skater.repository.ProductRepo;
 import com.ecommerce.skater.repository.SellerAccountRepo;
 import com.ecommerce.skater.service.FileUploadService;
@@ -33,6 +34,9 @@ public class ProductController {
 
     @Autowired
     private FileUploadService fileService;
+
+    @Autowired
+    private ProductImageRepo productImageRepo;
 
     // create a new product
     @Operation(summary = "Create a new Product", description = "Creates a new product")
@@ -172,6 +176,22 @@ public class ProductController {
             return new ResponseEntity<Product>(product, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/images/{imageid}")
+    public ResponseEntity<Product> deleteImage(@PathVariable int imageid) {
+        try {
+            var image = productImageRepo.findById(imageid).orElse(null);
+            if (image == null) {
+                return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+            }
+            var product = image.getProduct();
+            image.setProduct(null);
+            productImageRepo.delete(image);
+            return new ResponseEntity<Product>(productRepo.findById(product.getId()).orElse(null),HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
         }
     }
