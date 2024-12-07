@@ -8,12 +8,12 @@ const ProductPagination = ({ page, setPage, pageable }) => {
     setPage(pageable.pageNumber + 1);
   };
 
-  const goToPreviousPage = () => {
+  const goToPreviousPage = (e) => {
     e.preventDefault();
     if (pageable.pageNumber === 0) {
       return;
     }
-    setPage(e, pageable.pageNumber - 1);
+    setPage(pageable.pageNumber - 1);
   };
 
   const goToPage = (e,page: number) => {
@@ -26,7 +26,7 @@ const ProductPagination = ({ page, setPage, pageable }) => {
       {pageable.totalPages > 1 && (
         <nav aria-label="Page navigation">
           <ul className="pagination">
-            <li className={page === 0 ? "page-item disabled" : "page-item"}>
+            <li className={pageable.pageNumber === 0 ? "page-item disabled" : "page-item"}>
               <a className="page-link" href="#" onClick={goToPreviousPage}>
                 Previous
               </a>
