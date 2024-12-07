@@ -3,8 +3,10 @@ import { Product } from "../../interfaces/products";
 import img from "../../assets/img-placeholder.svg";
 import { Card, Button } from "react-bootstrap";
 import styles from "./styles.module.css";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard: React.FC<Product> = (product) => {
+  const navigate = useNavigate();
   return (
     <>
       <Card className="p-2" key={product.id}>
@@ -22,9 +24,23 @@ const ProductCard: React.FC<Product> = (product) => {
             <strong>
               <h2 className="my-3">${product.price}</h2>
             </strong>
-            <Button variant="warning" size="sm">
-              Add to cart
-            </Button>
+            <div className={styles.buttonSplit}>
+              <Button
+                variant="warning"
+                size="sm"
+                className={styles.primaryButton}
+              >
+                Add to cart
+              </Button>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                className={styles.secondButton}
+                onClick={() => navigate(`/product/${product.id}`)}
+              >
+                View Product
+              </Button>
+            </div>
           </div>
         </Card.Body>
       </Card>
