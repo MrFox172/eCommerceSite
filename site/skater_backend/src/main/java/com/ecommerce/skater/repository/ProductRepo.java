@@ -3,9 +3,11 @@ package com.ecommerce.skater.repository;
 import com.ecommerce.skater.data.Category;
 import com.ecommerce.skater.data.Product;
 import com.ecommerce.skater.data.SellerAccount;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ import java.util.List;
 public interface ProductRepo extends JpaRepository<Product, Integer> {
 
     List<Product> findBySellerAccount(SellerAccount sellerAccount);
+
+    Page<Product> findBySellerAccount(SellerAccount sellerAccount, Pageable pageable);
 
     List<Product> findByCategory(Category category);
 

@@ -1,77 +1,77 @@
 import { Col, Row, Button, Card, Stack, Badge } from "react-bootstrap";
 import { Product as IProduct } from "../../interfaces/products";
+import styles from "./styles.module.css";
 
-const SellerProductCard = (props: {
-  sellerProduct: IProduct;
-  setShow;
-  setProduct;
-  handleProductDelete;
+const SellerProductCard = ({
+  sellerProduct,
+  setShow,
+  setProduct,
+  handleProductDelete
 }) => {
   const handleEdit = () => {
-    props.setShow(true);
-    props.setProduct(props.sellerProduct);
+    setShow(true);
+    setProduct(sellerProduct);
   };
 
   return (
     <div>
-      <Card bg={"light"} className="">
-        <Card.Header as="h5" className="bg-dark bg-gradient text-white">
-          {props.sellerProduct.name}
+      <Card bg={"light"} className="border-success rounded-0">
+        <Card.Header as="h5" className="bg-transparent border-success">
+          {sellerProduct.name}
         </Card.Header>
         <Card.Body>
           <Row>
             <Col>
               <Card.Text>
-                <strong>Description:</strong> {props.sellerProduct.description}
+                <strong>Description:</strong> {sellerProduct.description}
               </Card.Text>
             </Col>
           </Row>
           <Row className="my-3">
             <Col>
               <Card.Text className="my-1">
-                <strong>SKU:</strong> {props.sellerProduct.id}
+                <strong>SKU:</strong> {sellerProduct.id}
               </Card.Text>
               <Card.Text className="my-1">
-                <strong>Price:</strong> ${props.sellerProduct.price}
+                <strong>Price:</strong> ${sellerProduct.price}
               </Card.Text>
+              {sellerProduct.salePrice && (
               <Card.Text className="my-1">
-                <strong>Sale Price:</strong> ${props.sellerProduct.salePrice}
+                <strong>Sale Price:</strong> ${sellerProduct.salePrice}
               </Card.Text>
+              )}
               <Card.Text className="my-1">
                 <strong>Stock on Hand:</strong>{" "}
-                {props.sellerProduct.stockOnHand}
+                {sellerProduct.stockOnHand}
               </Card.Text>
               <Card.Text className="my-1">
-                <strong>Category:</strong> {props.sellerProduct.category.name}
+                <strong>Category:</strong> {sellerProduct.category.name}
               </Card.Text>
             </Col>
-            <Col>
+            <Col md={3}>
               <strong>Tags:</strong>
               <ul>
-                {props.sellerProduct.tags.split(",").map((tag: string) => (
+                {sellerProduct.tags.split(",").map((tag: string) => (
                   <li key={tag}>
-                    <Badge pill bg="secondary">
+                    <Badge pill bg="warning text-black">
                       {tag}
                     </Badge>
                   </li>
                 ))}
               </ul>
             </Col>
-          </Row>
-          <Row>
             <Col>
-              <Stack direction="horizontal" gap={3}>
-                {props.sellerProduct.productImages &&
-                  props.sellerProduct.productImages.map((image) => (
-                    <Card.Img
+              <div className={styles.grid}>
+                {sellerProduct.productImages &&
+                  sellerProduct.productImages.map((image) => (
+                    <img
                       style={{ width: "6rem", height: "6rem" }}
-                      variant="top"
                       key={image.id}
                       src={image.imageUrl}
                       alt={image.name}
                     />
                   ))}
-              </Stack>
+              </div>
             </Col>
           </Row>
         </Card.Body>
@@ -80,7 +80,7 @@ const SellerProductCard = (props: {
             <Col className="justify-content-start text-start">
               <Card.Text>
                 <strong>Created:</strong>{" "}
-                {new Date(props.sellerProduct.createdate).toLocaleString()}
+                {new Date(sellerProduct.createdate).toLocaleString()}
               </Card.Text>
             </Col>
             <Col>
@@ -96,8 +96,8 @@ const SellerProductCard = (props: {
                 variant="danger"
                 className="mx-2"
                 size="sm"
-                id={`${props.sellerProduct.id}`}
-                onClick={props.handleProductDelete}
+                id={`${sellerProduct.id}`}
+                onClick={handleProductDelete}
               >
                 Delete
               </Button>
