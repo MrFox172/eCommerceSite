@@ -7,8 +7,15 @@ import SkatesBackground from "../../assets/SkatesCarouselBackdrop.png";
 import ShoesBackground from "../../assets/ShoesCarouselBackdrop.png";
 import ApparelBackground from "../../assets/ApparelCarouselBackdrop.png";
 import AccessoriesBackground from "../../assets/AccessoriesCarouselBackdrop.png";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const gotoProducts = (urlStub: string) => {
+    navigate(`/${urlStub}`);
+  };
+
   return (
     <>
       <Container
@@ -28,24 +35,26 @@ const Home: React.FC = () => {
       </Container>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
+        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
         style={{
           backgroundImage: `url("${SkateboardBackground}")`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
+        onClick={() => gotoProducts("skateboards")}
       >
         <h1>Skateboards</h1>
         <p>Explore our wide range of skateboards for all skill levels.</p>
       </Container>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
+        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
         style={{
           backgroundImage: `url("${SkatesBackground}")`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
+        onClick={() => gotoProducts("skates")}
       >
         <h1>Skates</h1>
         <p>
@@ -54,36 +63,39 @@ const Home: React.FC = () => {
       </Container>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
+        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
         style={{
           backgroundImage: `url("${ShoesBackground}")`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
+        onClick={() => gotoProducts("shoes")}
       >
         <h1>Shoes</h1>
         <p>Find the perfect pair of shoes for skating and everyday wear.</p>
       </Container>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
+        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
         style={{
           backgroundImage: `url("${ApparelBackground}")`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
+        onClick={() => gotoProducts("apparel")}
       >
         <h1>Apparel</h1>
         <p>Discover the latest trends in skate apparel and streetwear.</p>
       </Container>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
+        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
         style={{
           backgroundImage: `url("${AccessoriesBackground}")`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
+        onClick={() => gotoProducts("accessories")}
       >
         <h1>Accessories</h1>
         <p>
