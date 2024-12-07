@@ -16,3 +16,7 @@
   margin-left: 0;
   justify-self: right;
 }
+
+.input {
+  width: 3rem;
+}
