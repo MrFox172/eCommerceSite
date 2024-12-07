@@ -1,8 +1,8 @@
 .image_holder {
   width: 80%;
-  margin-left:10%;
-  margin-top:1rem;
-  margin-bottom:1rem;
+  margin-left: 10%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   height: auto;
   object-fit: cover;
   border-radius: 5px;
@@ -43,20 +43,20 @@ button {
   background-color: #ffa000;
   border: none;
   color: white;
-  padding: 6px 12px; 
+  padding: 6px 12px;
   font-size: 8px;
   border-radius: 2px;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  line-height: 1.2; 
+  line-height: 1.2;
 }
 button:hover {
-  background-color: #ff6f00; 
-  transform: scale(1.05); 
+  background-color: #ff6f00;
+  transform: scale(1.05);
 }
 
 button:active {
-  background-color: #e65100; 
-  transform: scale(0.95); 
+  background-color: #e65100;
+  transform: scale(0.95);
 }
 
 hr {
@@ -65,3 +65,17 @@ hr {
   margin: 10px 0;
 }
 
+.input {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  height: 2rem;
+  width: 2rem;
+  display: inline-block;
+}
+
+.countButton {
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
