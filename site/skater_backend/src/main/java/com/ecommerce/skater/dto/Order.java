@@ -6,7 +6,7 @@ public record Order(
         int accountId,
         int paymentMethodId,
         List<OrderedProduct> orderedProducts,
-        float orderTotal,
+        double expectedOrderTotal,
         String status
 ) {
 }

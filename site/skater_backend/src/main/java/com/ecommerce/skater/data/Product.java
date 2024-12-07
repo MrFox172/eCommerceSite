@@ -38,18 +38,18 @@ public class Product {
     private String description;
 
     @Column(name = "price", nullable = false, length = 50)
-    private String price;
+    private Double price;
+
+    @Column(name = "sale_percent", nullable = false)
+    private Double salePercent;
 
     @Column(name = "sale_price", nullable = false, length = 50)
-    private String salePrice;
+    private Double salePrice;
 
     // create a compute variable for that returns a boolean based on salePrice and price
     public boolean isOnSale() {
 
-        if (salePrice == null || salePrice.isEmpty()) {
-            return false;
-        }
-        return !salePrice.equals(price);
+        return salePercent > 0;
     }
 
     @Column(name = "brand", nullable = false, length = 200)

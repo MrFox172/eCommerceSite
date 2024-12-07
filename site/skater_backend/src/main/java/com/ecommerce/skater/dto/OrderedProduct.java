@@ -2,6 +2,7 @@ package com.ecommerce.skater.dto;
 
 public record OrderedProduct(
         int productId,
-        int quantity
+        int expectedQuantity,
+        double expectedPrice
 ) {
 }

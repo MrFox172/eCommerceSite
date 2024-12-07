@@ -20,6 +20,8 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
 
     List<Product> findByCategory(Category category);
 
+    List<Product> findByCategoryIn(List<Category> categories);
+
     // get all products containing a specific tag
     List<Product> findByTagsContaining(String tag);
 

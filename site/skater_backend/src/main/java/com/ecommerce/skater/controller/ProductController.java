@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ecommerce.skater.dto.ProductDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,6 +54,7 @@ public class ProductController {
         newProduct.setTags(product.tags());
         newProduct.setBrand(product.brand());
         newProduct.setSalePrice(product.salePrice());
+        newProduct.setSalePercent(product.salePercent());
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
         newProduct.setCategory(category);
@@ -97,6 +99,7 @@ public class ProductController {
             product.setTags(productDetails.tags());
             product.setBrand(productDetails.brand());
             product.setSalePrice(productDetails.salePrice());
+            product.setSalePercent(productDetails.salePercent());
 
             var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
             product.setCategory(category);
@@ -160,9 +163,40 @@ public class ProductController {
 
     // get all product categories
     @Operation(summary = "Get All Product Categories", description = "Returns a list of all product categories")
-    @GetMapping("/categories")
+    @GetMapping("/categories/list")
     public List<Category> getAllProductCategories() {
         return categoryRepo.findAll();
+    }
+
+    // get all product by multiple categories
+    @Operation(summary = "Get Products by Multiple Categories", description = "Returns a list of products by multiple categories")
+    @GetMapping("/categories")
+    public List<Product> getProductsByMultipleCategories(@RequestParam List<Integer> categoryIds) {
+        List<Category> searchCategories = new ArrayList<>();
+
+        for (int categoryId : categoryIds) {
+            var category = categoryRepo.findById(categoryId).orElse(null);
+            if (category != null) {
+                searchCategories.add(category);
+            }
+        }
+        return productRepo.findByCategoryIn(searchCategories);
+    }
+
+    // get all products by multiple categories by name
+    @Operation(summary = "Get Products by Multiple Categories by Name", description = "Returns a list of products by multiple categories by name")
+    @GetMapping("/categories/name")
+    public List<Product> getProductsByMultipleCategoriesByName(@RequestParam List<String> categoryNames) {
+
+        List<Category> searchCategories = new ArrayList<>();
+        for (String categoryName : categoryNames) {
+            var category = categoryRepo.findByNameIgnoreCase(categoryName).orElse(null);
+            if (category != null) {
+                searchCategories.add(category);
+            }
+        }
+
+        return productRepo.findByCategoryIn(searchCategories);
     }
 
     @Operation(summary = "Get Products by Tag that are on sale", description = "Returns a list of products by tag")

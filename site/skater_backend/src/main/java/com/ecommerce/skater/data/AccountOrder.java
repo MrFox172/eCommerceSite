@@ -33,7 +33,7 @@ public class AccountOrder {
     private String orderStatus;
 
     @Column(name = "order_total", nullable = false)
-    private Float orderTotal;
+    private Double orderTotal;
 
     @CreatedDate
     private Timestamp createdate;

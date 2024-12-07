@@ -5,12 +5,13 @@ import com.ecommerce.skater.data.Category;
 public record ProductDto(
         String name,
         String description,
-        String price,
+        double price,
         int stockOnHand,
         int categoryId,
         String tags,
         int sellerAccountId,
         String brand,
-        String salePrice
+        Double salePrice,
+        double salePercent
 ) {
 }
