@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 60vh;
+  height: 40vh;
   background-color: white;
   color: black;
 }
@@ -11,15 +11,50 @@
 .home h1 {
   font-size: 3rem;
   font-weight: 700;
-  background-color: rgba(100,100,100,.5);
+  background-color: rgba(100, 100, 100, 0.5);
   padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0,0,0,.5);
+  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
 }
 
 .home p {
   font-size: 1rem;
   font-weight: 700;
-  background-color: rgba(100,100,100,.5);
+  background-color: rgba(100, 100, 100, 0.5);
   padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0,0,0,.5);
+  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.clickableBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+  background-color: white;
+  color: black;
+  z-index: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.clickableBanner h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background-color: rgba(100, 100, 100, 0.5);
+  padding: 10px;
+  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.clickableBanner p {
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: rgba(100, 100, 100, 0.5);
+  padding: 10px;
+  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.clickableBanner:hover {
+  transform: scale(1.1);
+  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }

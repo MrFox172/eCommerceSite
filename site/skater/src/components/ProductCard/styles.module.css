@@ -2,3 +2,21 @@
   height: 20rem;
   width: 30rem;
 }
+
+.buttonSplit {
+  display: flex;
+  justify-content: space-between;
+}
+
+.primaryButton {
+  margin-right: 0;
+}
+
+.secondButton {
+  margin-left: 0;
+  justify-self: right;
+}
+
+.input {
+  width: 3rem;
+}
