@@ -19,6 +19,9 @@ import SellerProductCard from "./ProductCard";
 import { useFetch } from "../../hooks/useFetch";
 import { Account as IAccount, SellerAccount } from "../../interfaces/user";
 import { Product as IProduct, Category as ICategory } from "../../interfaces/products";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core'
+//import { all } from '@awesome/kit-KIT_CODE/icons'
 
 const Products = () => {
 
@@ -62,6 +65,7 @@ const Products = () => {
     ],
     tags: "",
     createdate: "",
+    onSale: false,
   };
   const context: IAccount = useOutletContext();
   const [product, setProduct] = useState<IProduct>(defaultProduct);
@@ -232,7 +236,6 @@ const Products = () => {
         console.log(error);
         setSaveMsg("Error deleting product...");
       });
-
   };
 
   const handleProductImageUploadSubmit = (e: React.SyntheticEvent) => {
@@ -296,6 +299,38 @@ const Products = () => {
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  };
+
+  const handleImageOnClickButton = (e) => {
+    console.log("Image ID: ", e.target.id);
+
+
+    const confirmBox = window.confirm("Do you really want to delete this Image?");
+
+    if (confirmBox === false) {
+      return;
+    }
+
+    axios
+      .delete(`https://www.thelowerorbit.com:8080/api/product/images/${e.target.id}`)
+      .then((response) => {
+        console.log(response.data);
+        if (response.status === 200) {
+          setSellerProducts(sellerProducts.map((product) => {
+            if (product.id === response.data.id) {
+              return { ...product, productImages: response.data.productImages };
+            } else {
+              return product;
+            }
+          }));
+          setProduct(response.data);
+        }
+        setSaveMsg("Image deleted successfully...");
+      })
+      .catch((error) => {
+        console.log(error);
+        setSaveMsg("Error deleting image...");
       });
   };
 
@@ -537,6 +572,16 @@ const Products = () => {
                           className="border-0"
                         >
                           <Card.Img variant="top" src={image.imageUrl} />
+                          <Card.Footer className="text-center">
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              id={image.id.toString()}
+                              onClick={handleImageOnClickButton}
+                            >
+                              x
+                            </Button>
+                          </Card.Footer>
                         </Card>
                       ))}
                   </Stack>
