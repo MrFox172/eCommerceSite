@@ -11,6 +11,9 @@ import com.ecommerce.skater.repository.SellerAccountRepo;
 import com.ecommerce.skater.service.FileUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -120,6 +123,16 @@ public class ProductController {
         return productRepo.findBySellerAccount(seller);
     }
 
+    @GetMapping("/seller/{sellerId}/page")
+    public Page<Product> getPageProductsBySellerId(
+            @PathVariable int sellerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        var seller = sellerAccountRepo.findById(sellerId).orElse(null);
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepo.findBySellerAccount(seller, pageable);
+    }
+
     // get all products by category id
     @Operation(summary = "Get Products by Category ID", description = "Returns a list of products by category ID")
     @GetMapping("/category/{categoryId}")
@@ -205,6 +218,7 @@ public class ProductController {
     public List<String> getAllBrands() {
         return productRepo.findAllBrands();
     }
+
 
 
 

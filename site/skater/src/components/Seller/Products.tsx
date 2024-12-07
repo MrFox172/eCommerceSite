@@ -21,6 +21,7 @@ import { Account as IAccount, SellerAccount } from "../../interfaces/user";
 import { Product as IProduct, Category as ICategory } from "../../interfaces/products";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
+import ProductPagination from "./ProductPagination";
 //import { all } from '@awesome/kit-KIT_CODE/icons'
 
 const Products = () => {
@@ -72,14 +73,24 @@ const Products = () => {
   const [saveMsg, setSaveMsg] = useState<string>("");
   const [sellerProducts, setSellerProducts] = useState<Array<IProduct>>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [url, setUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sellerAccount, setSellerAccount] = useState<SellerAccount | null>(null);
+  const [sellerAccount, setSellerAccount] = useState<SellerAccount | null>({
+    id: 0,
+    accountId: 0,
+    companyName: "",
+    createdate: "",
+  });
   const [isPending, setIsPending] = useState<boolean>(true);
+  const [pageable, setPageable] = useState({
+    pageNumber: 0,
+    pageSize: 0,
+    totalPages: 0,
+    totalElements: 0,
+  });
+  const [page, setPage] = useState<number>(0);
 
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-
-  console.log("Products",context);
+  axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
   const { data } = useFetch(`/seller/account/${context?.id}`);
 
@@ -87,25 +98,31 @@ const Products = () => {
     setUser(context);
     if(data) {
       setSellerAccount(data);
-      setUrl(`/product/seller/${sellerAccount?.id}`);
     }
-  }, [data]);
+  }, [data, context]);
 
   useEffect(() => {
-    setIsPending(false);
+    setIsPending(true);
     if (sellerAccount) {
       axios
-        .get(`https://www.thelowerorbit.com:8080/api/product/seller/${sellerAccount?.id}`)
+        .get(`https://www.thelowerorbit.com:8080/api/product/seller/${sellerAccount?.id}/page?page=${page}`)
         .then((response) => {
-          console.log(response.data);
-          setSellerProducts(response.data);
-          setIsPending(false);
+          setSellerProducts(response.data.content);
+          setPageable({
+            pageNumber: response.data.pageable.pageNumber,
+            pageSize: response.data.pageable.pageSize,
+            totalPages: response.data.totalPages,
+            totalElements: response.data.totalElements,
+          });
         })
         .catch((error) => {
           console.log(error);
-        });
+        })
+        .finally(() => {
+          setIsPending(false);
+        });;
     }
-  }, [data]);
+  }, [data, sellerAccount, page]);
 
   useEffect(() => {
     axios
@@ -331,7 +348,7 @@ const Products = () => {
       .catch((error) => {
         console.log(error);
         setSaveMsg("Error deleting image...");
-      });
+      })
   };
 
   return (
@@ -343,10 +360,16 @@ const Products = () => {
           </Button>
         </Col>
       </Row>
+      <hr />
+      <ProductPagination page={page} setPage={setPage} pageable={pageable} />
       <Row>
         <Col>
-          {isPending && <div>Loading...</div>}
-          <ListGroup className="mt-2 p-0">
+          {isPending && (
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+          )}
+          <ListGroup className="p-0">
             {sellerProducts &&
               sellerProducts.map((product) => (
                 <ListGroup.Item key={product.id} className="border-0 p-0 my-3">
@@ -361,6 +384,8 @@ const Products = () => {
           </ListGroup>
         </Col>
       </Row>
+      <ProductPagination page={page} setPage={setPage} pageable={pageable} />
+      <h5>Total Products: {pageable.totalElements}</h5>
       <Modal show={show} onHide={handleProductModalClose} size="lg" centered>
         <Modal.Header closeButton className="bg-success text-white">
           <Modal.Title as="h5">Add / Edit your store Product</Modal.Title>
@@ -447,7 +472,6 @@ const Products = () => {
                     id="salePrice"
                     onChange={handleOnChangeInput}
                     value={product?.salePrice || ""}
-                    required
                     size="sm"
                   />
                 </InputGroup>
