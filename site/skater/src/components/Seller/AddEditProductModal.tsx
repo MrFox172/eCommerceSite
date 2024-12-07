@@ -56,7 +56,7 @@ const AddEditProductModal = ({
     console.log("Seller Account: ", sellerAccount);
 
     axios
-      .post("http://localhost:8080/api/product", {
+      .post("https://www.thelowerorbit.com:8080/api/product", {
         name: product.name,
         brand: product.brand,
         description: product.description,
