@@ -52,6 +52,10 @@ const ProductSalesCard: React.FC<Product> = (product) => {
                 </h3>
                 <p>{product.description}</p>
                 <p>
+                  <strong>Tags: </strong>
+                  {product.tags.split(",").join(", ")}
+                </p>
+                <p>
                   Originally:
                   <strong>
                     <span className="my-3">

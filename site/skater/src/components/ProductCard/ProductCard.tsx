@@ -45,6 +45,10 @@ const ProductCard: React.FC<Product> = (product) => {
             <br />
             {product.description}
             <br />
+            <p>
+              <strong>Tags: </strong>
+              {product.tags.split(",").join(", ")}
+            </p>
             <strong>
               <h2 className="my-3">${product.price}</h2>
             </strong>
@@ -57,7 +61,12 @@ const ProductCard: React.FC<Product> = (product) => {
                 Add to cart
               </Button>
               <Button onClick={decrement}>-</Button>
-              <input className={styles.input}type="text" value={count} onChange={changeCount} />
+              <input
+                className={styles.input}
+                type="text"
+                value={count}
+                onChange={changeCount}
+              />
               <Button onClick={increment}>+</Button>
               <Button
                 variant="outline-secondary"
