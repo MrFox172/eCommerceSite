@@ -46,7 +46,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: build-artifact
-        path: ./build
+    - run: ls -R
 
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.7
@@ -54,7 +54,7 @@ jobs:
         host: ${{ secrets.WILL_EC2_HOST }}
         username: ${{ secrets.WILL_EC2_USER }}
         key: ${{ secrets.WILL_EC2_KEY }}
-        source: "./build/react_dist.tar.gz"
+        source: "react_dist.tar.gz"
         target: "/home/ubuntu/skater/dist"
 
     - name: Execute remote command
@@ -65,6 +65,6 @@ jobs:
         key: ${{ secrets.WILL_EC2_KEY }}
         script: |
           cd /home/ubuntu/skater/dist
-          tar -xzf react_dist.tar.gz
+          sudo tar -xzf react_dist.tar.gz
           sudo rm -rf /var/www/html2
           sudo cp -r dist/* /var/www/html2
