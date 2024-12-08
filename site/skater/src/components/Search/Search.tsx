@@ -30,9 +30,11 @@ const Search = () => {
     if (data && data !== null) {
       // Extract unique tags from the products
       const allTags = data
-        .map((product: IProduct) => product.tags.split(","))
+        .map((product: IProduct) =>
+          product.tags.split(",").map((tag) => tag.trim())
+        )
         .flat();
-      setTags(Array.from(new Set(allTags.filter(Boolean))));
+      setTags(Array.from(new Set(allTags.filter(Boolean))).sort());
     }
   }, [data]);
 
@@ -73,7 +75,7 @@ const Search = () => {
                         onChange={() => toggleFilter(tag)}
                         checked={filters.includes(tag)}
                       />
-                      {tag}
+                      &nbsp;{tag}
                     </label>
                   </li>
                 ))}
