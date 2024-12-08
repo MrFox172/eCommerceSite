@@ -13,6 +13,7 @@ import Payments from "./components/Account/Payments";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { Route, Routes } from "react-router-dom";
 import Verify from "./components/Auth/Verify";
+import ProductPage from "./components/ProductPage/ProductPage";
 
 import SkateboardBG from "./assets/SkateboardCarouselBackdrop.png";
 import SkateBG from "./assets/SkatesCarouselBackdrop.png";
@@ -76,6 +77,7 @@ function App() {
               />
             }
           />
+          <Route path="/product/:id" element={<ProductPage />} />
           <Route
             path="/login"
             element={
