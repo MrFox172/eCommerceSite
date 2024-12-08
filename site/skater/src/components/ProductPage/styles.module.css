@@ -1,63 +1,62 @@
 .outer {
-    padding-left:10%;
-    padding-right:10%;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .main {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    flex-direction: row;
-    margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-direction: row;
+  margin-top: 50px;
 }
 
-.imagesContainer {    
-    margin-right: 10px;
-    display: flex;
-    flex-direction: row;
+.imagesContainer {
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .productImage {
-    padding: 50px;
-    padding-top: 0;
-    background-color: #ccdfe0;
-    border: 2px solid #ccdfe0;
-    border-radius: 10px;
+  padding: 10px 25px;
+  background: linear-gradient(-45deg, #ccdfe0, white);
+  border: 2px solid #ccdfe0;
+  border-radius: 10px;
 }
 
-.productImage img{
-    background-color: aquamarine;
-    width: 300px;
+.productImage img {
+  background-color: aquamarine;
+  width: 300px;
 
-    border-radius: 10px;
-    border: 2px solid #ccdfe0;
+  border-radius: 10px;
+  border: 2px solid #ccdfe0;
 }
 
-.allAsideImages img{
-    width: 150px;
-    margin-right: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #14a8b3;
-    transition: border 0.3s ease;
+.allAsideImages img {
+  width: 150px;
+  margin-right: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #14a8b3;
+  transition: border 0.3s ease;
 }
 
-.allAsideImages img:hover{
-    cursor: pointer;
-    border: 2px solid #ff6f00;
-    transition: border 0.3s ease;
+.allAsideImages img:hover {
+  cursor: pointer;
+  border: 2px solid #ff6f00;
+  transition: border 0.3s ease;
 }
 
 .allAsideImages img:active {
-    border: 2px solid #ff0000;
-    transition: border 0.1s ease;
+  border: 2px solid #ff0000;
+  transition: border 0.1s ease;
 }
 
 .cart {
-    min-width: 300px;
-    background-color: #ff6f00;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 50px;
+  min-width: 300px;
+  background-color: #ff6f00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 50px;
 }

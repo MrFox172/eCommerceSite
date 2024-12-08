@@ -11,7 +11,7 @@ import { Card, Button } from "react-bootstrap";
 function ProductPage() {
   const [currentImage, setCurrentImage] = useState<ProductImage>({
     id: -1,
-    name: "None Available",
+    name: "No Image Available",
     imageUrl: defaultImage,
     createdate: "",
   });
@@ -49,6 +49,7 @@ function ProductPage() {
   //Use effect is split here to avoid unnecessary re-renders
   useEffect(() => {
     if (data && data !== null) {
+      console.log(data);
       setProduct(data);
     }
   }, [data]);
@@ -85,13 +86,34 @@ function ProductPage() {
               Image:{currentImage.name}
             </div>
           </div>
-          <div className={styles.productPage}>
-            <div className={styles.productDetails}>
-              <h2>Product Name</h2>
-              <p>Product Description</p>
-              <p>Price: $0.00</p>
-              <button>Add to Cart</button>
-            </div>
+          <div className={styles.productDetails}>
+            {product ? (
+              <>
+                <h2>{product.name}</h2>
+                <h3>{product.brand}</h3>
+                <p>Description</p>
+                <p>{product.description}</p>
+                <p>Tags: {product.tags}</p>
+                {product.onSale ? (
+                  <>
+                    <h2>
+                      <del>${product.price.toFixed(2)}</del>
+                    </h2>
+                    <h2>
+                      <em>On Sale!</em> ${product.salePrice.toFixed(2)}
+                    </h2>
+                  </>
+                ) : (
+                  <>
+                    <h2>${product.price.toFixed(2)}</h2>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <h2>Loading...</h2>
+              </>
+            )}
           </div>
           <div className={styles.cart}>
             <h2>Cart</h2>
