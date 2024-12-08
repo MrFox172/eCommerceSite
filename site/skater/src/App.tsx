@@ -94,6 +94,7 @@ function App() {
               <Account localUser={localUser} setLocalUser={setLocalUser} />
             }
           >
+
             <Route path="/account/profile" element={<Profile />} />
             <Route path="/account/seller" element={<SellerProducts />} />
             <Route path="/account/orders" Component={Orders} />

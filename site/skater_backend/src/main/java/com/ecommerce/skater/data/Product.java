@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -37,19 +38,19 @@ public class Product {
     @Column(name = "description", nullable = false, length = 300)
     private String description;
 
-    @Column(name = "price", nullable = false, length = 50)
-    private Double price;
+    @Column(name = "price", nullable = false, length = 50, precision=10, scale=2)
+    private BigDecimal price;
 
-    @Column(name = "sale_percent", nullable = false)
-    private Double salePercent;
+    @Column(name = "sale_percent", nullable = false, precision=10, scale=2)
+    private BigDecimal salePercent;
 
-    @Column(name = "sale_price", nullable = false, length = 50)
-    private Double salePrice;
+    @Column(name = "sale_price", nullable = false, precision=10, scale=2)
+    private BigDecimal salePrice;
 
     // create a compute variable for that returns a boolean based on salePrice and price
     public boolean isOnSale() {
 
-        return salePercent > 0;
+        return salePercent.compareTo(BigDecimal.valueOf(0.0)) > 0;
     }
 
     @Column(name = "brand", nullable = false, length = 200)

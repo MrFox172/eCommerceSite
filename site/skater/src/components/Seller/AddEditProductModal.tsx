@@ -31,7 +31,6 @@ const AddEditProductModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [saveMsg, setSaveMsg] = useState<string>("");
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [salesPrice, setSalesPrice] = useState<number>(0);
 
   useEffect(() => {
     axios
@@ -98,35 +97,29 @@ const AddEditProductModal = ({
   const handleOnChangeInput = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
 
-    console.log("Target ID: ", target.id);
     const value: (typeof product)[keyof typeof product] = target.value;
 
     if (target.id === "salePercent") {
-      console.log("Sale Percent: ", value);
-      const salePrice = product.price - (product.price * (value / 100));
-      console.log("Sale Price: ", salePrice);
-      setSalesPrice(salePrice);
-      setProduct({ ...product, salePrice: salesPrice });
-      
+
+      const salePrice = product.price - (product.price * (value / 100));  
+      setProduct({
+        id: product.id,
+        name: product.name,
+        brand: product.brand,
+        description: product.description,
+        price: product.price,
+        salePrice: Number(salePrice).toFixed(2),
+        salePercent: value,
+        stockOnHand: product.stockOnHand,
+        category: product.category,
+        tags: product.tags,
+        productImages: product.productImages,
+      })
+      return; 
     }
 
     setProduct({ ...product, [target.id]: value });
-    console.log("Product: ", product);
   };
-
-  const handleSalePercentOnChange = (e: React.SyntheticEvent) => {
-    const target = e.target as HTMLInputElement;
-
-    console.log("Sale Percent: ", target.value);
-    const value: number = Number(target.value);
-
-
-    const salePrice = product.price - product.price * (value / 100);
-    console.log("Sale Price: ", salePrice);
-    setProduct({ ...product, salePercent: value });
-
-    setProduct({ ...product, salePrice: salePrice });
-  }
 
   const handleProductUpdateSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -351,7 +344,6 @@ const AddEditProductModal = ({
                   id="salePercent"
                   onChange={handleOnChangeInput}
                   value={product?.salePercent || ""}
-                  defaultValue={0}
                   required
                   size="sm"
                 />
@@ -366,7 +358,7 @@ const AddEditProductModal = ({
                   type="text"
                   id="salePrice"
                   onChange={handleOnChangeInput}
-                  value={Number(salesPrice).toFixed(2) || ""}
+                  value={Number(product?.salePrice).toFixed(2) || ""}
                   required
                   disabled
                   size="sm"

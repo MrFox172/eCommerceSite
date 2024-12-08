@@ -34,23 +34,6 @@ public class ShipmentController {
         return shipmentRepository.save(shipment);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Shipment> updateShipment(@PathVariable int id, @RequestBody Shipment shipmentDetails) {
-        Optional<Shipment> shipment = shipmentRepository.findById(id);
-        if (shipment.isPresent()) {
-            Shipment updatedShipment = shipment.get();
-            updatedShipment.setAccountOrderId(shipmentDetails.getAccountOrderId());
-            updatedShipment.setAddressId(shipmentDetails.getAddressId());
-            updatedShipment.setShipmentStatus(shipmentDetails.getShipmentStatus());
-            updatedShipment.setShipmentDate(shipmentDetails.getShipmentDate());
-            updatedShipment.setTrackingNumber(shipmentDetails.getTrackingNumber());
-            updatedShipment.setCreatedate(shipmentDetails.getCreatedate());
-            return ResponseEntity.ok(shipmentRepository.save(updatedShipment));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShipment(@PathVariable int id) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);

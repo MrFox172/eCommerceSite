@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { IAccount } from "../../interfaces/user";
 
 import { useEffect } from "react";
 import { useState } from "react";
@@ -95,7 +96,7 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
               </Form>
               {isLogged ? (
                 <>
-                  <Nav.Link href="/account">Account</Nav.Link>
+                  <Nav.Link href={`/account/${JSON.parse(props.localUser).id}`}>Account</Nav.Link>
                   <Nav.Link href="/logout">Logout</Nav.Link>
                 </>
               ) : (
