@@ -106,7 +106,7 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
                         alt={"Cart Filled"}
                       />
                       <span className={styles.cartCount}>
-                        ({cart.getTotalItems()})
+                        {cart.getTotalItems()}
                       </span>
                     </span>
                   </Nav.Link>

@@ -101,7 +101,7 @@ function ProductPage() {
 
   return (
     <>
-      <main className={styles.outer}>
+      <main className={`container ${styles.outer}`}>
         <div className={styles.main}>
           <div className={styles.imagesContainer}>
             <aside className={styles.allAsideImages}>
