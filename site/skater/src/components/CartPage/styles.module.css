@@ -1,89 +1,100 @@
-.container{
-    max-width:900px;
-    margin:0 auto;
-    padding:20px;
-    background-color: #e6e4e4;
-    border-radius: 12px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.1)
+.wrapper {
     
-}
-
-.ro1{
+    background-image: url("../../assets/checkout.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh; 
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start; 
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(230, 228, 228, 0.9); 
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative; 
+  }
+  
+  .row {
     background-color: #fff;
-    border-radius:10px;
-    padding:15px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
-
-row.hover{
-    transform: translateY(-3px);
-    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
-}
-
-.img-fluid{
-    border-radius:8px;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .img-fluid {
+    border-radius: 8px;
     max-height: 150px;
-    object-fit:cover;
-}
-
-.col-md-8{
-    display:flex;
-    flex-direction:column;
+    object-fit: cover;
+  }
+  
+  .col-md-8 {
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
-}
-
-h5{
+  }
+  
+  h5 {
     font-size: 1.4rem;
     font-weight: 600;
     color: #343a40;
-}
-p{
+  }
+  
+  p {
     font-size: 0.95rem;
     color: #6c757d;
-}
-p em{
+  }
+  
+  p em {
     color: #e36946;
     font-weight: bold;
-}
-
-button{
-    margin-right:10px;
-    margin-top:10px;
-    transition: background-color 0.2s ease, transfrom 0.2s ease;
-}
-
-button:hover{
-     transform:translateY(-2px);
-
-}
-
-button:active{
-    transform:translateY(1px);
-}
-
-button.btn-primary{
-    background-color:#007bff;
-    border:none;
-}
- button.btm-secondary{
+  }
+  
+  button {
+    margin-right: 10px;
+    margin-top: 10px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+  }
+  
+  button:active {
+    transform: translateY(1px);
+  }
+  
+  button.btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  button.btn-secondary {
     background-color: #6c757d;
     border: none;
- }
-
- button.btn-success{
+  }
+  
+  button.btn-success {
     background-color: #28a745;
-    border:none;
- }
- h3{
-    margin-top:30px;
+    border: none;
+  }
+  
+  h3 {
+    margin-top: 30px;
     font-size: 1.5rem;
     font-weight: 600;
     text-align: right;
     color: #343a40;
- }
-
- p.empty-message{
-    text-align:center;
+  }
+  
+  p.empty-message {
+    text-align: center;
     font-size: 1.2rem;
     color: #6c757d;
- }
+  }
+  
