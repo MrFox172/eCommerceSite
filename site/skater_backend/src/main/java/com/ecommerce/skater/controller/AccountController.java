@@ -137,11 +137,11 @@ public class AccountController {
     // add address to account
     @Operation(summary = "Add Address to Account", description = "Adds an address to an account")
     @PostMapping("/address")
-    public Account addAddressToAccount(@RequestBody AddressDto address) {
+    public ResponseEntity addAddressToAccount(@RequestBody AddressDto address) {
 
         Account account = accountRepo.findById(address.accountId()).orElse(null);
         if(account == null) {
-            return null;
+            return new ResponseEntity("Account Does not exist", HttpStatus.BAD_REQUEST);
         }
         Address newAddress = new Address();
         newAddress.setRecipientName(address.recipientName());
@@ -150,7 +150,7 @@ public class AccountController {
         newAddress.setState(address.state());
         newAddress.setZip(address.zip());
         account.addAddress(newAddress);
-        return accountRepo.save(account);
+        return new ResponseEntity(accountRepo.save(account), HttpStatus.OK);
     }
 
     // update address to account
