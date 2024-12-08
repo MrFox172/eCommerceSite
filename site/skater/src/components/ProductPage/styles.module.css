@@ -1,0 +1,24 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items:stretch;
+    flex-direction: row;
+    margin-top: 50px;
+}
+
+.productImage img{
+    width: 300px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+.allImages img{
+    width: 150px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+.allImages img:hover{
+    cursor: pointer;
+    border: 2px solid #ff6f00;
+}
