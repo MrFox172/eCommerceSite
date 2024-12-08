@@ -5,7 +5,7 @@ interface Address {
   street: string;
   city: string;
   state: string;
-  zipCode: string;
+  zip: string;
 }
 
 interface Register {

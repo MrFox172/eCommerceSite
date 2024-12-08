@@ -137,20 +137,38 @@ public class AccountController {
     // add address to account
     @Operation(summary = "Add Address to Account", description = "Adds an address to an account")
     @PostMapping("/address")
-    public Account addAddressToAccount(@RequestBody AddressDto address) {
+    public ResponseEntity addAddressToAccount(@RequestBody AddressDto address) {
 
         Account account = accountRepo.findById(address.accountId()).orElse(null);
         if(account == null) {
-            return null;
+            return new ResponseEntity("Account Does not exist", HttpStatus.BAD_REQUEST);
         }
         Address newAddress = new Address();
         newAddress.setRecipientName(address.recipientName());
         newAddress.setStreet(address.street());
         newAddress.setCity(address.city());
         newAddress.setState(address.state());
-        newAddress.setZip(address.zipCode());
+        newAddress.setZip(address.zip());
         account.addAddress(newAddress);
-        return accountRepo.save(account);
+        return new ResponseEntity(accountRepo.save(account), HttpStatus.OK);
+    }
+
+    // update address to account
+    @Operation(summary = "Update Address to Account", description = "Updates an address to an account")
+    @PutMapping("/address/{addressId}")
+    public ResponseEntity updateAddressToAccount(@PathVariable int addressId, @RequestBody AddressDto address) {
+
+        var addressToUpdate = addressRepo.findById(addressId).orElse(null);
+        if(addressToUpdate == null) {
+            return new ResponseEntity("Address Account Does not exist", HttpStatus.BAD_REQUEST);
+        }
+        addressToUpdate.setRecipientName(address.recipientName());
+        addressToUpdate.setStreet(address.street());
+        addressToUpdate.setCity(address.city());
+        addressToUpdate.setState(address.state());
+        addressToUpdate.setZip(address.zip());
+        addressRepo.save(addressToUpdate);
+        return new ResponseEntity(addressRepo.save(addressToUpdate).getAccount(), HttpStatus.OK);
     }
 
     // remove address from account

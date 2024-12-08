@@ -20,12 +20,15 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
   const cart = useCart();
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [accountId, setAccountId] = useState<string>("");
 
   useEffect(() => {
     if (props.localUser !== "") {
       setIsLogged(true);
+      setAccountId(JSON.parse(props.localUser).id);
     } else {
       setIsLogged(false);
+      setAccountId("");
     }
   }, [props.localUser]);
 
@@ -86,7 +89,7 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
               </Form>
               {isLogged ? (
                 <>
-                  <Nav.Link href={`/account`}>Account</Nav.Link>
+                  <Nav.Link href={`/account/${accountId}`}>Account</Nav.Link>
                   <Nav.Link href="/logout">Logout</Nav.Link>
                 </>
               ) : (

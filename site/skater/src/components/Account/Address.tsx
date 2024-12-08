@@ -5,11 +5,11 @@ import { Address as IAddress } from "../../interfaces/user";
 import { useFetch } from "../../hooks/useFetch";
 import AddressCard from "./AddressCard";
 
-const Address = (props: { account: IAccount; setAccount }) => {
+const Address = ({ accountId }) => {
   const [addressList, setAddressList] = useState<IAddress[]>([]);
   const [show, setShow] = useState<boolean>(false);
 
-  const { data } = useFetch(`/account/${props.account.id}/address`);
+  const { data } = useFetch(`/account/${accountId}/address`);
 
   useEffect(() => {
     if (data) {
@@ -20,23 +20,23 @@ const Address = (props: { account: IAccount; setAccount }) => {
   return (
     <>
       <h4 className="mt-5">Address</h4>
-      <Button size="sm" variant="outline-primary" onClick={() => setShow(true)}>
+      <Button size="sm" className="" variant="outline-primary rounded-5" title="Add new Address" onClick={() => setShow(true)}>
         {" "}
-        +{" "}
+        Add new address{" "}
       </Button>
       <hr />
       {addressList.map((address) => (
         <AddressCard
           key={address.id}
-          accountId={props.account.id}
+          accountId={accountId}
           existingAddress={address}
           setShow={setShow}
           setAddressList={setAddressList}
         />
       ))}
-      <div className={show ? "d-inline" : "d-none"}>
+      <div className={show ? "d-inline mt-3" : "d-none mt-3"}>
         <AddressCard
-          accountId={props.account.id}
+          accountId={accountId}
           existingAddress={null}
           setShow={setShow}
           setAddressList={setAddressList}
