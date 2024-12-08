@@ -12,6 +12,27 @@ function ProductPage() {
   const { id } = useParams();
   const { data, isPending, error } = useFetch(`/product/${id}`);
   const [product, setProduct] = useState<Product | null>(null);
+  const [count, setCount] = useState(1);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  const decrement = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+
+  const changeCount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") {
+      console.log("Value changed to 0");
+      setCount(0);
+    } else {
+      console.log("Value changed to " + e.target.value);
+      setCount(parseInt(e.target.value));
+    }
+  };
 
   const changeCurrentImage = (event: React.MouseEvent<HTMLImageElement>) => {
     setCurrentImage(event.currentTarget.src);
@@ -26,10 +47,25 @@ function ProductPage() {
 
   useEffect(() => {
     if (product) {
-      //truthy once data is set
+      //first time the product is loaded in, we set the images
+      if (product.productImages) {
+        setAllImages(product.productImages.map((image) => image.imageUrl));
+        setCurrentImage(product.productImages[0].imageUrl);
+      }
       console.log(product);
     }
   }, [product]);
+
+  /* Code stub to be used later
+                <Button onClick={decrement}>-</Button>
+              <input
+                className={styles.input}
+                type="text"
+                value={count}
+                onChange={changeCount}
+              />
+              <Button onClick={increment}>+</Button>
+*/
 
   const getSimilarProducts = () => {};
   return (

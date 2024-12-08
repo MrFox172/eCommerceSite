@@ -9,32 +9,24 @@ import { useState } from "react";
 const ProductCard: React.FC<Product> = (product) => {
   const [count, setCount] = useState(1);
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  };
-
-  const changeCount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") {
-      console.log("Value changed to 0");
-      setCount(0);
-    } else {
-      console.log("Value changed to " + e.target.value);
-      setCount(parseInt(e.target.value));
-    }
-  };
-
   const navigate = useNavigate();
 
   return (
     <>
       <Card className="p-2" key={product.id}>
-        <Card.Img variant="top" className={styles.image_holder} src={img} />
+        {product.productImages && product.productImages.length > 0 ? (
+          <>
+            <Card.Img
+              variant="top"
+              className={styles.image_holder}
+              src={product.productImages[0].imageUrl}
+            />
+          </>
+        ) : (
+          <>
+            <Card.Img variant="top" className={styles.image_holder} src={img} />
+          </>
+        )}
         <hr />
         <Card.Body className="p-2">
           <div>
@@ -50,7 +42,20 @@ const ProductCard: React.FC<Product> = (product) => {
               {product.tags.split(",").join(", ")}
             </p>
             <strong>
-              <h2 className="my-3">${product.price.toFixed(2)}</h2>
+              {product.onSale ? (
+                <>
+                  <h2 className="my-3">
+                    <del>${product.price.toFixed(2)}</del>
+                  </h2>
+                  <h2 className="my-3">
+                    <em>On Sale!</em> ${product.salePrice.toFixed(2)}
+                  </h2>
+                </>
+              ) : (
+                <>
+                  <h2 className="my-3">${product.price.toFixed(2)}</h2>
+                </>
+              )}
             </strong>
             <div className={styles.buttonSplit}>
               <Button
@@ -60,14 +65,7 @@ const ProductCard: React.FC<Product> = (product) => {
               >
                 Add to cart
               </Button>
-              <Button onClick={decrement}>-</Button>
-              <input
-                className={styles.input}
-                type="text"
-                value={count}
-                onChange={changeCount}
-              />
-              <Button onClick={increment}>+</Button>
+
               <Button
                 variant="outline-secondary"
                 size="sm"
