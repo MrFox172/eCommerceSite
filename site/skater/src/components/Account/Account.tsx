@@ -12,20 +12,20 @@ const Account = (props : {localUser: string, setLocalUser: () => void}) => {
   const [activeTab, setActiveTab] = useState("");
   const [account, setAccount] = useState<IAccount | null>(null);
   const [showSellerOptions, setShowSellerOptions] = useState<boolean>(false);
-  const [url, setUrl] = useState<string>("");
 
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
 
+  const { id } = useParams();
+
   useEffect(() => {
     if (props.localUser === "") {
       navigate("/login");
     }
-    setUrl(`/account/${JSON.parse(props.localUser).id}`)
   }, [props.localUser, navigate]);
 
-  const { data } = useFetch(url);
+  const { data } = useFetch(`/account/${id}`);
 
   useEffect(() => {
     if (data) {
@@ -49,8 +49,6 @@ const Account = (props : {localUser: string, setLocalUser: () => void}) => {
           <Col>
             <Row>
               <Col className="py-4">
-                <h4>{activeTab}</h4>
-                <hr />
                 <div className="alert alert-info mx-4 p-5" role="alert">
                   This page is for changing account details, payment methods,
                   and other account settings.

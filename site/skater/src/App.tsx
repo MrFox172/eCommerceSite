@@ -91,16 +91,16 @@ function App() {
             }
           />
           <Route
-            path="/account"
+            path="/account/:id"
             element={
               <Account localUser={localUser} setLocalUser={setLocalUser} />
             }
           >
 
-            <Route path="/account/profile" element={<Profile />} />
-            <Route path="/account/seller" element={<SellerProducts />} />
-            <Route path="/account/orders" Component={Orders} />
-            <Route path="/account/payments" Component={Payments} />
+            <Route path="/account/:id/profile" element={<Profile />} />
+            <Route path="/account/:id/seller" element={<SellerProducts />} />
+            <Route path="/account/:id/orders" Component={Orders} />
+            <Route path="/account/:id/payments" Component={Payments} />
           </Route>
           <Route path="/cart" Component={Home} />
           <Route

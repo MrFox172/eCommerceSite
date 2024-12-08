@@ -37,20 +37,21 @@ export const AccountMenu = (props: {
 
   const handleOnClick = (e: React.SyntheticEvent, tab: string) => {
     e.preventDefault();
+    const target = e.target as HTMLAnchorElement;
     props.setActiveTab(tab);
-    
-    if (tab === "Products") {
-      navigate("/account/seller")
-    } else {
-      navigate("/account/" + tab.toLowerCase())
-    };
+
+    console.log(target.href)
+
+    target.classList.add("active");
+
+    window.location.href = target.href;
   };
 
   return (
     <>
       <div className="my-2 mb-5 px-3">
         <h5>
-          <Link to={"/account"}>Welcome Back, {props.account?.firstname}</Link>{" "}
+          <Link to={`/account/${props.account?.id}`}>Welcome Back, {props.account?.firstname}</Link>{" "}
         </h5>
         <hr />
         <h4 className="text-center justify-content-center ">
@@ -71,8 +72,8 @@ export const AccountMenu = (props: {
               action
               variant="light"
               key={setting}
-              href={`/account/${setting.toLowerCase()}`}
-              onClick={(e) => handleOnClick(e, setting)}
+              href={`/account/${props.account?.id}/${setting.toLowerCase()}`}
+              onClick={(e) => props.setActiveTab(setting)}
             >
               {setting}
             </ListGroup.Item>
@@ -98,7 +99,7 @@ export const AccountMenu = (props: {
             <ListGroup.Item
               action
               variant="light"
-              href="/account/seller"
+              href={`/account/${props.account?.id}/seller`}
               onClick={(e) => handleOnClick(e, "Products")}
             >
               Products
