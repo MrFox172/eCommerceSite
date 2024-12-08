@@ -12,3 +12,27 @@
   display: inline-block;
   margin-right: -0.75rem;
 }
+
+.cartIcon {
+  width: 2rem;
+  display: inline-block;
+}
+
+.cartGroup {
+  position: relative;
+  display: inline-block;
+}
+
+.cartCount {
+  position: absolute;
+  top: 0;
+  right: ;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.1rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: center;
+  min-width: 1.5rem;
+}

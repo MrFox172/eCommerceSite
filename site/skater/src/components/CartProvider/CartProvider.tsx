@@ -59,6 +59,10 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setCart([]);
   };
 
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -67,6 +71,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         removeProduct,
         updateProductQuantity,
         clearCart,
+        getTotalItems
       }}
     >
       {children}
