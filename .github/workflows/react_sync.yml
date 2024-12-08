@@ -65,6 +65,7 @@ jobs:
         key: ${{ secrets.WILL_EC2_KEY }}
         script: |
           cd /home/ubuntu/skater/dist
+          sudo rm -rf dist
           tar -xzf react_dist.tar.gz
-          sudo rm -rf /var/www/html2
+          sudo rm -rf /var/www/html2/*
           sudo cp -r dist/* /var/www/html2
