@@ -4,10 +4,10 @@ import img from "../../assets/img-placeholder.svg";
 import { Card, Button } from "react-bootstrap";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useCart } from "../CartProvider/CartProvider";
 
 const ProductCard: React.FC<Product> = (product) => {
-  const [count, setCount] = useState(1);
+  const cart = useCart();
 
   const navigate = useNavigate();
 
@@ -62,6 +62,7 @@ const ProductCard: React.FC<Product> = (product) => {
                 variant="warning"
                 size="sm"
                 className={styles.primaryButton}
+                onClick={() => cart.addProduct(product, 1)}
               >
                 Add to cart
               </Button>

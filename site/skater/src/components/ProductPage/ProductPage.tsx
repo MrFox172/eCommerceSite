@@ -10,6 +10,8 @@ import { Button } from "react-bootstrap";
 import ProductCard from "../ProductCard/ProductCard";
 //Writing custom axios instance to allow for cross origin requests
 import axios from "axios";
+import { useCart } from "../CartProvider/CartProvider";
+
 axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
 function ProductPage() {
@@ -26,6 +28,7 @@ function ProductPage() {
   const { data, isPending, error } = useFetch(`/product/${id}`);
   const [product, setProduct] = useState<Product | null>(null);
   const [count, setCount] = useState(1);
+  const cart = useCart();
 
   const increment = () => {
     setCount(count + 1);
@@ -92,6 +95,10 @@ function ProductPage() {
     }
   };
 
+  const addToCart = () => {
+    cart.addProduct(product, count);
+}
+
   return (
     <>
       <main className={styles.outer}>
@@ -151,6 +158,8 @@ function ProductPage() {
               onChange={changeCount}
             />
             <Button onClick={increment}>+</Button>
+            
+            <Button onClick={addToCart}>Add to Cart</Button>
           </div>
         </div>
         {/*end of div "main"*/}
