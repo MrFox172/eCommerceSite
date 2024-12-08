@@ -26,11 +26,6 @@ public class Shipment {
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_order_id", referencedColumnName = "id")
-    @JsonBackReference
-    private AccountOrder accountOrder;
-
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     @JsonManagedReference
     private Address address;

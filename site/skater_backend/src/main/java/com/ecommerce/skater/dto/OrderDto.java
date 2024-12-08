@@ -8,7 +8,6 @@ public record OrderDto(
         int shippingMethodId,
         int addressId,
         List<OrderedProduct> orderedProducts,
-        double expectedOrderTotal,
-        String status
+        double expectedOrderTotal
 ) {
 }
