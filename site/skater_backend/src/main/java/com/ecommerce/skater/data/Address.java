@@ -30,6 +30,9 @@ public class Address {
     @JsonBackReference
     private Account account;
 
+    @Column(name = "recipient_name", nullable = false, length = 50)
+    private String recipientName;
+
     @Column(name = "street", nullable = false, length = 50)
     private String street;
 

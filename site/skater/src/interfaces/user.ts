@@ -1,9 +1,10 @@
 interface Address {
+  id: number;
   accountId: number;
+  recipientName: string;
   street: string;
   city: string;
   state: string;
-  country: string;
   zipCode: string;
 }
 

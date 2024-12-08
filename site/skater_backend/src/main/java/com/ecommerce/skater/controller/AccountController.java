@@ -124,7 +124,7 @@ public class AccountController {
 
     // get addresses by account
     @Operation(summary = "Get Addresses by Account ID", description = "Returns a list of addresses by account ID")
-    @GetMapping("/{accountId}/addresses")
+    @GetMapping("/{accountId}/address")
     public List<Address> getAddressesByAccountId(@PathVariable int accountId) {
 
         Account account = accountRepo.findById(accountId).orElse(null);
@@ -144,10 +144,10 @@ public class AccountController {
             return null;
         }
         Address newAddress = new Address();
+        newAddress.setRecipientName(address.recipientName());
         newAddress.setStreet(address.street());
         newAddress.setCity(address.city());
         newAddress.setState(address.state());
-        //newAddress.setCountry(address.country());
         newAddress.setZip(address.zipCode());
         account.addAddress(newAddress);
         return accountRepo.save(account);

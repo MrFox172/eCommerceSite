@@ -277,7 +277,7 @@ const AddEditProductModal = ({
               : handleProductUpdateSubmit
           }
         >
-          <input type="hidden" id="id" value={product.id} />
+          <input type="hidden" id="id" value={product?.id} />
           <Row className="my-4">
             <FormGroup>
               <Form.Label>Product Brand:</Form.Label>
@@ -386,15 +386,13 @@ const AddEditProductModal = ({
                 required
                 onChange={handleOnChangeSelect}
                 size="sm"
+                value={product?.category?.name || ""}
               >
                 <option>Select Category</option>
                 {categories.map((category) => (
                   <option
                     key={category.id}
-                    value={category.name || "Select Category"}
-                    selected={
-                      product?.category?.name === category.name ? true : false
-                    }
+                    value={category.name}
                   >
                     {category.name}
                   </option>

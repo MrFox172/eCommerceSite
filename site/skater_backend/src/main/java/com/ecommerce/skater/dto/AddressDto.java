@@ -5,7 +5,7 @@ public record AddressDto(
         String street,
         String city,
         String state,
-        String country,
-        String zipCode
+        String zipCode,
+        String recipientName
 ) {
 }
