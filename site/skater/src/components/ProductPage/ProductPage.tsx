@@ -6,7 +6,12 @@ import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
 //import { useCart } from "../../contexts/CartContext";
-import { Card, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import ProductCardRecommendations from "../ProductCardRecommendations/ProductCardRecommendations";
+
+//Writing custom axios instance to allow for cross origin requests
+import axios from "axios";
+axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
 function ProductPage() {
   const [currentImage, setCurrentImage] = useState<ProductImage>({
@@ -16,6 +21,7 @@ function ProductPage() {
     createdate: "",
   });
   const [allImages, setAllImages] = useState<ProductImage[]>([currentImage]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const { id } = useParams();
   const { data, isPending, error } = useFetch(`/product/${id}`);
@@ -54,6 +60,7 @@ function ProductPage() {
     }
   }, [data]);
 
+  //use effect to set the images and tags
   useEffect(() => {
     if (product) {
       //first time the product is loaded in, we set the images
@@ -61,11 +68,31 @@ function ProductPage() {
         setAllImages(product.productImages);
         setCurrentImage(product.productImages[0]);
       }
+      if (product.tags) {
+        setSearchTerm(product.tags.split(",")[0]); //set the search term to the first tag, the highest priority tag
+      }
       console.log(product);
     }
   }, [product]);
 
-  const getSimilarProducts = () => {};
+  //The use effect to get the similar products
+  //This could be combined with the above use effect, but it is separated for clarity
+  useEffect(() => {
+    if (searchTerm) {
+      getSimilarProducts();
+    }
+  }, [searchTerm]);
+
+  const getSimilarProducts = async () => {
+    const response = await axios.get<Product[]>(
+      `https://www.thelowerorbit.com:8080/api/product/search?keyword=${searchTerm}`
+    );
+    if (response && response.data !== null) {
+      console.log(response.data);
+      setSimilarProducts(response.data.filter((product) => product.id !== parseInt(id)));
+    }
+  };
+
   return (
     <>
       <main className={styles.outer}>
@@ -129,14 +156,10 @@ function ProductPage() {
         </div>
         {/*end of div "main"*/}
         <div className={styles.similarProducts}>
-          <h2>Similar Products</h2>
-          <div className={styles.similarProductsList}>
-            <div className={styles.similarProduct}>
-              <img src="https://via.placeholder.com/150" alt="Product" />
-              <h3>Product Name</h3>
-              <p>Price: $0.00</p>
-            </div>
-          </div>
+            {similarProducts.length > 0 ? (<>
+                <h2>Similar Products</h2>
+                {similarProducts.map((product: Product) => <ProductCardRecommendations key={product.id} {...product} />)}
+            </>):(<></>)}
         </div>
       </main>
     </>
