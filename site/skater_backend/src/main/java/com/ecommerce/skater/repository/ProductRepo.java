@@ -31,7 +31,8 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
             "LOWER(p.description) LIKE LOWER(CONCAT('%',?1,'%')) OR " +
             "LOWER(p.tags) LIKE LOWER(CONCAT('%',?1,'%')) OR " +
             "LOWER(p.brand) LIKE LOWER(CONCAT('%',?1,'%')) OR " +
-            "LOWER(p.category.name) LIKE LOWER(CONCAT('%',?1,'%'))")
+            "LOWER(p.category.name) LIKE LOWER(CONCAT('%',?1,'%')) OR " +
+            "CAST(p.price AS string) LIKE LOWER(CONCAT('%',?1,'%'))")
     List<Product> findBySearchKeyword(String keyword);
 
     // get all product brand names
