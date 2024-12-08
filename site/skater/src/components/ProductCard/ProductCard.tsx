@@ -50,7 +50,7 @@ const ProductCard: React.FC<Product> = (product) => {
               {product.tags.split(",").join(", ")}
             </p>
             <strong>
-              <h2 className="my-3">${product.price}</h2>
+              <h2 className="my-3">${product.price.toFixed(2)}</h2>
             </strong>
             <div className={styles.buttonSplit}>
               <Button

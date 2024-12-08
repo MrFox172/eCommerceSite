@@ -59,7 +59,7 @@ const ProductSalesCard: React.FC<Product> = (product) => {
                   Originally:
                   <strong>
                     <span className="my-3">
-                      <del>${product.price}</del>
+                      <del>${product.price.toFixed(2)}</del>
                     </span>
                   </strong>
                 </p>
@@ -68,7 +68,9 @@ const ProductSalesCard: React.FC<Product> = (product) => {
                     <>
                       Now:
                       <strong>
-                        <span className="my-3">${product.salePrice}</span>
+                        <span className="my-3">
+                          ${product.salePrice.toFixed(2)}
+                        </span>
                       </strong>
                     </>
                   ) : (
