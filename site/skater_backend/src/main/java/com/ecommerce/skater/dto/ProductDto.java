@@ -11,7 +11,6 @@ public record ProductDto(
         String tags,
         int sellerAccountId,
         String brand,
-        Double salePrice,
         double salePercent
 ) {
 }

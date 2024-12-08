@@ -33,7 +33,7 @@ public class AccountOrder {
     private Account account;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "shipment_id", referencedColumnName = "id")
     @JsonManagedReference
     private Shipment shipment;
 

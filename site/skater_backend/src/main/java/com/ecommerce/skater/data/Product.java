@@ -6,13 +6,11 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -44,12 +42,12 @@ public class Product {
     @Column(name = "sale_percent", nullable = false, precision=10, scale=2)
     private BigDecimal salePercent;
 
+    @Transient
     @Column(name = "sale_price", nullable = false, precision=10, scale=2)
     private BigDecimal salePrice;
 
     // create a compute variable for that returns a boolean based on salePrice and price
     public boolean isOnSale() {
-
         return salePercent.compareTo(BigDecimal.valueOf(0.0)) > 0;
     }
 

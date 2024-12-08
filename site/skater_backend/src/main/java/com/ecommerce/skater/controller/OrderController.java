@@ -44,6 +44,8 @@ public class OrderController {
 
     @Autowired
     private AddressRepo addressRepo;
+    @Autowired
+    private ShipmentRepo shipmentRepo;
 
     @Operation(summary = "Check Cart", description = "Checks if the products in the cart are valid")
     @PostMapping("/cart/check")
@@ -70,7 +72,7 @@ public class OrderController {
                 throw new RuntimeException("Not enough stock for product: " + product.getName());
             }
 
-            if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice())) {
+            if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
                 throw new RuntimeException("Price does not match product price: " + product.getName());
             }
             });
@@ -96,10 +98,15 @@ public class OrderController {
             new ResponseEntity("No products in order", HttpStatus.BAD_REQUEST);
         }
 
+        LocalDate date = LocalDate.now();
+        UUID uuid = UUID.randomUUID();
+        UUID accountUid = UUID.randomUUID();
+
         AccountOrder accountOrder = new AccountOrder();
         accountOrder.setAccount(account);
         accountOrder.setOrderStatus("PENDING");
         accountOrder.setOrderTotal(BigDecimal.valueOf(order.expectedOrderTotal()));
+        accountOrder.setOrderNumber("ORD" + "-" + date.toString().replace("-","") + "-" + accountUid.toString().substring(0,7) + account.getId());
 
         List<Product> products = new ArrayList<>();
 
@@ -120,13 +127,15 @@ public class OrderController {
                     throw new RuntimeException("Not enough stock for product: " + product.getName());
                 }
 
-                if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice())) {
+
+                if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
                     throw new RuntimeException("Price does not match product price: " + product.getName());
                 }
 
                 ProductOrder productOrder = new ProductOrder();
                 productOrder.setProduct(product);
                 productOrder.setQuantity(x.expectedQuantity());
+                productOrder.setLineTotal(product.getPrice().multiply(BigDecimal.valueOf(x.expectedQuantity())));
                 accountOrder.addProductOrder(productOrder);
                 product.setStockOnHand(product.getStockOnHand() - x.expectedQuantity());
                 products.add(product);
@@ -150,22 +159,20 @@ public class OrderController {
             //return new ResponseEntity("Payment Method not found", HttpStatus.BAD_REQUEST);
         }
 
-        LocalDate date = LocalDate.now();
-        UUID uuid = UUID.randomUUID();
-        // create guid for order number
-
         Shipment shipment = new Shipment();
         shipment.setAddress(address);
         shipment.setShippingMethod(shippingMethod);
-        shipment.setShipmentStatus("PENDING");
+        shipment.setShipmentStatus("Processing...");
         shipment.setShipmentDate(Date.valueOf(date.plusDays(shipment.getDaysToDeliver())));
         shipment.setTrackingNumber(uuid.toString().replace("-", ""));
         accountOrder.setShipment(shipment);
-        accountOrder.setOrderNumber("ORD" + "-" + date.toString() + "-" + "0000000" + account.getId());
+        shipmentRepo.save(shipment);
+
+        var completeOrder = accountOrderRepo.save(accountOrder);
 
         productRepo.saveAll(products);
 
-        return new ResponseEntity(accountOrderRepo.save(accountOrder), HttpStatus.OK);
+        return new ResponseEntity(completeOrder, HttpStatus.OK);
     }
 
     @Operation(summary = "Get All Orders", description = "Returns a list of all orders")

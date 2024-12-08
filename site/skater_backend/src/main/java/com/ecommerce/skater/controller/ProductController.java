@@ -54,7 +54,6 @@ public class ProductController {
         newProduct.setStockOnHand(product.stockOnHand());
         newProduct.setTags(product.tags());
         newProduct.setBrand(product.brand());
-        newProduct.setSalePrice(BigDecimal.valueOf(product.salePrice()));
         newProduct.setSalePercent(BigDecimal.valueOf(product.salePercent()));
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
@@ -99,7 +98,6 @@ public class ProductController {
             product.setStockOnHand(productDetails.stockOnHand());
             product.setTags(productDetails.tags());
             product.setBrand(productDetails.brand());
-            product.setSalePrice(BigDecimal.valueOf(productDetails.salePrice()));
             product.setSalePercent(BigDecimal.valueOf(productDetails.salePercent()));
 
             var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
