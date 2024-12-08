@@ -14,6 +14,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import { Route, Routes } from "react-router-dom";
 import Verify from "./components/Auth/Verify";
 import ProductPage from "./components/ProductPage/ProductPage";
+import CartPage from "./components/CartPage/CartPage";
 
 import SkateboardBG from "./assets/SkateboardCarouselBackdrop.png";
 import SkateBG from "./assets/SkatesCarouselBackdrop.png";
@@ -105,7 +106,7 @@ function App() {
             <Route path="/account/:id/orders" Component={Orders} />
             <Route path="/account/:id/payments" Component={Payments} />
           </Route>
-          <Route path="/cart" Component={Home} />
+          <Route path="/cart" Component={CartPage} />
           <Route
             path="/register"
             element={

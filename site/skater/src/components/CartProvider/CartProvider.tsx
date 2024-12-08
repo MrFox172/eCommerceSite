@@ -49,9 +49,11 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const updateProductQuantity = (product: Product, quantity: number) => {
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.product.id === product.id ? { ...item, quantity } : item
-      )
+      prevCart
+        .map((item) =>
+          item.product.id === product.id ? { ...item, quantity } : item
+        )
+        .filter((item) => item.quantity > 0)
     );
   };
 
@@ -63,6 +65,10 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   }
 
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -71,7 +77,8 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         removeProduct,
         updateProductQuantity,
         clearCart,
-        getTotalItems
+        getTotalItems,
+        getTotalPrice
       }}
     >
       {children}
