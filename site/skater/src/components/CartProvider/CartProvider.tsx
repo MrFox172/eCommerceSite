@@ -22,6 +22,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
+    console.log("Cart updated:", cart);
   }, [cart]);
 
   const addProduct = (product: Product, quantity: number) => {
@@ -58,6 +59,10 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setCart([]);
   };
 
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -66,6 +71,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         removeProduct,
         updateProductQuantity,
         clearCart,
+        getTotalItems
       }}
     >
       {children}

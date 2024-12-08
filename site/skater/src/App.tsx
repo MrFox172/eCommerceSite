@@ -24,9 +24,11 @@ import AccessoriesBG from "./assets/AccessoriesCarouselBackdrop.png";
 import { useState } from "react";
 import Search from "./components/Search/Search";
 
-import { CartManager } from "./interfaces/cartManager";
+import { CartProvider } from "./components/CartProvider/CartProvider";
 
 import SellProductsPage from "./components/SellProductsPage/SellProductsPage";
+
+
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -36,6 +38,7 @@ function App() {
 
   return (
     <>
+    <CartProvider>
       <Header localUser={localUser} setLocalUser={setLocalUser} />
       <div className="min-vh-100">
         <Routes>
@@ -114,6 +117,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
+      </CartProvider>
     </>
   );
 }

@@ -6,7 +6,13 @@ import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
 //import { useCart } from "../../contexts/CartContext";
-import { Card, Button } from "react-bootstrap";
+import { Button, InputGroup, Form } from "react-bootstrap";
+import ProductCard from "../ProductCard/ProductCard";
+//Writing custom axios instance to allow for cross origin requests
+import axios from "axios";
+import { useCart } from "../CartProvider/CartProvider";
+
+axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
 function ProductPage() {
   const [currentImage, setCurrentImage] = useState<ProductImage>({
@@ -16,11 +22,13 @@ function ProductPage() {
     createdate: "",
   });
   const [allImages, setAllImages] = useState<ProductImage[]>([currentImage]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const { id } = useParams();
   const { data, isPending, error } = useFetch(`/product/${id}`);
   const [product, setProduct] = useState<Product | null>(null);
   const [count, setCount] = useState(1);
+  const cart = useCart();
 
   const increment = () => {
     setCount(count + 1);
@@ -54,6 +62,7 @@ function ProductPage() {
     }
   }, [data]);
 
+  //use effect to set the images and tags
   useEffect(() => {
     if (product) {
       //first time the product is loaded in, we set the images
@@ -61,14 +70,40 @@ function ProductPage() {
         setAllImages(product.productImages);
         setCurrentImage(product.productImages[0]);
       }
+      if (product.tags) {
+        setSearchTerm(product.tags.split(",")[0]); //set the search term to the first tag, the highest priority tag
+      }
       console.log(product);
     }
   }, [product]);
 
-  const getSimilarProducts = () => {};
+  //The use effect to get the similar products
+  //This could be combined with the above use effect, but it is separated for clarity
+  useEffect(() => {
+    if (searchTerm) {
+      getSimilarProducts();
+    }
+  }, [searchTerm]);
+
+  const getSimilarProducts = async () => {
+    const response = await axios.get<Product[]>(
+      `https://www.thelowerorbit.com:8080/api/product/search?keyword=${searchTerm}`
+    );
+    if (response && response.data !== null) {
+      console.log(response.data);
+      setSimilarProducts(
+        response.data.filter((product) => product.id !== parseInt(id))
+      );
+    }
+  };
+
+  const addToCart = () => {
+    cart.addProduct(product, count);
+  };
+
   return (
     <>
-      <main className={styles.outer}>
+      <main className={`container ${styles.outer}`}>
         <div className={styles.main}>
           <div className={styles.imagesContainer}>
             <aside className={styles.allAsideImages}>
@@ -115,28 +150,35 @@ function ProductPage() {
               </>
             )}
           </div>
-          <div className={styles.cart}>
-            <h2>Cart</h2>
-            <Button onClick={decrement}>-</Button>
-            <input
-              className={styles.input}
-              type="text"
-              value={count}
-              onChange={changeCount}
-            />
-            <Button onClick={increment}>+</Button>
+          <div className={`bg-light ${styles.cart}`}>
+            <h2>Buy New at ${product!=null && product.onSale? product.salePrice.toFixed(2):product?.price.toFixed(2)}</h2>
+            <p></p>
+            <InputGroup className="p-4 w-50">
+            <Button onClick={decrement} variant="outline-success" size="sm" className="">-</Button>
+            <Form.Control type="text" value={count} size="sm" onChange={changeCount} className="h-75"></Form.Control>
+            <Button onClick={increment} variant="outline-success" size="sm" className="">
+              +
+            </Button>
+            </InputGroup>
+            <Button onClick={addToCart} size="sm" className="rounded-5 px-4 bg-success">
+              Add to Cart
+            </Button>
           </div>
         </div>
         {/*end of div "main"*/}
         <div className={styles.similarProducts}>
-          <h2>Similar Products</h2>
-          <div className={styles.similarProductsList}>
-            <div className={styles.similarProduct}>
-              <img src="https://via.placeholder.com/150" alt="Product" />
-              <h3>Product Name</h3>
-              <p>Price: $0.00</p>
-            </div>
-          </div>
+          {similarProducts.length > 0 ? (
+            <>
+              <h2>Similar Products</h2>
+              <div className={styles.productCardGrid}>
+                {similarProducts.map((product: Product) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </main>
     </>

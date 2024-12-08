@@ -11,6 +11,7 @@ interface CartManager {
   removeProduct: (product: Product) => void;
   updateProductQuantity: (product: Product, quantity: number) => void;
   clearCart: () => void;
+  getTotalItems: () => number;
 }
 
 export type { CartItem, CartManager };

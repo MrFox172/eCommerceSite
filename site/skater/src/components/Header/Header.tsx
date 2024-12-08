@@ -6,14 +6,18 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import cartEmpty from "../../assets/shoppingCart.png";
+import cartFull from "../../assets/shoppingCartFilled.png";
 
 import { useEffect } from "react";
 import { useState } from "react";
+import { useCart } from "../CartProvider/CartProvider";
 
 import logoImage from "../../assets/SKATERLogoSmall.png";
 
 const Header = (props: { localUser: string; setLocalUser: () => void }) => {
   const navigate = useNavigate();
+  const cart = useCart();
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [accountId, setAccountId] = useState<string>("");
@@ -42,7 +46,7 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
       <Navbar expand="lg" bg="light" data-bs-theme="light">
         <Container fluid className="px-5">
           <Navbar.Brand href="/" className="fw-bold">
-            <img src={logoImage} className={styles.icon}/>
+            <img src={logoImage} className={styles.icon} />
             KATER.COM
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -91,9 +95,33 @@ const Header = (props: { localUser: string; setLocalUser: () => void }) => {
               ) : (
                 <Nav.Link href="/login">Login</Nav.Link>
               )}
-              <Nav.Link eventKey={2} href="#memes">
-                Cart
-              </Nav.Link>
+
+              {cart.getTotalItems() > 0 ? (
+                <>
+                  <Nav.Link href="/cart">
+                    <span className = {styles.cartGroup}>
+                      <img
+                        className={styles.cartIcon}
+                        src={cartFull}
+                        alt={"Cart Filled"}
+                      />
+                      <span className={styles.cartCount}>
+                        {cart.getTotalItems()}
+                      </span>
+                    </span>
+                  </Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Nav.Link href="/cart">
+                    <img
+                      className={styles.cartIcon}
+                      src={cartEmpty}
+                      alt="Cart Empty"
+                    />
+                  </Nav.Link>
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
