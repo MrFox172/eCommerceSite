@@ -1,14 +1,22 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
-import { Product } from "../../interfaces/products";
+import { Product, ProductImage } from "../../interfaces/products";
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
+import { useCart } from "../../contexts/CartContext";
+import { Card, Button } from "react-bootstrap";
 
 function ProductPage() {
-  const [currentImage, setCurrentImage] = useState<string>(defaultImage);
-  const [allImages, setAllImages] = useState<string[]>([defaultImage]);
+  const [currentImage, setCurrentImage] = useState<ProductImage>({
+    id: -1,
+    name: "None Available",
+    imageUrl: defaultImage,
+    createdate: "",
+  });
+  const [allImages, setAllImages] = useState<ProductImage[]>([currentImage]);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const { id } = useParams();
   const { data, isPending, error } = useFetch(`/product/${id}`);
   const [product, setProduct] = useState<Product | null>(null);
@@ -34,8 +42,8 @@ function ProductPage() {
     }
   };
 
-  const changeCurrentImage = (event: React.MouseEvent<HTMLImageElement>) => {
-    setCurrentImage(event.currentTarget.src);
+  const changeCurrentImage = (index: number) => {
+    setCurrentImage(allImages[index]);
   };
 
   //Use effect is split here to avoid unnecessary re-renders
@@ -48,68 +56,67 @@ function ProductPage() {
   useEffect(() => {
     if (product) {
       //first time the product is loaded in, we set the images
-      if (product.productImages) {
-        setAllImages(product.productImages.map((image) => image.imageUrl));
-        setCurrentImage(product.productImages[0].imageUrl);
+      if (product.productImages.length > 0) {
+        setAllImages(product.productImages);
+        setCurrentImage(product.productImages[0]);
       }
       console.log(product);
     }
   }, [product]);
 
-  /* Code stub to be used later
-                <Button onClick={decrement}>-</Button>
-              <input
-                className={styles.input}
-                type="text"
-                value={count}
-                onChange={changeCount}
-              />
-              <Button onClick={increment}>+</Button>
-*/
-
   const getSimilarProducts = () => {};
   return (
     <>
-      <main className={styles.main}>
-        <aside className={styles.allImages}>
-          {allImages.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt="Product"
-              onClick={changeCurrentImage}
-            />
-          ))}
-        </aside>
-        <div className={styles.productPage}>
-          <div className={styles.productImage}>
-            <img src={currentImage} alt="Product" />
+      <main className={styles.outer}>
+        <div className={styles.main}>
+          <div className={styles.imagesContainer}>
+            <aside className={styles.allAsideImages}>
+              {allImages.map((image: ProductImage, index) => (
+                <img
+                  key={index}
+                  src={image.imageUrl}
+                  alt={image.name}
+                  onClick={() => changeCurrentImage(index)}
+                />
+              ))}
+            </aside>
+            <div className={styles.productImage}>
+              <img src={currentImage.imageUrl} alt="Product" />
+              Image:{currentImage.name}
+            </div>
           </div>
-          <div className={styles.productDetails}>
-            <h2>Product Name</h2>
-            <p>Product Description</p>
-            <p>Price: $0.00</p>
-            <button>Add to Cart</button>
+          <div className={styles.productPage}>
+            <div className={styles.productDetails}>
+              <h2>Product Name</h2>
+              <p>Product Description</p>
+              <p>Price: $0.00</p>
+              <button>Add to Cart</button>
+            </div>
+          </div>
+          <div className={styles.cart}>
+            <h2>Cart</h2>
+            <Button onClick={decrement}>-</Button>
+            <input
+              className={styles.input}
+              type="text"
+              value={count}
+              onChange={changeCount}
+            />
+            <Button onClick={increment}>+</Button>
           </div>
         </div>
-        <div className={styles.cart}>
-          <h2>Cart</h2>
-          <p>Product Name</p>
-          <p>Price: $0.00</p>
-          <p>Quantity: 1</p>
-          <button>Remove</button>
+        {/*end of div "main"*/}
+        <div className={styles.similarProducts}>
+          <h2>Similar Products</h2>
+          <div className={styles.similarProductsList}>
+            <div className={styles.similarProduct}>
+              <img src="https://via.placeholder.com/150" alt="Product" />
+              <h3>Product Name</h3>
+              <p>Price: $0.00</p>
+            </div>
+          </div>
         </div>
       </main>
-      <div className={styles.similarProducts}>
-        <h2>Similar Products</h2>
-        <div className={styles.similarProductsList}>
-          <div className={styles.similarProduct}>
-            <img src="https://via.placeholder.com/150" alt="Product" />
-            <h3>Product Name</h3>
-            <p>Price: $0.00</p>
-          </div>
-        </div>
-      </div>
     </>
   );
 }
