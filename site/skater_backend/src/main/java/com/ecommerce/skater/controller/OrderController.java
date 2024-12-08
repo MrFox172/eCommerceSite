@@ -1,22 +1,23 @@
 package com.ecommerce.skater.controller;
 
-import com.ecommerce.skater.data.AccountOrder;
-import com.ecommerce.skater.data.Product;
-import com.ecommerce.skater.data.ProductOrder;
+import com.ecommerce.skater.data.*;
 import com.ecommerce.skater.dto.CartCheck;
-import com.ecommerce.skater.dto.Order;
+import com.ecommerce.skater.dto.OrderDto;
 import com.ecommerce.skater.dto.OrderedProduct;
-import com.ecommerce.skater.repository.AccountOrderRepo;
-import com.ecommerce.skater.repository.AccountRepo;
-import com.ecommerce.skater.repository.ProductOrderRepo;
-import com.ecommerce.skater.repository.ProductRepo;
+import com.ecommerce.skater.repository.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/order")
@@ -35,6 +36,15 @@ public class OrderController {
     @Autowired
     private ProductRepo productRepo;
 
+    @Autowired
+    private ShippingMethodRepo shippingMethodRepo;
+
+    @Autowired
+    private PaymentMethodRepo paymentMethodRepo;
+
+    @Autowired
+    private AddressRepo addressRepo;
+
     @Operation(summary = "Check Cart", description = "Checks if the products in the cart are valid")
     @PostMapping("/cart/check")
     public ResponseEntity cartCheck(@RequestBody CartCheck cartCheck) {
@@ -43,32 +53,38 @@ public class OrderController {
             return new ResponseEntity("No products in order", HttpStatus.BAD_REQUEST);
         }
 
-        cartCheck.orderedProducts().forEach(x -> {
+        try {
+
+            cartCheck.orderedProducts().forEach(x -> {
             var product = productRepo.findById(x.productId()).orElse(null);
 
             if (product == null) {
-                new ResponseEntity("Product not found", HttpStatus.BAD_REQUEST);
+                throw new RuntimeException("Product not found");
             }
 
             if (x.expectedQuantity() <= 0) {
-                new ResponseEntity("Quantity must be greater than 0", HttpStatus.BAD_REQUEST);
+                throw new RuntimeException("Quantity must be greater than 0");
             }
 
             if (x.expectedQuantity() > product.getStockOnHand()) {
-                new ResponseEntity("Not enough stock for product: " + product.getName(), HttpStatus.BAD_REQUEST);
+                throw new RuntimeException("Not enough stock for product: " + product.getName());
             }
 
-            if (x.expectedPrice() != product.getPrice()) {
-                new ResponseEntity("Price does not match product price: " + product.getName(), HttpStatus.BAD_REQUEST);
+            if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice())) {
+                throw new RuntimeException("Price does not match product price: " + product.getName());
             }
-        });
+            });
+
+        } catch (RuntimeException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity("Ordered Items Valid!!", HttpStatus.OK);
     }
 
     @Operation(summary = "Create Order", description = "Creates a new order")
     @PostMapping
-    public ResponseEntity createOrder(@RequestBody Order order) {
+    public ResponseEntity createOrder(@RequestBody OrderDto order) {
 
         var account = accountRepo.findById(order.accountId()).orElse(null);
 
@@ -83,33 +99,71 @@ public class OrderController {
         AccountOrder accountOrder = new AccountOrder();
         accountOrder.setAccount(account);
         accountOrder.setOrderStatus("PENDING");
-        accountOrder.setOrderTotal(order.expectedOrderTotal());
+        accountOrder.setOrderTotal(BigDecimal.valueOf(order.expectedOrderTotal()));
 
-        // Checking if the products in the order are valid
-        order.orderedProducts().forEach(x -> {
-            var product = productRepo.findById(x.productId()).orElse(null);
+        List<Product> products = new ArrayList<>();
 
-            if (product == null) {
-                new ResponseEntity("Product not found", HttpStatus.BAD_REQUEST);
-            }
+        try {
+            // Checking if the products in the order are valid
+            order.orderedProducts().forEach(x -> {
+                var product = productRepo.findById(x.productId()).orElse(null);
 
-            if (x.expectedQuantity() <= 0) {
-                new ResponseEntity("Quantity must be greater than 0", HttpStatus.BAD_REQUEST);
-            }
+                if (product == null) {
+                    throw new RuntimeException("Product not found");
+                }
 
-            if (x.expectedQuantity() > product.getStockOnHand()) {
-                new ResponseEntity("Not enough stock for product: " + product.getName(), HttpStatus.BAD_REQUEST);
-            }
+                if (x.expectedQuantity() <= 0) {
+                    throw new RuntimeException("Quantity must be greater than 0");
+                }
 
-            if (x.expectedPrice() != product.getPrice()) {
-                new ResponseEntity("Price does not match product price: " + product.getName(), HttpStatus.BAD_REQUEST);
-            }
+                if (x.expectedQuantity() > product.getStockOnHand()) {
+                    throw new RuntimeException("Not enough stock for product: " + product.getName());
+                }
 
-            ProductOrder productOrder = new ProductOrder();
-            productOrder.setProduct(product);
-            productOrder.setQuantity(x.expectedQuantity());
-            accountOrder.addProductOrder(productOrder);
-        });
+                if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice())) {
+                    throw new RuntimeException("Price does not match product price: " + product.getName());
+                }
+
+                ProductOrder productOrder = new ProductOrder();
+                productOrder.setProduct(product);
+                productOrder.setQuantity(x.expectedQuantity());
+                accountOrder.addProductOrder(productOrder);
+                product.setStockOnHand(product.getStockOnHand() - x.expectedQuantity());
+                products.add(product);
+            });
+        } catch (RuntimeException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        var shippingMethod = shippingMethodRepo.findById(order.shippingMethodId()).orElse(null);
+        if (shippingMethod == null) {
+            return new ResponseEntity("Shipping Method not found", HttpStatus.BAD_REQUEST);
+        }
+
+        var address = addressRepo.findById(order.addressId()).orElse(null);
+        if (address == null) {
+            return new ResponseEntity("Buyer Address not found", HttpStatus.BAD_REQUEST);
+        }
+
+        var paymentMethod = paymentMethodRepo.findById(order.paymentMethodId()).orElse(null);
+        if (paymentMethod == null) {
+            //return new ResponseEntity("Payment Method not found", HttpStatus.BAD_REQUEST);
+        }
+
+        LocalDate date = LocalDate.now();
+        UUID uuid = UUID.randomUUID();
+        // create guid for order number
+
+        Shipment shipment = new Shipment();
+        shipment.setAddress(address);
+        shipment.setShippingMethod(shippingMethod);
+        shipment.setShipmentStatus("PENDING");
+        shipment.setShipmentDate(Date.valueOf(date.plusDays(shipment.getDaysToDeliver())));
+        shipment.setTrackingNumber(uuid.toString().replace("-", ""));
+        accountOrder.setShipment(shipment);
+        accountOrder.setOrderNumber("ORD" + "-" + date.toString() + "-" + "0000000" + account.getId());
+
+        productRepo.saveAll(products);
 
         return new ResponseEntity(accountOrderRepo.save(accountOrder), HttpStatus.OK);
     }
@@ -187,6 +241,11 @@ public class OrderController {
             return new ResponseEntity<List<AccountOrder>>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<List<AccountOrder>>(accountOrderRepo.findByAccount(account), HttpStatus.OK);
+    }
+
+    @GetMapping("/shipping/options")
+    public ResponseEntity<List<ShippingMethod>> getShippingOptions() {
+        return new ResponseEntity<List<ShippingMethod>>(shippingMethodRepo.findAll(), HttpStatus.OK);
     }
 
 }

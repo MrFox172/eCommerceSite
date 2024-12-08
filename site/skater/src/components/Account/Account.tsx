@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect} from "react";
 import { AccountMenu } from "./AccountMenu";
 import SellerAccountModal from "../Seller/SellerAccountModal";
@@ -7,6 +7,7 @@ import { useFetch } from "../../hooks/useFetch";
 import { Account as IAccount } from "../../interfaces/user";
 
 const Account = (props : {localUser: string, setLocalUser: () => void}) => {
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("");
   const [account, setAccount] = useState<IAccount | null>(null);

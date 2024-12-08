@@ -17,6 +17,7 @@ interface Product {
   description: string;
   price: number;
   salePrice: number;
+  salePercent: number;
   brand: string;
   stockOnHand: number;
   category: Category;

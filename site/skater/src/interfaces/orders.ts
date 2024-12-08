@@ -1,6 +1,7 @@
 interface OrderedProduct {
   productId: number;
-  quantity: number;
+  expectedQuantity: number;
+  expectedPrice: number;
 }
 
 //ordering
@@ -8,6 +9,6 @@ interface Order {
   accountId: number;
   paymentMethodId: number;
   orderedProducts: OrderedProduct[];
-  orderTotal: number;
+  expectedOrderTotal: number;
   status: string;
 }

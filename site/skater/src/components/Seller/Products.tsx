@@ -85,11 +85,9 @@ const Products = () => {
         if (response.status === 200) {
           setSellerProducts(sellerProducts.filter((product) => product.id !== Number(target.id)));
         }
-        //setSaveMsg("Product deleted successfully...");
       })
       .catch((error) => {
         console.log(error);
-        //setSaveMsg("Error deleting product...");
       });
   };
 

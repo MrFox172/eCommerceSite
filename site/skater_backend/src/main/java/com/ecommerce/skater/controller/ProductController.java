@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ecommerce.skater.dto.ProductDto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +50,12 @@ public class ProductController {
         Product newProduct = new Product();
         newProduct.setName(product.name());
         newProduct.setDescription(product.description());
-        newProduct.setPrice(product.price());
+        newProduct.setPrice(BigDecimal.valueOf(product.price()));
         newProduct.setStockOnHand(product.stockOnHand());
         newProduct.setTags(product.tags());
         newProduct.setBrand(product.brand());
-        newProduct.setSalePrice(product.salePrice());
-        newProduct.setSalePercent(product.salePercent());
+        newProduct.setSalePrice(BigDecimal.valueOf(product.salePrice()));
+        newProduct.setSalePercent(BigDecimal.valueOf(product.salePercent()));
 
         var category = categoryRepo.findById(product.categoryId()).orElse(null);
         newProduct.setCategory(category);
@@ -94,12 +95,12 @@ public class ProductController {
 
             product.setName(productDetails.name());
             product.setDescription(productDetails.description());
-            product.setPrice(productDetails.price());
+            product.setPrice(BigDecimal.valueOf(productDetails.price()));
             product.setStockOnHand(productDetails.stockOnHand());
             product.setTags(productDetails.tags());
             product.setBrand(productDetails.brand());
-            product.setSalePrice(productDetails.salePrice());
-            product.setSalePercent(productDetails.salePercent());
+            product.setSalePrice(BigDecimal.valueOf(productDetails.salePrice()));
+            product.setSalePercent(BigDecimal.valueOf(productDetails.salePercent()));
 
             var category = categoryRepo.findById(productDetails.categoryId()).orElse(null);
             product.setCategory(category);
