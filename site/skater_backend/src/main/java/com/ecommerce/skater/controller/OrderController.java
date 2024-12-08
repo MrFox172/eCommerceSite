@@ -72,7 +72,7 @@ public class OrderController {
                 throw new RuntimeException("Not enough stock for product: " + product.getName());
             }
 
-            if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
+            if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
                 throw new RuntimeException("Price does not match product price: " + product.getName());
             }
             });
@@ -128,7 +128,7 @@ public class OrderController {
                 }
 
 
-                if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getPrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
+                if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
                     throw new RuntimeException("Price does not match product price: " + product.getName());
                 }
 
