@@ -21,9 +21,11 @@ const FixedSearch: React.FC<FixedSearchProps> = ({ searchTerm }) => {
     if (data && data !== null) {
       // Extract unique tags from the data
       const allTags = data
-        .map((product: IProduct) => product.tags.split(","))
+        .map((product: IProduct) =>
+          product.tags.split(",").map((tag) => tag.trim())
+        )
         .flat();
-      setTags(Array.from(new Set(allTags.filter(Boolean))));
+      setTags(Array.from(new Set(allTags.filter(Boolean))).sort());
     }
   }, [data]);
 
@@ -64,7 +66,7 @@ const FixedSearch: React.FC<FixedSearchProps> = ({ searchTerm }) => {
                         onChange={() => toggleFilter(tag)}
                         checked={filters.includes(tag)}
                       />
-                      {tag}
+                      &nbsp;{tag}
                     </label>
                   </li>
                 ))}
