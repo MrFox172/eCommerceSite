@@ -42,8 +42,7 @@ public class Product {
     @Column(name = "sale_percent", nullable = false, precision=10, scale=2)
     private BigDecimal salePercent;
 
-    @Transient
-    @Column(name = "sale_price", nullable = false, precision=10, scale=2)
+    @Column(name = "sale_price", nullable = false, insertable = false, updatable = false, precision=10, scale=2)
     private BigDecimal salePrice;
 
     // create a compute variable for that returns a boolean based on salePrice and price
