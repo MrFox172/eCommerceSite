@@ -59,15 +59,38 @@ const CartPage: React.FC = () => {
                     <p>Price: ${item.product.price.toFixed(2)}</p>
                   </>
                 )}
-                <Button variant="primary" onClick={()=>cart.updateProductQuantity(item.product,item.quantity+1)}>Add</Button>
-                <Button variant="secondary" onClick={()=>cart.updateProductQuantity(item.product,item.quantity-1)}>Remove</Button>
-                <Button variant="danger" onClick={()=>cart.removeProduct(item.product)}>Remove All</Button>
+                <Button
+                  variant="primary"
+                  onClick={() =>
+                    cart.updateProductQuantity(item.product, item.quantity + 1)
+                  }
+                >
+                  Add
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    cart.updateProductQuantity(item.product, item.quantity - 1)
+                  }
+                >
+                  Remove
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => cart.removeProduct(item.product)}
+                >
+                  Remove All
+                </Button>
               </div>
             </div>
           ))}
-            <h3>Sub Total: ${cart.getTotalPrice().toFixed(2)}</h3>
-          <Button variant="danger" onClick={cart.clearCart}>Clear Cart</Button>
-          <Button variant="success" onClick={()=>navigate("/")}>Checkout</Button>
+          <h3>Sub Total: ${cart.getTotalPrice().toFixed(2)}</h3>
+          <Button variant="danger" onClick={cart.clearCart}>
+            Clear Cart
+          </Button>
+          <Button variant="success" onClick={() => navigate("/checkout")}>
+            Checkout
+          </Button>
         </>
       )}
     </div>

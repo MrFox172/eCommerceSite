@@ -63,11 +63,21 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
-  }
+  };
 
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
-  }
+    const getCheapestPrice = (product: Product) => {
+      if (product.onSale) {
+        return product.salePrice;
+      }
+      return product.price;
+    };
+
+    return cart.reduce(
+      (total, item) => total + getCheapestPrice(item.product) * item.quantity,
+      0
+    );
+  };
 
   return (
     <CartContext.Provider
@@ -78,7 +88,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         updateProductQuantity,
         clearCart,
         getTotalItems,
-        getTotalPrice
+        getTotalPrice,
       }}
     >
       {children}
