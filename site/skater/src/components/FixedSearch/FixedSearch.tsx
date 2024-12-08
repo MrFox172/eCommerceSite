@@ -20,7 +20,7 @@ const FixedSearch: React.FC<FixedSearchProps> = ({ searchTerm }) => {
   useEffect(() => {
     if (data && data !== null) {
       // Extract unique tags from the data
-      const allTags = data
+      const allTags: string[] = data
         .map((product: IProduct) =>
           product.tags.split(",").map((tag) => tag.trim())
         )

@@ -29,7 +29,7 @@ const Search = () => {
   useEffect(() => {
     if (data && data !== null) {
       // Extract unique tags from the products
-      const allTags = data
+      const allTags: string[] = data
         .map((product: IProduct) =>
           product.tags.split(",").map((tag) => tag.trim())
         )

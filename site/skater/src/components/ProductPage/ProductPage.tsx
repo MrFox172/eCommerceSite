@@ -5,7 +5,7 @@ import { Product, ProductImage } from "../../interfaces/products";
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
-import { useCart } from "../../contexts/CartContext";
+//import { useCart } from "../../contexts/CartContext";
 import { Card, Button } from "react-bootstrap";
 
 function ProductPage() {

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Account as IAccount } from "../../interfaces/user";
 
 const Address = (props: {account: IAccount, setAccount}) => {
-  const [user, setUser] = useState<IAccount>({});
+  const [user, setUser] = useState<IAccount>({} as IAccount);
   const context: IAccount = useOutletContext();
   //const context = null;
   //console.log(context);

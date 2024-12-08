@@ -1,14 +1,15 @@
 import React from "react";
 import styles from "./styles.module.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { Product } from "../../interfaces/products";
 
 import ProductSalesCard from "../ProductSalesCard/ProductSalesCard";
 
-interface Product {
-  name: string;
-  price: string;
-  description?: string;
-}
+//interface Product {
+////  name: string;
+///  price: string;
+ // description?: string;
+//}
 
 interface CarouselProps {
   products: Product[]; // Array of products corresponding to images
