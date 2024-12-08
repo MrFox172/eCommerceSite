@@ -31,10 +31,11 @@ const AddEditProductModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [saveMsg, setSaveMsg] = useState<string>("");
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [salesPrice, setSalesPrice] = useState<number>(0);
 
   useEffect(() => {
     axios
-      .get("https://www.thelowerorbit.com:8080/api/product/categories")
+      .get("https://www.thelowerorbit.com:8080/api/product/categories/list")
       .then((response) => {
         setCategories(response.data);
       })
@@ -46,6 +47,7 @@ const AddEditProductModal = ({
   const handleProductModalClose = () => {
     setShow(false);
     setSaveMsg("");
+    setProduct({} as IProduct);
   };
 
   const handleProductSubmit = (e: React.SyntheticEvent) => {
@@ -62,6 +64,7 @@ const AddEditProductModal = ({
         description: product.description,
         price: product.price,
         salePrice: product.salePrice,
+        salePercent: product.salePercent,
         stockOnHand: product.stockOnHand,
         categoryId: product.category.id,
         tags: product.tags,
@@ -95,10 +98,35 @@ const AddEditProductModal = ({
   const handleOnChangeInput = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
 
+    console.log("Target ID: ", target.id);
     const value: (typeof product)[keyof typeof product] = target.value;
 
+    if (target.id === "salePercent") {
+      console.log("Sale Percent: ", value);
+      const salePrice = product.price - (product.price * (value / 100));
+      console.log("Sale Price: ", salePrice);
+      setSalesPrice(salePrice);
+      setProduct({ ...product, salePrice: salesPrice });
+      
+    }
+
     setProduct({ ...product, [target.id]: value });
+    console.log("Product: ", product);
   };
+
+  const handleSalePercentOnChange = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    console.log("Sale Percent: ", target.value);
+    const value: number = Number(target.value);
+
+
+    const salePrice = product.price - product.price * (value / 100);
+    console.log("Sale Price: ", salePrice);
+    setProduct({ ...product, salePercent: value });
+
+    setProduct({ ...product, salePrice: salePrice });
+  }
 
   const handleProductUpdateSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -111,6 +139,7 @@ const AddEditProductModal = ({
         description: product.description,
         price: product.price,
         salePrice: product.salePrice,
+        salePercent: product.salePercent,
         stockOnHand: product.stockOnHand,
         categoryId: product.category.id,
         tags: product.tags,
@@ -299,8 +328,8 @@ const AddEditProductModal = ({
             </FormGroup>
           </Row>
           <Row className="my-4">
-            <FormGroup as={Col} md="4">
-              <Form.Label>Price (USD):</Form.Label>
+            <FormGroup as={Col} md="3">
+              <Form.Label>Base Price (USD):</Form.Label>
               <InputGroup size="sm">
                 <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
                 <Form.Control
@@ -314,25 +343,40 @@ const AddEditProductModal = ({
                 />
               </InputGroup>
             </FormGroup>
-            <FormGroup as={Col} md="4">
-              <Form.Label>Sale (USD)</Form.Label>
+            <FormGroup as={Col} md="3">
+              <Form.Label>Sale %</Form.Label>
+              <InputGroup size="sm">
+                <Form.Control
+                  type="text"
+                  id="salePercent"
+                  onChange={handleOnChangeInput}
+                  value={product?.salePercent || ""}
+                  defaultValue={0}
+                  required
+                  size="sm"
+                />
+                <InputGroup.Text id="inputGroupPrepend">%</InputGroup.Text>
+              </InputGroup>
+            </FormGroup>
+            <FormGroup as={Col} md="3">
+              <Form.Label>Sale Price (USD)</Form.Label>
               <InputGroup size="sm">
               <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
                 <Form.Control
                   type="text"
                   id="salePrice"
                   onChange={handleOnChangeInput}
-                  value={product?.salePrice || ""}
+                  value={Number(salesPrice).toFixed(2) || ""}
                   required
+                  disabled
                   size="sm"
                 />
               </InputGroup>
             </FormGroup>
-            <FormGroup as={Col} md="4">
+            <FormGroup as={Col} md="3">
               <Form.Label>Stock on Hand:</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="00000000"
                 id="stockOnHand"
                 onChange={handleOnChangeInput}
                 value={product?.stockOnHand || ""}

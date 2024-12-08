@@ -15,8 +15,9 @@ interface Product {
   id: number;
   name: string;
   description: string;
-  price: string;
-  salePrice: string;
+  price: number;
+  salePrice: number;
+  salePercent: number;
   brand: string;
   stockOnHand: number;
   category: Category;
