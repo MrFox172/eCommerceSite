@@ -7,8 +7,7 @@ import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
 //import { useCart } from "../../contexts/CartContext";
 import { Button } from "react-bootstrap";
-import ProductCardRecommendations from "../ProductCardRecommendations/ProductCardRecommendations";
-
+import ProductCard from "../ProductCard/ProductCard";
 //Writing custom axios instance to allow for cross origin requests
 import axios from "axios";
 axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
@@ -158,7 +157,7 @@ function ProductPage() {
         <div className={styles.similarProducts}>
             {similarProducts.length > 0 ? (<>
                 <h2>Similar Products</h2>
-                {similarProducts.map((product: Product) => <ProductCardRecommendations key={product.id} {...product} />)}
+                {similarProducts.map((product: Product) => <ProductCard key={product.id} {...product} />)}
             </>):(<></>)}
         </div>
       </main>
