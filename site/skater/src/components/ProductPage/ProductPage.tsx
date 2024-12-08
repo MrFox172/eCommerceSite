@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import defaultImage from "../../assets/img-placeholder.svg";
 //import { useCart } from "../../contexts/CartContext";
-import { Button } from "react-bootstrap";
+import { Button, InputGroup, Form } from "react-bootstrap";
 import ProductCard from "../ProductCard/ProductCard";
 //Writing custom axios instance to allow for cross origin requests
 import axios from "axios";
@@ -91,13 +91,15 @@ function ProductPage() {
     );
     if (response && response.data !== null) {
       console.log(response.data);
-      setSimilarProducts(response.data.filter((product) => product.id !== parseInt(id)));
+      setSimilarProducts(
+        response.data.filter((product) => product.id !== parseInt(id))
+      );
     }
   };
 
   const addToCart = () => {
     cart.addProduct(product, count);
-}
+  };
 
   return (
     <>
@@ -148,26 +150,35 @@ function ProductPage() {
               </>
             )}
           </div>
-          <div className={styles.cart}>
-            <h2>Cart</h2>
-            <Button onClick={decrement}>-</Button>
-            <input
-              className={styles.input}
-              type="text"
-              value={count}
-              onChange={changeCount}
-            />
-            <Button onClick={increment}>+</Button>
-            
-            <Button onClick={addToCart}>Add to Cart</Button>
+          <div className={`bg-light ${styles.cart}`}>
+            <h2>Buy New at ${product!=null && product.onSale? product.salePrice.toFixed(2):product?.price.toFixed(2)}</h2>
+            <p></p>
+            <InputGroup className="p-4 w-50">
+            <Button onClick={decrement} variant="outline-success" size="sm" className="">-</Button>
+            <Form.Control type="text" value={count} size="sm" onChange={changeCount} className="h-75"></Form.Control>
+            <Button onClick={increment} variant="outline-success" size="sm" className="">
+              +
+            </Button>
+            </InputGroup>
+            <Button onClick={addToCart} size="sm" className="rounded-5 px-4 bg-success">
+              Add to Cart
+            </Button>
           </div>
         </div>
         {/*end of div "main"*/}
         <div className={styles.similarProducts}>
-            {similarProducts.length > 0 ? (<>
-                <h2>Similar Products</h2>
-                {similarProducts.map((product: Product) => <ProductCard key={product.id} {...product} />)}
-            </>):(<></>)}
+          {similarProducts.length > 0 ? (
+            <>
+              <h2>Similar Products</h2>
+              <div className={styles.productCardGrid}>
+                {similarProducts.map((product: Product) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </main>
     </>
