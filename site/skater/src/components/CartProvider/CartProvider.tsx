@@ -7,10 +7,13 @@ import React, {
 } from "react";
 import { CartManager, CartItem } from "../../interfaces/cartManager";
 import { Product } from "../../interfaces/products";
+import axios from "axios";
+
+const baseUrl = "https://www.thelowerorbit.com:8080/api";
+axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
 
 // Create context
 const CartContext = createContext<CartManager | undefined>(undefined);
-
 // CartProvider component
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -63,11 +66,52 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
-  }
+  };
 
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
-  }
+    const getCheapestPrice = (product: Product) => {
+      if (product.onSale) {
+        return product.salePrice;
+      }
+      return product.price;
+    };
+
+    return cart.reduce(
+      (total, item) => total + getCheapestPrice(item.product) * item.quantity,
+      0
+    );
+  };
+
+  const refreshCart = async () => {
+    console.log("Refreshing cart...");
+    try {
+      const updatedCart = await Promise.all(
+        cart.map(async (item) => {
+          try {
+            const response = await axios.get(
+              `${baseUrl}/product/${item.product.id}`
+            );
+            console.log(`Fetched product ${item.product.id}:`, response.data);
+            return { ...item, product: response.data };
+          } catch (error) {
+            console.error(
+              `CORS or other error for product ${item.product.id}:`,
+              error
+            );
+            return item; // Return the original item if the request fails
+          }
+        })
+      );
+      setCart(updatedCart);
+    } catch (globalError) {
+      console.error("Error during cart refresh:", globalError);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(refreshCart, 30000); // Poll every 30 seconds
+    return () => clearInterval(interval);
+  }, [cart]);
 
   return (
     <CartContext.Provider
@@ -78,7 +122,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         updateProductQuantity,
         clearCart,
         getTotalItems,
-        getTotalPrice
+        getTotalPrice,
       }}
     >
       {children}

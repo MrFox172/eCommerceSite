@@ -4,6 +4,10 @@ interface OrderedProduct {
   expectedPrice: number;
 }
 
+interface OrderVerification {
+  orderedProducts: OrderedProduct[];
+}
+
 //ordering
 interface Order {
   accountId: number;
@@ -12,3 +16,5 @@ interface Order {
   expectedOrderTotal: number;
   status: string;
 }
+
+export type { OrderVerification, Order, OrderedProduct };

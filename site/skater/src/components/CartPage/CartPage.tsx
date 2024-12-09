@@ -4,7 +4,8 @@ import { Button } from "react-bootstrap";
 import { Product, Category, ProductImage } from "../../interfaces/products";
 import { CartItem } from "../../interfaces/cartManager";
 import defaultImage from "../../assets/img-placeholder.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigationType } from "react-router-dom";
+
 import styles from "./styles.module.css";
 import checkoutimg from "../../assets/checkout.png"; // Import the image
 
@@ -18,8 +19,10 @@ const CartPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.wrapper}> {/* Wrapper div for background image */}
-      <div className={`mt-5 ${styles.container}`}>
+    <div className={styles.wrapper}>
+      {" "}
+      {/* Wrapper div for background image */}
+      <div className={`mt-3 mb-5 ${styles.container}`}>
         {cartItems.length === 0 ? (
           <p className={styles.emptyMessage}>Your cart is empty</p>
         ) : (
@@ -54,7 +57,10 @@ const CartPage: React.FC = () => {
                     variant="primary"
                     className="mx-1"
                     onClick={() =>
-                      cart.updateProductQuantity(item.product, item.quantity + 1)
+                      cart.updateProductQuantity(
+                        item.product,
+                        item.quantity + 1
+                      )
                     }
                   >
                     Add
@@ -63,7 +69,10 @@ const CartPage: React.FC = () => {
                     variant="secondary"
                     className="mx-1"
                     onClick={() =>
-                      cart.updateProductQuantity(item.product, item.quantity - 1)
+                      cart.updateProductQuantity(
+                        item.product,
+                        item.quantity - 1
+                      )
                     }
                   >
                     Remove
@@ -84,7 +93,11 @@ const CartPage: React.FC = () => {
             <Button variant="danger" className="mx-2" onClick={cart.clearCart}>
               Clear Cart
             </Button>
-            <Button variant="success" className="mx-2" onClick={() => navigate("/")}>
+            <Button
+              variant="success"
+              className="mx-2"
+              onClick={() => navigate("/checkout")}
+            >
               Checkout
             </Button>
           </>

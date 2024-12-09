@@ -15,6 +15,7 @@ import { Route, Routes } from "react-router-dom";
 import Verify from "./components/Auth/Verify";
 import ProductPage from "./components/ProductPage/ProductPage";
 import CartPage from "./components/CartPage/CartPage";
+import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 
 import SkateboardBG from "./assets/SkateboardCarouselBackdrop.png";
 import SkateBG from "./assets/SkatesCarouselBackdrop.png";
@@ -108,6 +109,9 @@ function App() {
             <Route path="/account/:id/payments" Component={Payments} />
           </Route>
           <Route path="/cart" Component={CartPage} />
+          <Route path="/checkout" element={
+            <CheckoutPage {...localUser}/>
+          }/>
           <Route
             path="/register"
             element={

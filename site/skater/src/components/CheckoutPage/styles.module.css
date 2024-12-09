@@ -1,0 +1,16 @@
+.alternating:nth-child(odd) {
+  background-color: #eb2424;
+}
+
+.liSplit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.liSplit div img {
+  width: 50px;
+  border-radius: 5px;
+  margin-right: 1rem;
+}
