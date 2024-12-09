@@ -72,8 +72,11 @@ public class OrderController {
                 throw new RuntimeException("Not enough stock for product: " + product.getName());
             }
 
+            var expected = BigDecimal.valueOf(x.expectedPrice());
+            var actual = product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity()));
+
             if (!BigDecimal.valueOf(x.expectedPrice()).equals(product.getSalePrice().multiply(BigDecimal.valueOf(x.expectedQuantity())))) {
-                throw new RuntimeException("Price does not match product price: " + product.getName());
+                throw new RuntimeException("Price does not match product price (expected:"+ expected.toString() +") (actual:"+actual.toString()+"): " + product.getName());
             }
             });
 
