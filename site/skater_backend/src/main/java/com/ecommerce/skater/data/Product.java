@@ -47,7 +47,7 @@ public class Product {
 
     // create a compute variable for that returns a boolean based on salePrice and price
     public boolean isOnSale() {
-        return salePercent.compareTo(BigDecimal.valueOf(0.0)) > 0;
+        return salePercent.compareTo(BigDecimal.valueOf(0.0)) > 0.0;
     }
 
     @Column(name = "brand", nullable = false, length = 200)
