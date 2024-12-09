@@ -59,11 +59,11 @@ const Search = () => {
   return (
     <Container className="my-5">
       <Row>
-        <Col md={3} className="border h-75">
-          <h2>Filters</h2>
+        <Col md={3} className="border h-75 py-3">
+          <h4>Filters</h4>
           <p>Filter by category, price, brand, and more...</p>
           <div>
-            <h4>Tags</h4>
+            <h5>Tags</h5>
             <ul>
               {tags &&
                 tags.map((tag: string) => (

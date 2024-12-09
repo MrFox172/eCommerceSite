@@ -29,6 +29,7 @@ import Search from "./components/Search/Search";
 import { CartProvider } from "./components/CartProvider/CartProvider";
 
 import SellProductsPage from "./components/SellProductsPage/SellProductsPage";
+import Admin from "./components/Admin/Admin";
 
 
 
@@ -119,6 +120,7 @@ function App() {
           />
           <Route path="/search/:keyword" element={<Search />} />
           <Route path="/:id/verify/:token" element={<Verify />} />
+          <Route path="/admin" Component={Admin} />
         </Routes>
       </div>
       <Footer />

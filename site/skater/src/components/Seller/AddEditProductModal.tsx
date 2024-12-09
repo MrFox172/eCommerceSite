@@ -327,7 +327,6 @@ const AddEditProductModal = ({
                 <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
                 <Form.Control
                   type="text"
-                  placeholder="99.99"
                   id="price"
                   onChange={handleOnChangeInput}
                   value={product?.price || ""}
@@ -345,6 +344,7 @@ const AddEditProductModal = ({
                   onChange={handleOnChangeInput}
                   value={product?.salePercent || ""}
                   required
+                  disabled={(product?.price && product?.price > 0) ? false : true}
                   size="sm"
                 />
                 <InputGroup.Text id="inputGroupPrepend">%</InputGroup.Text>

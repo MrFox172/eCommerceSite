@@ -134,7 +134,7 @@ function ProductPage() {
                     <h2>
                       <del>${product.price.toFixed(2)}</del>
                     </h2>
-                    <h2>
+                    <h2 className="text-danger">
                       <em>On Sale!</em> ${product.salePrice.toFixed(2)}
                     </h2>
                   </>
