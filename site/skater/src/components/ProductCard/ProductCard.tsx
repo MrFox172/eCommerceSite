@@ -44,16 +44,16 @@ const ProductCard: React.FC<Product> = (product) => {
             <strong>
               {product.onSale ? (
                 <>
-                  <h2 className="my-3">
+                  <h4 className="my-3">
                     <del>${product.price.toFixed(2)}</del>
-                  </h2>
-                  <h2 className="my-3">
+                  </h4>
+                  <h4 className="my-3 text-danger">
                     <em>On Sale!</em> ${product.salePrice.toFixed(2)}
-                  </h2>
+                  </h4>
                 </>
               ) : (
                 <>
-                  <h2 className="my-3">${product.price.toFixed(2)}</h2>
+                  <h4 className="my-3">${product.price.toFixed(2)}</h4>
                 </>
               )}
             </strong>

@@ -52,6 +52,7 @@ const CartPage: React.FC = () => {
                   )}
                   <Button
                     variant="primary"
+                    className="mx-1"
                     onClick={() =>
                       cart.updateProductQuantity(item.product, item.quantity + 1)
                     }
@@ -60,6 +61,7 @@ const CartPage: React.FC = () => {
                   </Button>
                   <Button
                     variant="secondary"
+                    className="mx-1"
                     onClick={() =>
                       cart.updateProductQuantity(item.product, item.quantity - 1)
                     }
@@ -68,6 +70,7 @@ const CartPage: React.FC = () => {
                   </Button>
                   <Button
                     variant="danger"
+                    className="mx-1"
                     onClick={() => cart.removeProduct(item.product)}
                   >
                     Remove All
@@ -78,10 +81,10 @@ const CartPage: React.FC = () => {
             <h3 className={styles.subTotal}>
               Sub Total: ${cart.getTotalPrice().toFixed(2)}
             </h3>
-            <Button variant="danger" onClick={cart.clearCart}>
+            <Button variant="danger" className="mx-2" onClick={cart.clearCart}>
               Clear Cart
             </Button>
-            <Button variant="success" onClick={() => navigate("/")}>
+            <Button variant="success" className="mx-2" onClick={() => navigate("/")}>
               Checkout
             </Button>
           </>

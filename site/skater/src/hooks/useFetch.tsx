@@ -24,7 +24,7 @@ export const useFetch = (url: string) => {
           setIsPending(false);
         }
       };
-      if (url.valueOf() != "") {
+      if (url.valueOf() != "" && !url.valueOf().includes("undefined")) {
         fetchData();
       }
     }, [url]);

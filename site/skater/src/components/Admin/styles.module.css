@@ -1,0 +1,13 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(20rem, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    height: 20rem;
+}
+
+.cardbody {
+    font-size: 6rem;
+}
