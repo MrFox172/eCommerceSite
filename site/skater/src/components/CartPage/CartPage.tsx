@@ -5,6 +5,7 @@ import { Product, Category, ProductImage } from "../../interfaces/products";
 import { CartItem } from "../../interfaces/cartManager";
 import defaultImage from "../../assets/img-placeholder.svg";
 import { useNavigate, useNavigationType } from "react-router-dom";
+
 import styles from "./styles.module.css";
 
 const CartPage: React.FC = () => {
@@ -17,7 +18,7 @@ const CartPage: React.FC = () => {
   };
 
   return (
-    <div className={`mt-5 ${styles.container}`}>
+    <div className={`mt-3 mb-5 ${styles.container}`}>
     {cartItems.length === 0 ? (
       <p className={styles.emptyMessage}>Your cart is empty</p>
     ) : (

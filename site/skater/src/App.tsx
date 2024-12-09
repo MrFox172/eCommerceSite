@@ -108,7 +108,9 @@ function App() {
             <Route path="/account/:id/payments" Component={Payments} />
           </Route>
           <Route path="/cart" Component={CartPage} />
-          <Route path="/checkout" Component={CheckoutPage}/>
+          <Route path="/checkout" element={
+            <CheckoutPage {...localUser}/>
+          }/>
           <Route
             path="/register"
             element={

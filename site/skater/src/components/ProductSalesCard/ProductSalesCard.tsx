@@ -25,7 +25,23 @@ const ProductSalesCard: React.FC<Product> = (product) => {
         <Card.Body className="p-2">
           <Row>
             <Col className="border p-0" md={4}>
-              <img className={styles.image_holder} src={img} />
+              {product.productImages && product.productImages.length > 0 ? (
+                <>
+                  <Card.Img
+                    variant="top"
+                    className={styles.image_holder}
+                    src={product.productImages[0].imageUrl}
+                  />
+                </>
+              ) : (
+                <>
+                  <Card.Img
+                    variant="top"
+                    className={styles.image_holder}
+                    src={img}
+                  />
+                </>
+              )}
             </Col>
             <Col className="border">
               <div>
@@ -71,7 +87,7 @@ const ProductSalesCard: React.FC<Product> = (product) => {
                   className={styles.primaryButton}
                   onClick={() => cart.addProduct(product, 1)}
                 >
-                Add to Cart
+                  Add to Cart
                 </Button>
                 <br />
                 <Button
