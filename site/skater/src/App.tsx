@@ -123,8 +123,8 @@ function App() {
             <Route path="/search/:keyword" element={<Search />} />
             <Route path="/:id/verify/:token" element={<Verify />} />
             <Route path="/admin" Component={Admin} />
-            <Route path="/cart/success" Component={ConfirmationPage} />
-            <Route path="/cart/cancelled" Component={CartPage} />
+            <Route path="/cart/success/:id" Component={ConfirmationPage} />
+            <Route path="/cart/cancelled/:id" Component={CartPage} />
             <Route path="/*" element={<Fallthrough />} />{/*Fall through route*/}
             
           </Routes>
