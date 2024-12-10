@@ -18,6 +18,7 @@ import CartPage from "./components/CartPage/CartPage";
 import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import ConfirmationPage from "./components/ConfirmationPage/ConfirmationPage";
 import Fallthrough from "./components/FallthroughPage/Fallthrough";
+import PaymentFailedPage from "./components/PaymentFailedPage/PaymentFailedPage";
 
 import SkateboardBG from "./assets/SkateboardCarouselBackdrop.png";
 import SkateBG from "./assets/SkatesCarouselBackdrop.png";
@@ -112,6 +113,7 @@ function App() {
             </Route>
             <Route path="/cart" Component={CartPage} />
             <Route path="/checkout" element={<CheckoutPage {...localUser} />} />
+            <Route path="/checkout/cancel" element={<CartPage />} />
             <Route
               path="/register"
               element={
@@ -121,7 +123,8 @@ function App() {
             <Route path="/search/:keyword" element={<Search />} />
             <Route path="/:id/verify/:token" element={<Verify />} />
             <Route path="/admin" Component={Admin} />
-            <Route path="/confirmation" Component={ConfirmationPage} />
+            <Route path="/confirmation/:confirmation" Component={ConfirmationPage} />
+            <Route path="/payment-failed/:error" Component={PaymentFailedPage} />
             <Route path="/*" element={<Fallthrough />} />{/*Fall through route*/}
             
           </Routes>
