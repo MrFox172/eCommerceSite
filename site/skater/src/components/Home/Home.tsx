@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "./styles.module.css";
 import { Container, Row, Col } from "react-bootstrap";
-import HeroBackground from "../../assets/skateboard_crew_front.png";
-import SkateboardBackground from "../../assets/SkateboardCarouselBackdrop.png";
-import SkatesBackground from "../../assets/SkatesCarouselBackdrop.png";
-import ShoesBackground from "../../assets/ShoesCarouselBackdrop.png";
-import ApparelBackground from "../../assets/ApparelCarouselBackdrop.png";
-import AccessoriesBackground from "../../assets/AccessoriesCarouselBackdrop.png";
+import HeroBackground from "../../assets/herolands.jpg";
+import SkateboardBackground from "../../assets/skateboardback.jpg";
+import SkatesBackground from "../../assets/skates.jpg";
+import ShoesBackground from "../../assets/skateshoes.jpg";
+import ApparelBackground from "../../assets/apparel.jpg";
+import AccessoriesBackground from "../../assets/accessories.jpg";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
