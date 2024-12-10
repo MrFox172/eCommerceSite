@@ -254,7 +254,7 @@ public class OrderController {
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.PAYMENT)
                         .setSuccessUrl(FRONTEND_URL + "/cart/success/" + newAccountOrder.getId())
-                        .setCancelUrl(FRONTEND_URL + "/cart/cancelled" + newAccountOrder.getId())
+                        .setCancelUrl(FRONTEND_URL + "/cart/cancelled/" + newAccountOrder.getId())
                         .addAllLineItem(lineItems)
                         .addShippingOption(
                                 SessionCreateParams.ShippingOption.builder()
