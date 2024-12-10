@@ -65,12 +65,14 @@ const CheckoutPage: React.FC<string> = () => {
 
   const getUpToDateUser = () => {
     axios
-      .get(`${api}/account/${localUser.id}`)
+      .get(`${api}/account/${user.id}`)
       .then((res) => {
         console.log("Up to date user data received.", res.data);
         setUser(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log("Failed to get up to date user data.", err);
+      });
   };
 
   useEffect(() => {
@@ -160,9 +162,9 @@ const CheckoutPage: React.FC<string> = () => {
       {errorMessage !== null && (
         <Row>
           <Col>
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}        
-          </div>
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
             <Button className="btn-warning" onClick={() => navigate("/cart")}>
               Return to Cart
             </Button>
