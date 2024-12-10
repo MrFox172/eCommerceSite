@@ -127,7 +127,7 @@ public class OrderController {
         AccountOrder accountOrder = new AccountOrder();
         accountOrder.setAccount(account);
         accountOrder.setOrderStatus("PENDING");
-        accountOrder.setOrderTotal(BigDecimal.valueOf(order.expectedOrderTotal()));
+
         accountOrder.setOrderNumber("ORD" + "-" + date.toString().replace("-","") + "-" + accountUid.toString().substring(0,7) + account.getId());
 
         List<Product> products = new ArrayList<>();
@@ -227,6 +227,8 @@ public class OrderController {
         shipment.setShipmentDate(Date.valueOf(date.plusDays(shipment.getDaysToDeliver())));
         shipment.setTrackingNumber(uuid.toString().replace("-", ""));
         accountOrder.setShipment(shipment);
+
+        accountOrder.setOrderTotal(BigDecimal.valueOf(order.expectedOrderTotal()).add(shippingMethod.getPrice()));
 
         // stripe shipping method object
         // add shipping option to stripe
