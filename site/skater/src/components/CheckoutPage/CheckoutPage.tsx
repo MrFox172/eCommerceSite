@@ -17,8 +17,6 @@ import {
   Order,
 } from "../../interfaces/orders";
 
-import StripeIntegration from "./StripeIntegration/StripeIntegration";
-
 import axios from "axios";
 
 const CheckoutPage: React.FC<string> = () => {
@@ -26,6 +24,8 @@ const CheckoutPage: React.FC<string> = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<Account | null>(null);
   const [localUser, setLocalUser] = useLocalStorage("user", "");
+  const [verified, setCartVerified] = useState(false);
+  const [sessionUrl, setSessionUrl] = useState<string | null>(null);
 
   // const { data, isPending, error } = useFetch();
 
@@ -37,7 +37,7 @@ const CheckoutPage: React.FC<string> = () => {
       //verifying the cart.
       verifyCart();
     }
-  }, [cart, navigate]);
+  }, [cart.cart, navigate]);
 
   useEffect(() => {
     if (localUser !== "" && localUser !== null) {
@@ -50,13 +50,19 @@ const CheckoutPage: React.FC<string> = () => {
     }
   }, [localUser]);
 
+  useEffect(() => {
+    if (verified) {
+      getSessionUrl();
+    }
+  }, [verified]);
+
   const verifyCart = () => {
     let order: OrderVerification = { orderedProducts: [] };
     cart.cart.forEach((item) => {
       const orderedProduct: OrderedProduct = {
         productId: item.product.id,
         expectedQuantity: item.quantity,
-        expectedPrice: item.product.salePrice * item.quantity,
+        expectedPrice: item.product.salePrice,
       };
       order.orderedProducts.push(orderedProduct);
     });
@@ -65,10 +71,30 @@ const CheckoutPage: React.FC<string> = () => {
       .post("https://thelowerorbit.com:8080/api/order/cart/check", order)
       .then((res) => {
         alert("Verification Okay");
+        setCartVerified(true);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const getSessionUrl = () => {
+    /*
+    axios
+      .post()
+      .then((res) => {
+        setSessionUrl(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      */
+  };
+
+  const payWithStripe = () => {
+    if (!verified || sessionUrl === null) {
+      return;
+    }
   };
 
   return (
@@ -117,8 +143,14 @@ const CheckoutPage: React.FC<string> = () => {
                 existingAddress={user.addresses[0]}
                 setShow={true}
                 setAddressList={user.addresses}
+                showButton={false}
               />
-              <StripeIntegration {...user}/>
+              <Button
+                className={verified ? "btn-primary" : "btn-warning"}
+                onClick={payWithStripe}
+              >
+                {verified ? <>Proceed to Payment</> : <>Verifying Cart</>}
+              </Button>
             </>
           ) : (
             <>

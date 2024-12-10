@@ -1,4 +1,4 @@
-import { Row, Form, Col} from "react-bootstrap";
+import { Row, Form, Col } from "react-bootstrap";
 import { Address as IAddress } from "../../interfaces/user";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -8,6 +8,7 @@ const AddressCard = ({
   existingAddress,
   setShow,
   setAddressList,
+  showButton,
 }) => {
   const [address, setAddress] = useState<IAddress>({} as IAddress);
 
@@ -86,17 +87,21 @@ const AddressCard = ({
       })
       .catch((err) => {
         console.log(err);
-      });    
+      });
   };
 
   const handleDeleteOnClick = (e) => {
     e.preventDefault();
-    const confirmDelete = window.confirm("Are you sure you want to delete this address?");  
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this address?"
+    );
     if (!confirmDelete) {
       return;
     }
     axios
-      .delete(`https://www.thelowerorbit.com:8080/api/account/${accountId}/address/${address.id}`)
+      .delete(
+        `https://www.thelowerorbit.com:8080/api/account/${accountId}/address/${address.id}`
+      )
       .then((res) => {
         setAddressList(res.data.addresses);
         setShow(false);
@@ -105,7 +110,7 @@ const AddressCard = ({
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   return (
     <Form className="border p-3 mb-3" onSubmit={handleSubmit}>
@@ -174,9 +179,7 @@ const AddressCard = ({
             value={address?.zip || ""}
             required
             disabled={address.id ? true : false}
-            onChange={(e) =>
-              setAddress({ ...address, zip: e.target.value })
-            }
+            onChange={(e) => setAddress({ ...address, zip: e.target.value })}
           />
         </Form.Group>
       </Row>
@@ -184,7 +187,10 @@ const AddressCard = ({
         <Row className="mt-2">
           <Col className="justify-content-end text-end">
             <p className="msg text-warning"></p>
-            <button className="btn btn-outline-success btn-sm rounded-5" type="submit">
+            <button
+              className="btn btn-outline-success btn-sm rounded-5"
+              type="submit"
+            >
               Save
             </button>
           </Col>
@@ -193,9 +199,18 @@ const AddressCard = ({
         <Row className="mt-2">
           <Col className="justify-content-end text-end">
             <p className="msg text-warning"></p>
-            <button className="btn btn-outline-danger btn-sm rounded-5" onClick={handleDeleteOnClick}>
-              Delete
-            </button>
+            {showButton == null || showButton == true ? (
+              <>
+                <button
+                  className="btn btn-outline-danger btn-sm rounded-5"
+                  onClick={handleDeleteOnClick}
+                >
+                  Delete
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </Col>
         </Row>
       )}
