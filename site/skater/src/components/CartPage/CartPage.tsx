@@ -98,6 +98,7 @@ const CartPage: React.FC = () => {
                       >
                         Remove Unavailable
                       </Button>
+                      {item.product.stockOnHand === 0 && <h5>Out of Stock</h5>}
                     </>
                   )}
                 </div>
