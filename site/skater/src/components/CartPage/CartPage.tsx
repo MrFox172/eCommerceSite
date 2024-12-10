@@ -84,6 +84,22 @@ const CartPage: React.FC = () => {
                   >
                     Remove All
                   </Button>
+                  {item.product.stockOnHand < item.quantity && (
+                    <>
+                      <br />
+                      <Button
+                        variant="warning"
+                        onClick={() =>
+                          cart.updateProductQuantity(
+                            item.product,
+                            item.product.stockOnHand
+                          )
+                        }
+                      >
+                        Remove Unavailable
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
