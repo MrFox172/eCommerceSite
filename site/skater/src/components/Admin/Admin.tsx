@@ -21,6 +21,7 @@ interface Order {
   orderNumber: string;
   orderTotal: number;
   orderCommission: number;
+  orderStatus: string;
   numberOfProducts: number;
   productsOrdered: Product[];
 }
@@ -138,7 +139,7 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {orders?.map((order) => (
+              {orders?.filter((x) => x.orderStatus == "COMPLETED").map((order) => (
                 <tr key={order.orderNumber}>
                   <td className="text-warning fw-bold">{order.orderNumber}</td>
                   <td className="text-warning">${order.orderTotal}</td>

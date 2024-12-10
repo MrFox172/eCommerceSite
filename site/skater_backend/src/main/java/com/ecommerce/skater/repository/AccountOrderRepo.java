@@ -11,4 +11,6 @@ import java.util.List;
 public interface AccountOrderRepo extends JpaRepository<AccountOrder, Integer> {
 
     List<AccountOrder> findByAccount(Account account);
+
+    List<AccountOrder> findByOrderStatus(String orderStatus);
 }

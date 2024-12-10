@@ -105,7 +105,7 @@ const CheckoutPage: React.FC<string> = () => {
       .catch((err) => {
         console.log(err);
         setErrorMessage(
-          "There was an issue verifying your cart:" + err.response.data
+          "There was an issue verifying your cart: " + err.response.data
         );
       });
   };
@@ -160,7 +160,9 @@ const CheckoutPage: React.FC<string> = () => {
       {errorMessage !== null && (
         <Row>
           <Col>
-            <h4 className="text-danger">{errorMessage}</h4>
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}        
+          </div>
             <Button className="btn-warning" onClick={() => navigate("/cart")}>
               Return to Cart
             </Button>

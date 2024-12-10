@@ -299,26 +299,32 @@ public class OrderController {
                 return new ResponseEntity<String>("Order not found", HttpStatus.BAD_REQUEST);
             }
 
-            accountOrder.setOrderStatus("COMPLETED");
+            if(!accountOrder.getOrderStatus().equals("COMPLETED")) {
 
-            Set<SellerAccount> sellers = new HashSet<>();
+                accountOrder.setOrderStatus("COMPLETED");
 
-            accountOrder.getProductsOrdered().forEach(x -> {
-                Product product = x.getProduct();
-                product.setStockOnHand(product.getStockOnHand() - x.getQuantity());
-                sellers.add(product.getSellerAccount());
-                productRepo.save(product);
-            });
+                Set<SellerAccount> sellers = new HashSet<>();
 
-            accountOrderRepo.save(accountOrder);
+                accountOrder.getProductsOrdered().forEach(x -> {
+                    Product product = x.getProduct();
 
-            // send order confirmation email
-            emailService.sendOrderConfirmationEmail(accountOrder.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString());
+                    if(product.getStockOnHand() > 1) {
+                        product.setStockOnHand(product.getStockOnHand() - x.getQuantity());
+                    }
 
-            sellers.forEach(
-                    x -> emailService.sendSellerOrderNotificationEmail(x.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString())
-            );
+                    sellers.add(product.getSellerAccount());
+                    productRepo.save(product);
+                });
 
+                accountOrderRepo.save(accountOrder);
+
+                // send order confirmation email
+                emailService.sendOrderConfirmationEmail(accountOrder.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString());
+
+                sellers.forEach(
+                        x -> emailService.sendSellerOrderNotificationEmail(x.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString())
+                );
+            }
             return new ResponseEntity(accountOrder, HttpStatus.OK);
     }
 
@@ -326,6 +332,13 @@ public class OrderController {
     @GetMapping
     public List<AccountOrder> getAllOrders() {
         return accountOrderRepo.findAll();
+    }
+
+    // get all completed orders
+    @Operation(summary = "Get All Completed Orders", description = "Returns a list of all completed orders")
+    @GetMapping("/completed")
+    public List<AccountOrder> getCompletedOrders() {
+        return accountOrderRepo.findByOrderStatus("COMPLETED");
     }
 
     @Operation(summary = "Get Order by ID", description = "Returns the order with the specified ID")
