@@ -46,6 +46,9 @@ public class AccountOrder {
     @Column(name = "order_total", nullable = false, precision=10, scale=2)
     private BigDecimal orderTotal;
 
+    @Column(name = "order_commission", nullable = false, precision=10, scale=2, insertable = false, updatable = false)
+    private BigDecimal orderCommission;
+
     @CreatedDate
     private Timestamp createdate;
 
