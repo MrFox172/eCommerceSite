@@ -1,60 +1,83 @@
-.home {
+.heroSection {
+  height: 50vh;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 2rem;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+}
+
+.productBanner {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 40vh;
-  background-color: white;
-  color: black;
-}
-
-.home h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  background-color: rgba(100, 100, 100, 0.5);
-  padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
-}
-
-.home p {
-  font-size: 1rem;
-  font-weight: 700;
-  background-color: rgba(100, 100, 100, 0.5);
-  padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
-}
-
-.clickableBanner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 30vh;
-  background-color: white;
-  color: black;
-  z-index: 0;
+  justify-content: flex-end;
+  padding: 2rem;
+  color: #fff;
+  text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.7);
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
-.clickableBanner h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  background-color: rgba(100, 100, 100, 0.5);
-  padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+.productBanner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.3s ease;
+  border-radius: 12px;
 }
 
-.clickableBanner p {
-  font-size: 1rem;
-  font-weight: 700;
-  background-color: rgba(100, 100, 100, 0.5);
-  padding: 10px;
-  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
-}
-
-.clickableBanner:hover {
-  transform: scale(1.1);
-  box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+.productBanner h2 {
+  font-size: 2rem;
+  font-weight: bold;
   z-index: 1;
+}
+
+.productBanner p {
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+.productBanner:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.productBanner:hover::before {
+  background: rgba(0, 0, 0, 0.6);
 }

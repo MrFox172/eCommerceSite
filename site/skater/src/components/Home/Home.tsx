@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.css";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import HeroBackground from "../../assets/skateboard_crew_front.png";
 import SkateboardBackground from "../../assets/SkateboardCarouselBackdrop.png";
 import SkatesBackground from "../../assets/SkatesCarouselBackdrop.png";
@@ -20,88 +20,65 @@ const Home: React.FC = () => {
     <>
       <Container
         fluid
-        className={`text-white text-center mh-75 ${styles.home}`}
-        style={{
-          backgroundImage: `url("${HeroBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
+        className={`${styles.heroSection}`}
+        style={{ backgroundImage: `url("${HeroBackground}")` }}
       >
-        <h1>Shop Apparel, Skateboards, and Accessories</h1>
-        <p>
-          Top brands and the latest styles in clothing, skateboards, and skating
-          accessories
-        </p>
+        <Row className="justify-content-center align-items-center text-center">
+          <Col lg={8}>
+            <h1 className={styles.heroTitle}>Unleash Your Skating Potential</h1>
+            <p className={styles.heroSubtitle}>
+              The ultimate collection of apparel, skateboards, and accessories
+            </p>
+          </Col>
+        </Row>
       </Container>
-      <Container
-        fluid
-        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
-        style={{
-          backgroundImage: `url("${SkateboardBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        onClick={() => gotoProducts("skateboards")}
-      >
-        <h1>Skateboards</h1>
-        <p>Explore our wide range of skateboards for all skill levels.</p>
-      </Container>
-      <Container
-        fluid
-        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
-        style={{
-          backgroundImage: `url("${SkatesBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        onClick={() => gotoProducts("skates")}
-      >
-        <h1>Skates</h1>
-        <p>
-          Check out our collection of skates for every style and preference.
-        </p>
-      </Container>
-      <Container
-        fluid
-        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
-        style={{
-          backgroundImage: `url("${ShoesBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        onClick={() => gotoProducts("shoes")}
-      >
-        <h1>Shoes</h1>
-        <p>Find the perfect pair of shoes for skating and everyday wear.</p>
-      </Container>
-      <Container
-        fluid
-        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
-        style={{
-          backgroundImage: `url("${ApparelBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        onClick={() => gotoProducts("apparel")}
-      >
-        <h1>Apparel</h1>
-        <p>Discover the latest trends in skate apparel and streetwear.</p>
-      </Container>
-      <Container
-        fluid
-        className={`text-white text-center mh-75 ${styles.clickableBanner}`}
-        style={{
-          backgroundImage: `url("${AccessoriesBackground}")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-        onClick={() => gotoProducts("accessories")}
-      >
-        <h1>Accessories</h1>
-        <p>
-          Shop for essential accessories to complete your skating experience.
-        </p>
-      </Container>
+
+      <div className={styles.productGrid}>
+        <div
+          className={styles.productBanner}
+          style={{ backgroundImage: `url("${SkateboardBackground}")` }}
+          onClick={() => gotoProducts("skateboards")}
+        >
+          <h2>Skateboards</h2>
+          <p>Explore our wide range of skateboards for all skill levels.</p>
+        </div>
+
+        <div
+          className={styles.productBanner}
+          style={{ backgroundImage: `url("${SkatesBackground}")` }}
+          onClick={() => gotoProducts("skates")}
+        >
+          <h2>Skates</h2>
+          <p>Check out our collection of skates for every style.</p>
+        </div>
+
+        <div
+          className={styles.productBanner}
+          style={{ backgroundImage: `url("${ShoesBackground}")` }}
+          onClick={() => gotoProducts("shoes")}
+        >
+          <h2>Shoes</h2>
+          <p>Find the perfect pair of shoes for skating and beyond.</p>
+        </div>
+
+        <div
+          className={styles.productBanner}
+          style={{ backgroundImage: `url("${ApparelBackground}")` }}
+          onClick={() => gotoProducts("apparel")}
+        >
+          <h2>Apparel</h2>
+          <p>Discover the latest trends in skate apparel.</p>
+        </div>
+
+        <div
+          className={styles.productBanner}
+          style={{ backgroundImage: `url("${AccessoriesBackground}")` }}
+          onClick={() => gotoProducts("accessories")}
+        >
+          <h2>Accessories</h2>
+          <p>Shop essential accessories for your skating experience.</p>
+        </div>
+      </div>
     </>
   );
 };
