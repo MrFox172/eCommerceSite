@@ -307,7 +307,11 @@ public class OrderController {
 
                 accountOrder.getProductsOrdered().forEach(x -> {
                     Product product = x.getProduct();
-                    product.setStockOnHand(product.getStockOnHand() - x.getQuantity());
+
+                    if(product.getStockOnHand() > 1) {
+                        product.setStockOnHand(product.getStockOnHand() - x.getQuantity());
+                    }
+
                     sellers.add(product.getSellerAccount());
                     productRepo.save(product);
                 });
