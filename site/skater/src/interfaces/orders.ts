@@ -17,4 +17,13 @@ interface Order {
   status: string;
 }
 
-export type { OrderVerification, Order, OrderedProduct };
+interface StripeOrder {
+  accountId: number,
+  paymentMethodId: number,
+  shippingMethodId: number,
+  addressId: number,
+  orderedProducts: OrderedProduct[],
+  expectedOrderTotal: number,
+}
+
+export type { OrderVerification, Order, OrderedProduct, StripeOrder };

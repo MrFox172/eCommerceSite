@@ -1,9 +1,7 @@
 import React from "react";
 import { useCart } from "../CartProvider/CartProvider";
-import { Product } from "../../interfaces/products";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useFetch } from "../../hooks/useFetch";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import defaultImage from "../../assets/img-placeholder.svg";
 import styles from "./styles.module.css";
@@ -14,7 +12,7 @@ import { Account } from "../../interfaces/user";
 import {
   OrderVerification,
   OrderedProduct,
-  Order,
+  StripeOrder,
 } from "../../interfaces/orders";
 
 import axios from "axios";
@@ -26,8 +24,11 @@ const CheckoutPage: React.FC<string> = () => {
   const [localUser, setLocalUser] = useLocalStorage("user", "");
   const [verified, setCartVerified] = useState(false);
   const [sessionUrl, setSessionUrl] = useState<string | null>(null);
-
-  // const { data, isPending, error } = useFetch();
+  const [selectedAddress, setSelectedAddress] = useState<number>(0);
+  const [selectedShipping, setSelectedShipping] = useState<number>(3);
+  const [verifiedCartProducts, setVerifiedCartProducts] = useState<
+    OrderedProduct[]
+  >([]);
 
   useEffect(() => {
     if (cart.getTotalItems() === 0) {
@@ -54,7 +55,7 @@ const CheckoutPage: React.FC<string> = () => {
     if (verified) {
       getSessionUrl();
     }
-  }, [verified]);
+  }, [verified, verifiedCartProducts, selectedShipping, selectedAddress]);
 
   const verifyCart = () => {
     let order: OrderVerification = { orderedProducts: [] };
@@ -70,8 +71,8 @@ const CheckoutPage: React.FC<string> = () => {
     axios
       .post("https://thelowerorbit.com:8080/api/order/cart/check", order)
       .then((res) => {
-        alert("Verification Okay");
         setCartVerified(true);
+        setVerifiedCartProducts(order.orderedProducts);
       })
       .catch((err) => {
         console.log(err);
@@ -79,16 +80,15 @@ const CheckoutPage: React.FC<string> = () => {
   };
 
   const getSessionUrl = () => {
-    /*
-    axios
-      .post()
-      .then((res) => {
-        setSessionUrl(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-      */
+    let order: StripeOrder = {
+      accountId: user.id,
+      paymentMethodId: 0,
+      shippingMethodId: selectedShipping,
+      addressId: user.addresses[selectedAddress].id,
+      orderedProducts: verifiedCartProducts,
+      expectedOrderTotal: cart.getTotalPrice(),
+    };
+    console.log("Order to send to Stripe", order);
   };
 
   const payWithStripe = () => {
@@ -133,18 +133,52 @@ const CheckoutPage: React.FC<string> = () => {
               </li>
             ))}
           </ul>
+          Total: ${cart.getTotalPrice().toFixed(2)}
         </Col>
         <Col>
           <h4>Checkout Information</h4>
           {user && user.addresses && user.addresses.length > 0 ? (
             <>
+              <h5>Shipping Address</h5>
+              {user.addresses.map((address, index) => (
+                <Button
+                  key={index}
+                  variant={selectedAddress === index ? "primary" : "secondary"}
+                  onClick={() => setSelectedAddress(index)}
+                  className="mb-2"
+                >
+                  Address {index + 1}
+                </Button>
+              ))}
               <AddressCard
                 accountId={user.id}
-                existingAddress={user.addresses[0]}
+                existingAddress={user.addresses[selectedAddress]}
                 setShow={true}
                 setAddressList={user.addresses}
                 showButton={false}
               />
+              <h5>Shipping Options</h5>
+              <Button
+                variant={selectedShipping === 3 ? "primary" : "secondary"}
+                onClick={() => setSelectedShipping(3)}
+                className="mb-2"
+              >
+                Express: 2-Day Shipping
+              </Button>
+              <Button
+                variant={selectedShipping === 4 ? "primary" : "secondary"}
+                onClick={() => setSelectedShipping(4)}
+                className="mb-2"
+              >
+                Next Day Shipping
+              </Button>
+              <Button
+                variant={selectedShipping === 5 ? "primary" : "secondary"}
+                onClick={() => setSelectedShipping(5)}
+                className="mb-2"
+              >
+                Standard: 3-5 Day Shipping
+              </Button>
               <Button
                 className={verified ? "btn-primary" : "btn-warning"}
                 onClick={payWithStripe}
