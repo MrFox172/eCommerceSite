@@ -47,8 +47,8 @@ const CheckoutPage: React.FC<string> = () => {
   }, [cart.cart, navigate]);
 
   useEffect(() => {
-    if (localUser !== "" && localUser !== null) {
-      console.log("User is logged in");
+    if (localUser !== "" && localUser !== null && localUser !== undefined) {
+      console.log("Local User is logged in");
       console.log(JSON.parse(localUser));
       setUser(JSON.parse(localUser));
     } else {
@@ -56,6 +56,22 @@ const CheckoutPage: React.FC<string> = () => {
       //navigate("/login");
     }
   }, [localUser]);
+
+  useEffect(() => {
+    if (user !== null && user !== undefined && user.id !== null) {
+      getUpToDateUser();
+    }
+  }, [user]);
+
+  const getUpToDateUser = () => {
+    axios
+      .get(`${api}/account/${localUser.id}`)
+      .then((res) => {
+        console.log("Up to date user data received.", res.data);
+        setUser(res.data);
+      })
+      .catch((err) => {});
+  };
 
   useEffect(() => {
     if (verified) {
@@ -95,6 +111,20 @@ const CheckoutPage: React.FC<string> = () => {
   };
 
   const getSessionUrl = () => {
+    if (user === null) {
+      console.log("User is null, cannot create order");
+      return;
+    }
+
+    if (
+      user.addresses.length === 0 ||
+      user.addresses === null ||
+      user.addresses === undefined
+    ) {
+      console.log("User has no addresses, cannot create order");
+      return;
+    }
+
     let order: StripeOrder = {
       accountId: user.id,
       paymentMethodId: 0,
