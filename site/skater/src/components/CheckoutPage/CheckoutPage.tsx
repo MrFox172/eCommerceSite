@@ -17,6 +17,8 @@ import {
   Order,
 } from "../../interfaces/orders";
 
+import StripeIntegration from "./StripeIntegration/StripeIntegration";
+
 import axios from "axios";
 
 const CheckoutPage: React.FC<string> = () => {
@@ -116,6 +118,7 @@ const CheckoutPage: React.FC<string> = () => {
                 setShow={true}
                 setAddressList={user.addresses}
               />
+              <StripeIntegration {...user}/>
             </>
           ) : (
             <>
