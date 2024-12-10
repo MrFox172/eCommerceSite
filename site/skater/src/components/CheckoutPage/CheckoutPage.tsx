@@ -33,6 +33,7 @@ const CheckoutPage: React.FC<string> = () => {
   const [shippingPrices, setShippingPrices] = useState<number[]>([
     19.99, 34.99, 5.99,
   ]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (cart.getTotalItems() === 0) {
@@ -59,7 +60,13 @@ const CheckoutPage: React.FC<string> = () => {
     if (verified) {
       getSessionUrl();
     }
-  }, [verified, verifiedCartProducts, selectedShipping, selectedAddress]);
+  }, [
+    verified,
+    verifiedCartProducts,
+    selectedShipping,
+    selectedAddress,
+    errorMessage,
+  ]);
 
   const verifyCart = () => {
     let order: OrderVerification = { orderedProducts: [] };
@@ -80,6 +87,9 @@ const CheckoutPage: React.FC<string> = () => {
       })
       .catch((err) => {
         console.log(err);
+        setErrorMessage(
+          "There was an issue verifying your cart:" + err.response.data
+        );
       });
   };
 
@@ -103,7 +113,16 @@ const CheckoutPage: React.FC<string> = () => {
 
   return (
     <Container className="mt-5">
-      
+      {errorMessage !== null && (
+        <Row>
+          <Col>
+            <h4 className="text-danger">{errorMessage}</h4>
+            <Button className="btn-warning" onClick={() => navigate("/cart")}>
+              Return to Cart
+            </Button>
+          </Col>
+        </Row>
+      )}
       <Row>
         <h1>Checkout</h1>
       </Row>
