@@ -8,4 +8,11 @@ interface Shipment {
   createdate: string;
 }
 
-export type { Shipment };
+interface ShippingOption {
+  id: number;
+  name: string;
+  price: number;
+  createdate: string;
+}
+
+export type { Shipment, ShippingOption };

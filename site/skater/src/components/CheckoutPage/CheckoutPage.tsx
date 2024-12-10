@@ -14,6 +14,7 @@ import {
   OrderedProduct,
   StripeOrder,
 } from "../../interfaces/orders";
+import { ShippingOption } from "../../interfaces/shipments";
 
 import axios from "axios";
 
@@ -29,6 +30,9 @@ const CheckoutPage: React.FC<string> = () => {
   const [verifiedCartProducts, setVerifiedCartProducts] = useState<
     OrderedProduct[]
   >([]);
+  const [shippingPrices, setShippingPrices] = useState<number[]>([
+    19.99, 34.99, 5.99,
+  ]);
 
   useEffect(() => {
     if (cart.getTotalItems() === 0) {
@@ -133,7 +137,17 @@ const CheckoutPage: React.FC<string> = () => {
               </li>
             ))}
           </ul>
-          Total: ${cart.getTotalPrice().toFixed(2)}
+          <p className="text-dark">
+            <strong>Sub Total: </strong>${cart.getTotalPrice().toFixed(2)}
+          </p>
+          <p className="text-dark">
+            <strong>Tax USD: </strong>$
+            {(cart.getTotalPrice() * 0.06).toFixed(2)}
+          </p>
+          <p className="text-dark">
+            <strong>Total USD: </strong>$
+            {(cart.getTotalPrice() * 1.06).toFixed(2)}
+          </p>
         </Col>
         <Col>
           <h4>Checkout Information</h4>
@@ -161,24 +175,28 @@ const CheckoutPage: React.FC<string> = () => {
               <Button
                 variant={selectedShipping === 3 ? "primary" : "secondary"}
                 onClick={() => setSelectedShipping(3)}
-                className="mb-2"
+                className="mb-2 mr-5"
               >
                 Express: 2-Day Shipping
               </Button>
               <Button
                 variant={selectedShipping === 4 ? "primary" : "secondary"}
                 onClick={() => setSelectedShipping(4)}
-                className="mb-2"
+                className="mb-2 mr-2"
               >
                 Next Day Shipping
               </Button>
               <Button
                 variant={selectedShipping === 5 ? "primary" : "secondary"}
                 onClick={() => setSelectedShipping(5)}
-                className="mb-2"
+                className="mb-2 mr-2"
               >
                 Standard: 3-5 Day Shipping
               </Button>
+              <p className="text-dark">
+                Estimated Shipping Cost: ${shippingPrices[selectedShipping - 3]}
+              </p>
+              <br />
               <Button
                 className={verified ? "btn-primary" : "btn-warning"}
                 onClick={payWithStripe}
