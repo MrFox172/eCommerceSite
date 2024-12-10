@@ -22,13 +22,13 @@ public class CheckoutController {
 
     @PostConstruct
     public void init() {
-        Stripe.apiKey = "sk_test_51QJq4xBdVPVn8s1RdSRldcArftaLXqyBDQQ2knNGjup1CidLg5MDjhVnC257ViNSqJIpTr9Jq2oFZeJ3aH59ElAr00LQb7Lquc";
+        Stripe.apiKey = "";
     }
 
     // Create a new Checkout Session
     @GetMapping("/create-checkout-session")
     public String createCheckoutSession() throws StripeException {
-        Stripe.apiKey = "sk_test_51QJq4xBdVPVn8s1RdSRldcArftaLXqyBDQQ2knNGjup1CidLg5MDjhVnC257ViNSqJIpTr9Jq2oFZeJ3aH59ElAr00LQb7Lquc";
+        Stripe.apiKey = "";
 
         ProductCreateParams productParams =
                 ProductCreateParams.builder()
