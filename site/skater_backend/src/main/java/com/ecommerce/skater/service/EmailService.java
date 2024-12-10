@@ -45,5 +45,52 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    public void sendOrderConfirmationEmail(String to, String orderNumber, String orderDate, String orderTotal, String expectedDelivery) {
+        // send email
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Your Skater.com Order Confirmation \uD83D\uDE9A");
+        message.setText(String.format("""
+        Hi %s,
+        
+        Your order has been confirmed! Here are the details:
+        
+        Order Number: %s
+        Order Date: %s
+        Order Total: $%s
+        Expected Delivery: %s
+        
+        Thank you for shopping with Skater.com! We can’t wait to see you shred in your new gear.
+        
+        Stay rad,
+        The Skater.com Team
+        """, to, orderNumber, orderDate, orderTotal, expectedDelivery));
+
+        javaMailSender.send(message);
+    }
+
+    public void sendSellerOrderNotificationEmail(String to, String orderNumber, String orderDate, String orderTotal, String expectedDelivery) {
+        // send email
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("New Order Alert! \uD83D\uDEA8");
+        message.setText(String.format("""
+        Hi %s,
+        
+        You have a new order! Here are the details:
+        
+        Order Number: %s
+        Order Date: %s
+        Order Total: $%s
+        Expected Delivery: %s
+        
+        Log in to your Skater.com account to view the order details and fulfill it.
+        
+        Stay rad,
+        The Skater.com Team
+        """, to, orderNumber, orderDate, orderTotal, expectedDelivery));
+
+        javaMailSender.send(message);
+    }
 
 }

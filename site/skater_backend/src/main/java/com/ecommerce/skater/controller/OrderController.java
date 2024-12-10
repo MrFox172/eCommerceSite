@@ -5,6 +5,7 @@ import com.ecommerce.skater.dto.CartCheck;
 import com.ecommerce.skater.dto.OrderDto;
 import com.ecommerce.skater.dto.OrderedProduct;
 import com.ecommerce.skater.repository.*;
+import com.ecommerce.skater.service.EmailService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
@@ -25,9 +26,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/order")
@@ -57,6 +56,9 @@ public class OrderController {
 
     @Autowired
     private ShipmentRepo shipmentRepo;
+
+    @Autowired
+    private EmailService emailService;
 
     @Value("${stripe.secretKey}")
     private String STRIPE_SECRET_KEY;
@@ -244,11 +246,15 @@ public class OrderController {
 
         ShippingRate shippingRate = ShippingRate.create(shippingRateParams);
 
+        shipmentRepo.save(shipment);
+
+        var newAccountOrder = accountOrderRepo.save(accountOrder);
+
         SessionCreateParams params =
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl(FRONTEND_URL + "/cart/success")
-                        .setCancelUrl(FRONTEND_URL + "/cart/cancelled")
+                        .setSuccessUrl(FRONTEND_URL + "/cart/success/" + newAccountOrder.getId())
+                        .setCancelUrl(FRONTEND_URL + "/cart/cancelled" + newAccountOrder.getId())
                         .addAllLineItem(lineItems)
                         .addShippingOption(
                                 SessionCreateParams.ShippingOption.builder()
@@ -258,13 +264,62 @@ public class OrderController {
 
         Session session = Session.create(params);
 
-        shipmentRepo.save(shipment);
+        return new ResponseEntity(session.getUrl(), HttpStatus.OK);
+    }
+
+    @GetMapping("/session/{id}")
+    public ResponseEntity<Session> getSession(@PathVariable String id) throws StripeException {
+        Stripe.apiKey = STRIPE_SECRET_KEY;
+        Session session = Session.retrieve(id);
+
+        return new ResponseEntity<Session>(session, HttpStatus.OK);
+    }
+
+    @GetMapping("cancel/id")
+    public ResponseEntity<String> cancel(@PathVariable int id) {
+        AccountOrder accountOrder = accountOrderRepo.findById(id).orElse(null);
+
+        if (accountOrder == null) {
+            return new ResponseEntity<String>("Order not found", HttpStatus.BAD_REQUEST);
+        }
+
+        accountOrder.setOrderStatus("CANCELLED");
 
         accountOrderRepo.save(accountOrder);
 
-        //productRepo.saveAll(products);
+        return new ResponseEntity<String>("Order Cancelled", HttpStatus.OK);
+    }
 
-        return new ResponseEntity(session.getUrl(), HttpStatus.OK);
+    @GetMapping("confirm/{id}")
+    public ResponseEntity<String> confirmation(@PathVariable int id) {
+
+            AccountOrder accountOrder = accountOrderRepo.findById(id).orElse(null);
+
+            if (accountOrder == null) {
+                return new ResponseEntity<String>("Order not found", HttpStatus.BAD_REQUEST);
+            }
+
+            accountOrder.setOrderStatus("COMPLETED");
+
+            Set<SellerAccount> sellers = new HashSet<>();
+
+            accountOrder.getProductsOrdered().forEach(x -> {
+                Product product = x.getProduct();
+                product.setStockOnHand(product.getStockOnHand() - x.getQuantity());
+                sellers.add(product.getSellerAccount());
+                productRepo.save(product);
+            });
+
+            accountOrderRepo.save(accountOrder);
+
+            // send order confirmation email
+            emailService.sendOrderConfirmationEmail(accountOrder.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString());
+
+            sellers.forEach(
+                    x -> emailService.sendSellerOrderNotificationEmail(x.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString())
+            );
+
+            return new ResponseEntity<String>("Order Confirmed", HttpStatus.OK);
     }
 
     @Operation(summary = "Get All Orders", description = "Returns a list of all orders")
