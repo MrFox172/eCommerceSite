@@ -50,7 +50,7 @@ const Orders = () => {
           </Col>
         </Row>
       </Container>
-      {orders.length === 0 ? ( <h3>No orders found</h3> ) : (
+      {orders.filter((x) => x.orderStatus == "COMPLETED").length === 0 ? ( <h3>No orders found</h3> ) : (
 
       <Table striped bordered hover size="sm">
       <thead>
