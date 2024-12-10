@@ -7,6 +7,7 @@ import axios from "axios";
 interface Orders {
   orderNumber: string
   orderTotal: number
+  orderStatus: string
   createdate: string
   shipment: {
     trackingNumber: string
@@ -61,7 +62,7 @@ const Orders = () => {
         </tr>
       </thead>
       <tbody>
-        {orders.map((order) => (
+        {orders.filter((x) => x.orderStatus == "COMPLETED").map((order) => (
           <tr key={order.orderNumber}>
             <td>{order.orderNumber}</td>
             <td>{order.orderTotal}</td>
