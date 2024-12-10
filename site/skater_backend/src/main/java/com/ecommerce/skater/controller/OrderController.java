@@ -276,7 +276,7 @@ public class OrderController {
     }
 
     @GetMapping("cancel/{id}")
-    public ResponseEntity<String> cancel(@PathVariable int id) {
+    public ResponseEntity cancel(@PathVariable int id) {
         AccountOrder accountOrder = accountOrderRepo.findById(id).orElse(null);
 
         if (accountOrder == null) {
@@ -287,11 +287,11 @@ public class OrderController {
 
         accountOrderRepo.save(accountOrder);
 
-        return new ResponseEntity<String>("Order Cancelled", HttpStatus.OK);
+        return new ResponseEntity(accountOrder, HttpStatus.OK);
     }
 
     @GetMapping("confirm/{id}")
-    public ResponseEntity<String> confirmation(@PathVariable int id) {
+    public ResponseEntity confirmation(@PathVariable int id) {
 
             AccountOrder accountOrder = accountOrderRepo.findById(id).orElse(null);
 
@@ -319,7 +319,7 @@ public class OrderController {
                     x -> emailService.sendSellerOrderNotificationEmail(x.getAccount().getEmailaddress(), accountOrder.getOrderNumber(), accountOrder.getCreatedate().toString(), accountOrder.getOrderTotal().toString(), accountOrder.getShipment().getShipmentDate().toString())
             );
 
-            return new ResponseEntity<String>("Order Confirmed", HttpStatus.OK);
+            return new ResponseEntity(accountOrder, HttpStatus.OK);
     }
 
     @Operation(summary = "Get All Orders", description = "Returns a list of all orders")
