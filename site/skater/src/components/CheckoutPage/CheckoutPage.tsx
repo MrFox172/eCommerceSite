@@ -19,6 +19,7 @@ import { ShippingOption } from "../../interfaces/shipments";
 import axios from "axios";
 
 const CheckoutPage: React.FC<string> = () => {
+  const api = "https://thelowerorbit.com:8080/api";
   const cart = useCart();
   const navigate = useNavigate();
   const [user, setUser] = useState<Account | null>(null);
@@ -80,7 +81,7 @@ const CheckoutPage: React.FC<string> = () => {
     });
     console.log("Order to Verify", order);
     axios
-      .post("https://thelowerorbit.com:8080/api/order/cart/check", order)
+      .post(`${api}/order/cart/check`, order)
       .then((res) => {
         setCartVerified(true);
         setVerifiedCartProducts(order.orderedProducts);
@@ -103,12 +104,25 @@ const CheckoutPage: React.FC<string> = () => {
       expectedOrderTotal: cart.getTotalPrice(),
     };
     console.log("Order to send to Stripe", order);
+    axios
+      .post(`${api}/order`, order)
+      .then((res) => {
+        console.log(res);
+        setSessionUrl(res.data);
+      })
+      .catch((err) => {
+        setErrorMessage(
+          "There was an issue creating your order: " + err.response.data
+        );
+      });
   };
 
   const payWithStripe = () => {
     if (!verified || sessionUrl === null) {
+      console.log("Button disabled");
       return;
     }
+    window.open(sessionUrl, "_self");
   };
 
   return (
