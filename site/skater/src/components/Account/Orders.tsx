@@ -2,10 +2,22 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Account as IAccount } from "../../interfaces/user";
 import { Col, Row, Container, Table } from "react-bootstrap";
+import axios from "axios";
+
+interface Orders {
+  orderNumber: string
+  orderTotal: number
+  createdate: string
+  shipment: {
+    trackingNumber: string
+    shipmentDate: string
+  }
+}
 
 const Orders = () => {
   const [user, setUser] = useState<IAccount>();
   const context: IAccount = useOutletContext();
+  const [orders, setOrders] = useState<Orders[]>([]);
 
   console.log("Context:", context);
 
@@ -13,46 +25,53 @@ const Orders = () => {
     setUser(context);
   }, [context]);
 
+  useEffect(() => {
+    if(!user) return;
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.get(`https://www.thelowerorbit.com:8080/api/order/account/${user?.id}`)
+        .then((res) => {
+            console.log(res);
+            setOrders(res.data);
+        }
+        , (err) => {
+            console.log(err);
+        });
+  }, [user]);
+
+
+
   return (
     <>
       <Container>
         <Row>
           <Col>
-            <h1>Orders</h1>
+            <h4>Orders</h4>
           </Col>
         </Row>
       </Container>
-      <h1>Orders</h1>
-      <h1>{user?.firstname}</h1>
-      <Table striped bordered hover>
+      {orders.length === 0 ? ( <h3>No orders found</h3> ) : (
+
+      <Table striped bordered hover size="sm">
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>Order Number</th>
+          <th>Order Total</th>
+          <th>Order Date</th>
+          <th>Expected Delivery Date</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {orders.map((order) => (
+          <tr key={order.orderNumber}>
+            <td>{order.orderNumber}</td>
+            <td>{order.orderTotal}</td>
+            <td>{new Date(order.createdate).toLocaleString()}</td>
+            <td>{order.shipment.shipmentDate}</td>
+          </tr>
+        ))}        
       </tbody>
     </Table>
+      )}
     </>
   );
 };

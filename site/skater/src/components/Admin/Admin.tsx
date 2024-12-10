@@ -2,6 +2,7 @@ import { Card, Button, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
+import { Product } from "../../interfaces/products";
 
 interface AdminMetrics {
   accountCount: number;
@@ -16,9 +17,18 @@ interface AdminRevenue {
   revenue: number;
 }
 
+interface Order {
+  orderNumber: string;
+  orderTotal: number;
+  orderCommission: number;
+  numberOfProducts: number;
+  productsOrdered: Product[];
+}
+
 const Admin = () => {
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [revenue, setRevenue] = useState<AdminRevenue | null>(null);
+  const [orders, setOrders] = useState<Order[] | null>(null);
 
   useEffect(() => {
     axios
@@ -38,6 +48,18 @@ const Admin = () => {
       .then((response) => {
         console.log(response.data);
         setRevenue(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://www.thelowerorbit.com:8080/api/order")
+      .then((response) => {
+        console.log(response.data);
+        setOrders(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -102,6 +124,30 @@ const Admin = () => {
               </Card.Body>
             </Card>
           </div>
+        </Col>
+      </Row>
+      <Row className="my-5">
+        <Col>
+          <table className="table table-dark text-dark fs-2">
+            <thead>
+              <tr>
+                <th scope="col">Order Number</th>
+                <th scope="col">Order Total</th>
+                <th scope="col">Order Commission</th>
+                <th scope="col">Number of Products</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders?.map((order) => (
+                <tr key={order.orderNumber}>
+                  <td className="text-warning fw-bold">{order.orderNumber}</td>
+                  <td className="text-warning">${order.orderTotal}</td>
+                  <td className="text-warning">${order.orderCommission}</td>
+                  <td className="text-warning">{order.productsOrdered.length}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Col>
       </Row>
     </Container>

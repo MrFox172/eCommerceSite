@@ -14,7 +14,7 @@ export const AccountMenu = (props: {
 }) => {
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
   const navigate = useNavigate();
-  const accountMenuList = ["Profile", "Orders", "Payments"];
+  const accountMenuList = ["Profile", "Orders"];
   const [url, setUrl] = React.useState<string>("");
 
   useEffect(() => {
