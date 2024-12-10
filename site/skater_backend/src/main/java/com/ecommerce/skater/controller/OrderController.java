@@ -5,8 +5,18 @@ import com.ecommerce.skater.dto.CartCheck;
 import com.ecommerce.skater.dto.OrderDto;
 import com.ecommerce.skater.dto.OrderedProduct;
 import com.ecommerce.skater.repository.*;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Price;
+import com.stripe.model.ShippingRate;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.PriceCreateParams;
+import com.stripe.param.ProductCreateParams;
+import com.stripe.param.ShippingRateCreateParams;
+import com.stripe.param.checkout.SessionCreateParams;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +54,15 @@ public class OrderController {
 
     @Autowired
     private AddressRepo addressRepo;
-    
+
     @Autowired
     private ShipmentRepo shipmentRepo;
+
+    @Value("${stripe.secretKey}")
+    private String STRIPE_SECRET_KEY;
+
+    @Value("${frontend.url:http://localhost:5173}")
+    private String FRONTEND_URL;
 
     @Operation(summary = "Check Cart", description = "Checks if the products in the cart are valid")
     @PostMapping("/cart/check")
@@ -90,7 +106,7 @@ public class OrderController {
 
     @Operation(summary = "Create Order", description = "Creates a new order")
     @PostMapping
-    public ResponseEntity createOrder(@RequestBody OrderDto order) {
+    public ResponseEntity createOrder(@RequestBody OrderDto order) throws StripeException {
 
         var account = accountRepo.findById(order.accountId()).orElse(null);
 
@@ -113,10 +129,12 @@ public class OrderController {
         accountOrder.setOrderNumber("ORD" + "-" + date.toString().replace("-","") + "-" + accountUid.toString().substring(0,7) + account.getId());
 
         List<Product> products = new ArrayList<>();
+        List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
 
         try {
             // Checking if the products in the order are valid
             order.orderedProducts().forEach(x -> {
+
                 var product = productRepo.findById(x.productId()).orElse(null);
 
                 if (product == null) {
@@ -138,12 +156,47 @@ public class OrderController {
                     throw new RuntimeException("Price does not match product price: " + product.getName());
                 }
 
+                // create stripe products and prices
+                try {
+
+                    Stripe.apiKey = STRIPE_SECRET_KEY;
+
+                    ProductCreateParams productParams =
+                            ProductCreateParams.builder()
+                                    .setName(product.getName())
+                                    .setDescription(product.getDescription())
+                                    .build();
+
+                    com.stripe.model.Product stripProduct = com.stripe.model.Product.create(productParams);
+
+                    var salePrice = product.getSalePrice().multiply(new BigDecimal("100"));
+
+                    PriceCreateParams priceparams =
+                            PriceCreateParams.builder()
+                                    .setProduct(stripProduct.getId())
+                                    .setUnitAmount(salePrice.longValue())
+                                    .setCurrency("usd")
+                                    .build();
+
+                    Price price = Price.create(priceparams);
+
+                    lineItems.add(
+                            SessionCreateParams.LineItem.builder()
+                            .setQuantity(Long.valueOf(x.expectedQuantity()))
+                            // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                            .setPrice(price.getId())
+                            .build());
+
+                } catch (StripeException e) {
+                    throw new RuntimeException(e);
+                }
+
                 ProductOrder productOrder = new ProductOrder();
                 productOrder.setProduct(product);
                 productOrder.setQuantity(x.expectedQuantity());
                 productOrder.setLineTotal(product.getPrice().multiply(BigDecimal.valueOf(x.expectedQuantity())));
                 accountOrder.addProductOrder(productOrder);
-                product.setStockOnHand(product.getStockOnHand() - x.expectedQuantity());
+                //product.setStockOnHand(product.getStockOnHand() - x.expectedQuantity());
                 products.add(product);
             });
         } catch (RuntimeException e) {
@@ -172,13 +225,46 @@ public class OrderController {
         shipment.setShipmentDate(Date.valueOf(date.plusDays(shipment.getDaysToDeliver())));
         shipment.setTrackingNumber(uuid.toString().replace("-", ""));
         accountOrder.setShipment(shipment);
+
+        // stripe shipping method object
+        // add shipping option to stripe
+
+        ShippingRateCreateParams shippingRateParams =
+                ShippingRateCreateParams.builder()
+                        .setDisplayName(shippingMethod.getName())
+                        .setType(ShippingRateCreateParams.Type.FIXED_AMOUNT)
+                        .setFixedAmount(
+                                ShippingRateCreateParams.FixedAmount.builder()
+                                        .setAmount(shippingMethod.getPrice().multiply(new BigDecimal("100")).longValue())
+                                        .setCurrency("usd")
+                                        .build()
+                        )
+                        .build();
+
+
+        ShippingRate shippingRate = ShippingRate.create(shippingRateParams);
+
+        SessionCreateParams params =
+                SessionCreateParams.builder()
+                        .setMode(SessionCreateParams.Mode.PAYMENT)
+                        .setSuccessUrl(FRONTEND_URL + "/cart/success")
+                        .setCancelUrl(FRONTEND_URL + "/cart/cancelled")
+                        .addAllLineItem(lineItems)
+                        .addShippingOption(
+                                SessionCreateParams.ShippingOption.builder()
+                                        .setShippingRate(shippingRate.getId()).build()
+                        )
+                        .build();
+
+        Session session = Session.create(params);
+
         shipmentRepo.save(shipment);
 
-        var completeOrder = accountOrderRepo.save(accountOrder);
+        accountOrderRepo.save(accountOrder);
 
-        productRepo.saveAll(products);
+        //productRepo.saveAll(products);
 
-        return new ResponseEntity(completeOrder, HttpStatus.OK);
+        return new ResponseEntity(session.getUrl(), HttpStatus.OK);
     }
 
     @Operation(summary = "Get All Orders", description = "Returns a list of all orders")
