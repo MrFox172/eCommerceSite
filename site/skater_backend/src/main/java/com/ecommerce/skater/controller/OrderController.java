@@ -275,7 +275,7 @@ public class OrderController {
         return new ResponseEntity<Session>(session, HttpStatus.OK);
     }
 
-    @GetMapping("cancel/id")
+    @GetMapping("cancel/{id}")
     public ResponseEntity<String> cancel(@PathVariable int id) {
         AccountOrder accountOrder = accountOrderRepo.findById(id).orElse(null);
 
