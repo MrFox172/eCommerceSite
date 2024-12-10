@@ -103,6 +103,7 @@ const CheckoutPage: React.FC<string> = () => {
 
   return (
     <Container className="mt-5">
+      
       <Row>
         <h1>Checkout</h1>
       </Row>

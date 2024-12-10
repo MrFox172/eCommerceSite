@@ -20,7 +20,13 @@ const Address = ({ accountId }) => {
   return (
     <>
       <h4 className="mt-5">Address</h4>
-      <Button size="sm" className="" variant="outline-primary rounded-5" title="Add new Address" onClick={() => setShow(true)}>
+      <Button
+        size="sm"
+        className=""
+        variant="outline-primary rounded-5"
+        title="Add new Address"
+        onClick={() => setShow(true)}
+      >
         {" "}
         Add new address{" "}
       </Button>
@@ -32,6 +38,7 @@ const Address = ({ accountId }) => {
           existingAddress={address}
           setShow={setShow}
           setAddressList={setAddressList}
+          showButton={true}
         />
       ))}
       <div className={show ? "d-inline mt-3" : "d-none mt-3"}>
@@ -40,6 +47,7 @@ const Address = ({ accountId }) => {
           existingAddress={null}
           setShow={setShow}
           setAddressList={setAddressList}
+          showButton={true}
         />
       </div>
     </>
