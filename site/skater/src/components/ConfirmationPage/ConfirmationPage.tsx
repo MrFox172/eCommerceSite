@@ -21,7 +21,7 @@ const ConfirmationPage: React.FC = () => {
   const getOrder = async (id: string) => {
     console.log("Getting order with id: ", id);
     axios
-      .get(`${api}/order/${id}`)
+      .get(`${api}/order/confirm/${id}`)
       .then((res) => {
         console.log(res.data);
         setOrder(res.data);
