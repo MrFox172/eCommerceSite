@@ -104,14 +104,6 @@ export const AccountMenu = (props: {
             >
               Products
             </ListGroup.Item>
-            <ListGroup.Item
-              action
-              variant="light"
-              href="#Sales"
-              onClick={(e) => handleOnClick(e, "Sales")}
-            >
-              Sales
-            </ListGroup.Item>
           </ListGroup>
         )}
       </div>
