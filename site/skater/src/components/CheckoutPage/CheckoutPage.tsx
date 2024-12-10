@@ -68,6 +68,10 @@ const CheckoutPage: React.FC<string> = () => {
       .get(`${api}/account/${user.id}`)
       .then((res) => {
         console.log("Up to date user data received.", res.data);
+        if (JSON.stringify(res.data) === JSON.stringify(user)) {
+          console.log("User data is already up to date.");
+          return;
+        }
         setUser(res.data);
       })
       .catch((err) => {
@@ -151,6 +155,7 @@ const CheckoutPage: React.FC<string> = () => {
 
   const payWithStripe = () => {
     if (!verified || sessionUrl === null) {
+      console.log(sessionUrl, verified);
       console.log("Button disabled");
       return;
     }
