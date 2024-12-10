@@ -32,7 +32,7 @@ public class EmailService {
     
         Click the link below to validate your account and complete your registration:
     
-        http://localhost:5173/%d/verify/%s
+        https://www.thelowerorbit.com:9080/%d/verify/%s
     
         This step helps us ensure your account’s security and makes your experience with us seamless.
     
